@@ -1,13 +1,18 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Kakiyo",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#4E8CFF",
+    "light": "#71a3ff",
+    "dark": "#3e70cc"
   },
   "favicon": "/favicon.svg",
+  "background": {
+    "color": {
+      "dark": "#151820"
+    }
+  },
   "navigation": {
     "tabs": [
       {
@@ -82,14 +87,14 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Help",
+        "href": "https://help.kakiyo.com"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://app.kakiyo.com"
     }
   },
   "footer": {
