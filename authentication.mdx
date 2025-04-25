@@ -1,0 +1,159 @@
+---
+title: 'Authentication'
+description: 'Learn how to authenticate with the Kakiyo API'
+---
+
+## Overview
+
+Kakiyo API uses API keys for authentication. All API requests must be authenticated using your API key in the Authorization header.
+
+## API Keys
+
+API keys are 40-character strings that should be copied from dashboard
+
+## Obtaining an API Key
+
+You can generate API keys from your Kakiyo dashboard:
+
+1. Log in to your [Kakiyo dashboard](https://app.kakiyo.com)
+2. Navigate to **Team > API Keys**
+3. Click **Create New API Key**
+4. Give your key a descriptive name (e.g., "Production", "Development", "Testing")
+5. Copy your newly generated API key immediately, as you won't be able to see it again
+
+<Warning>
+  API keys grant access to your Kakiyo account and all associated data. Keep your keys secure and never share them publicly.
+</Warning>
+
+## Using Your API Key
+
+Include your API key in the Authorization header of all API requests:
+
+```bash
+Authorization: Bearer API_KEY
+```
+
+## API Key Best Practices
+
+1. **Never expose your API keys** in client-side code, public repositories, or anywhere else that is publicly accessible.
+
+2. **Use different keys for different environments** (development, staging, production).
+
+3. **Rotate your keys periodically** for security. You can generate new keys and deprecate old ones from your dashboard.
+
+4. **Set appropriate permissions** for each key based on what it needs to access.
+
+5. **Monitor API key usage** to detect unusual patterns that might indicate a security breach.
+
+## Verifying Authentication
+
+You can verify your API key is working correctly by making a simple request to the verification endpoint:
+
+<CodeGroup>
+```bash cURL
+curl -X GET "https://api.kakiyo.com/v1/verify" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const axios = require('axios');
+
+const API_KEY = 'YOUR_API_KEY';
+const BASE_URL = 'https://api.kakiyo.com/v1';
+
+async function verifyApiKey() {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/verify`,
+      {
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`,
+        }
+      }
+    );
+
+    console.log('Authentication successful:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Authentication failed:', error.response ? error.response.data : error.message);
+    throw error;
+  }
+}
+
+verifyApiKey();
+```
+
+```python Python
+import requests
+
+API_KEY = 'YOUR_API_KEY'
+BASE_URL = 'https://api.kakiyo.com/v1'
+
+def verify_api_key():
+    try:
+        response = requests.get(
+            f'{BASE_URL}/verify',
+            headers={
+                'Authorization': f'Bearer {API_KEY}'
+            }
+        )
+
+        response.raise_for_status()
+        print('Authentication successful:', response.json())
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print('Authentication failed:', e)
+        raise
+
+verify_api_key()
+```
+</CodeGroup>
+
+If successful, you'll receive a response like:
+
+```json
+{
+  "status": "success",
+  "message": "API key is valid"
+}
+```
+
+## Managing API Keys
+
+You can manage your API keys from the Kakiyo dashboard:
+
+- **View all active keys**: See a list of all your active API keys and when they were last used
+- **Create new keys**: Generate new API keys with specific permissions
+- **Delete keys**: Revoke access for keys that are no longer needed or may have been compromised
+
+## Error Responses
+
+If authentication fails, you'll receive one of the following error responses:
+
+| Status Code | Error | Description |
+| ----------- | ----- | ----------- |
+| 401 | `missing_api_key` | No API key was provided in the request |
+| 401 | `invalid_api_key_format` | The API key format is invalid |
+| 401 | `invalid_api_key` | The API key is not recognized |
+| 403 | `subscription_inactive` | Your subscription is inactive |
+
+## Next Steps
+
+Now that you understand how to authenticate with the Kakiyo API, you can proceed to make API calls to create campaigns, add prospects, and more.
+
+<CardGroup cols={2}>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/introduction"
+  >
+    Browse the complete API documentation
+  </Card>
+  <Card
+    title="Quickstart Guide"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Follow our quickstart guide to get up and running
+  </Card>
+</CardGroup>

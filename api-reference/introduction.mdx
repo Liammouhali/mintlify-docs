@@ -1,33 +1,156 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'API Reference'
+description: 'Complete reference documentation for the Kakiyo API'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Overview
 
-## Welcome
+The Kakiyo API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Base URL
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+All API requests should be made to:
+
+```
+https://api.kakiyo.com/v1
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+The Kakiyo API uses API keys to authenticate requests. You can view and manage your API keys in the Kakiyo dashboard.
+
+Authentication is performed via the `Authorization` header with a Bearer token:
+
+```bash
+Authorization: Bearer YOUR_TEAM_ID+YOUR_API_KEY
+```
+
+All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
+
+## Request Format
+
+For `POST` and `PUT` requests, the request body should be JSON, with the `Content-Type` header set to `application/json`.
+
+```bash
+Content-Type: application/json
+```
+
+## Response Format
+
+All responses are returned in JSON format. Successful responses include a `200 OK` status code and the appropriate response data.
+
+Example successful response:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "id": "campaign_123456789",
+  "name": "Summer Outreach Campaign",
+  "status": "active"
+}
 ```
+
+## Error Handling
+
+Kakiyo uses conventional HTTP response codes to indicate the success or failure of an API request. In general:
+
+- `2xx` range indicates success
+- `4xx` range indicates an error occurred based on the information provided (e.g., missing required parameters, invalid API key)
+- `5xx` range indicates an error with Kakiyo's servers
+
+All error responses include a JSON object with the following structure:
+
+```json
+{
+  "error": "error_code",
+  "message": "A human-readable description of the error"
+}
+```
+
+### Common Error Codes
+
+| Status Code | Error Code | Description |
+| ----------- | ---------- | ----------- |
+| 400 | `validation_error` | The request parameters failed validation |
+| 401 | `missing_api_key` | No API key was provided |
+| 401 | `invalid_api_key_format` | The API key format is invalid |
+| 401 | `invalid_api_key` | The API key is not recognized |
+| 403 | `forbidden` | The API key doesn't have permissions to perform the request |
+| 403 | `subscription_inactive` | Your subscription is inactive |
+| 404 | `not_found` | The requested resource doesn't exist |
+| 429 | `rate_limit_exceeded` | Too many requests hit the API too quickly |
+| 500 | `internal_error` | Something went wrong on Kakiyo's end |
+
+## Rate Limiting
+
+The API is rate limited to prevent abuse. Rate limits vary based on your subscription plan. If you exceed the rate limit, you'll receive a `429 Too Many Requests` response.
+
+The response headers will include:
+
+- `X-RateLimit-Limit`: The maximum number of requests allowed in a time window
+- `X-RateLimit-Remaining`: The number of requests remaining in the current time window
+- `X-RateLimit-Reset`: The time at which the current rate limit window resets (UTC epoch seconds)
+
+When you exceed the rate limit, the response will include a `Retry-After` header indicating how many seconds to wait before retrying.
+
+## Pagination
+
+For endpoints that return lists of items, Kakiyo uses cursor-based pagination. These endpoints accept the following parameters:
+
+- `limit`: The number of items to return (default: 20, maximum: 100)
+- `after`: The cursor to use as the starting point for the next set of results
+
+The response will include:
+
+- `data`: The list of items
+- `has_more`: A boolean indicating if there are more items available
+- `next_cursor`: A cursor to use for the next page of results (only included if `has_more` is true)
+
+Example:
+
+```json
+{
+  "data": [
+    { "id": "campaign_1", "name": "First Campaign" },
+    { "id": "campaign_2", "name": "Second Campaign" }
+  ],
+  "has_more": true,
+  "next_cursor": "campaign_2"
+}
+```
+
+To fetch the next page, include the `next_cursor` value in the `after` parameter:
+
+```
+GET /v1/campaigns?limit=2&after=campaign_2
+```
+
+## Versioning
+
+The Kakiyo API is versioned. The current version is `v1`. We recommend specifying a version in the URL to ensure API stability for your application.
+
+When we make backwards-incompatible changes to the API, we'll release a new version. We'll provide ample notice before deprecating any API versions.
+
+## Resources
+
+The Kakiyo API provides access to the following resources:
+
+- [Campaigns](/api-reference/campaigns/list) - Create and manage outreach campaigns
+- [Prospects](/api-reference/prospects/list) - Add and manage prospects
+- [Products](/api-reference/products/list) - Manage your product information
+- [Prompts](/api-reference/prompts/list) - Create and manage message templates
+- [Agents](/api-reference/agents/list) - Manage AI agents that handle conversations
+
+## SDKs and Libraries
+
+We provide official client libraries for several popular languages to make integrating with Kakiyo easier:
+
+- [JavaScript/Node.js](https://github.com/kakiyo/kakiyo-node)
+- [Python](https://github.com/kakiyo/kakiyo-python)
+- [PHP](https://github.com/kakiyo/kakiyo-php)
+- [Ruby](https://github.com/kakiyo/kakiyo-ruby)
+- [Go](https://github.com/kakiyo/kakiyo-go)
+- [Java](https://github.com/kakiyo/kakiyo-java)
+
+## Support
+
+If you have any questions or need help with the API, please contact our support team at [support@kakiyo.com](mailto:support@kakiyo.com) or visit our [help center](https://help.kakiyo.com).

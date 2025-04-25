@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "Kakiyo API",
+    "description": "API for automating LinkedIn outreach campaigns with AI-powered conversations",
     "license": {
       "name": "MIT"
     },
@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.kakiyo.com/v1"
     }
   ],
   "security": [
@@ -19,72 +19,38 @@
     }
   ],
   "paths": {
-    "/plants": {
+    "/verify": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        "summary": "Verify API Key",
+        "description": "Verifies that the provided API key is valid and returns information about the associated team",
+        "operationId": "verifyApiKey",
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "API key verification successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "API key is valid"
+                    },
+                    "teamId": {
+                      "type": "string",
+                      "example": "abcdefghij1234567890"
+                    }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
+          "401": {
+            "description": "Authentication failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -96,28 +62,1331 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/campaigns": {
+      "get": {
+        "summary": "List Campaigns",
+        "description": "Returns all campaigns for the authenticated team",
+        "operationId": "listCampaigns",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of campaigns to return",
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "format": "int32",
+              "default": 20,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "description": "Cursor for pagination",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "List of campaigns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Campaign"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Campaign",
+        "description": "Creates a new outreach campaign",
+        "operationId": "createCampaign",
+        "requestBody": {
+          "description": "Campaign to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCampaignRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Campaign created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "campaign_12345abcde"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Q2 Sales Outreach"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "active"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "unexpected error",
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - limit reached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{id}": {
+      "put": {
+        "summary": "Update Campaign",
+        "description": "Updates an existing campaign",
+        "operationId": "updateCampaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the campaign to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Campaign properties to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Campaign updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "campaign_12345abcde"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Campaign updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{id}/pause": {
+      "post": {
+        "summary": "Pause Campaign",
+        "description": "Pauses an active campaign",
+        "operationId": "pauseCampaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the campaign to pause",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign paused successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "campaign_12345abcde"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Campaign paused successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{id}/resume": {
+      "post": {
+        "summary": "Resume Campaign",
+        "description": "Resumes a paused campaign",
+        "operationId": "resumeCampaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the campaign to resume",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign resumed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "campaign_12345abcde"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Campaign resumed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{id}/stats": {
+      "get": {
+        "summary": "Get Campaign Stats",
+        "description": "Returns statistics for a specific campaign",
+        "operationId": "getCampaignStats",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the campaign",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "campaign_12345abcde"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Q2 Sales Outreach"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "active"
+                    },
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "prospects": {
+                          "type": "integer",
+                          "example": 150
+                        },
+                        "prospectsAnswers": {
+                          "type": "integer",
+                          "example": 42
+                        },
+                        "messages": {
+                          "type": "integer",
+                          "example": 320
+                        },
+                        "qualified": {
+                          "type": "integer",
+                          "example": 18
+                        },
+                        "closed": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "conversionRate": {
+                          "type": "string",
+                          "example": "12.00%"
+                        },
+                        "responseRate": {
+                          "type": "string",
+                          "example": "28.00%"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/batch": {
+      "post": {
+        "summary": "Add Prospects Batch",
+        "description": "Adds multiple prospects to a campaign",
+        "operationId": "addProspectsBatch",
+        "requestBody": {
+          "description": "Batch of prospects to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProspectsBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Prospects added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "3 prospects added successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects": {
+      "post": {
+        "summary": "Add Single Prospect",
+        "description": "Adds a single prospect to a campaign",
+        "operationId": "addProspect",
+        "requestBody": {
+          "description": "Prospect to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProspectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Prospect added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Prospect added successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/campaign/{campaignId}": {
+      "get": {
+        "summary": "List Campaign Prospects",
+        "description": "Returns all prospects associated with a campaign",
+        "operationId": "listCampaignProspects",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "ID of the campaign",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of prospects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Prospect"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/{chatId}": {
+      "get": {
+        "summary": "Get Prospect Details",
+        "description": "Returns details of a specific prospect conversation",
+        "operationId": "getProspectDetails",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "description": "ID of the chat/conversation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProspectDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Prospect not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/{chatId}/pause": {
+      "post": {
+        "summary": "Pause Conversation",
+        "description": "Pauses a conversation with a prospect",
+        "operationId": "pauseConversation",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "description": "ID of the chat/conversation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conversation paused successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Conversation paused successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conversation not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/{chatId}/resume": {
+      "post": {
+        "summary": "Resume Conversation",
+        "description": "Resumes a paused conversation with a prospect",
+        "operationId": "resumeConversation",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "description": "ID of the chat/conversation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conversation resumed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Conversation resumed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conversation not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/{chatId}/qualify": {
+      "post": {
+        "summary": "Qualify Prospect",
+        "description": "Marks a prospect as qualified",
+        "operationId": "qualifyProspect",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "description": "ID of the chat/conversation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect qualified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Prospect marked as qualified successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conversation not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "List Products",
+        "description": "Returns all products for the authenticated team",
+        "operationId": "listProducts",
+        "responses": {
+          "200": {
+            "description": "List of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Product",
+        "description": "Creates a new product",
+        "operationId": "createProduct",
+        "requestBody": {
+          "description": "Product to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Product created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Product created successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - limit reached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prompts": {
+      "get": {
+        "summary": "List Prompts",
+        "description": "Returns all prompt templates for the authenticated team",
+        "operationId": "listPrompts",
+        "responses": {
+          "200": {
+            "description": "List of prompts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Prompt"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Prompt",
+        "description": "Creates a new prompt template",
+        "operationId": "createPrompt",
+        "requestBody": {
+          "description": "Prompt to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromptRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Prompt created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Prompt created successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents": {
+      "get": {
+        "summary": "List Agents",
+        "description": "Returns all agents for the authenticated team",
+        "operationId": "listAgents",
+        "responses": {
+          "200": {
+            "description": "List of agents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Agent"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Agent",
+        "description": "Creates a new agent",
+        "operationId": "createAgent",
+        "responses": {
+          "201": {
+            "description": "Agent created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "agent_12345abcde"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Agent created successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - limit reached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/{id}": {
+      "get": {
+        "summary": "Get Agent Details",
+        "description": "Returns details of a specific agent",
+        "operationId": "getAgentDetails",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the agent",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agent details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/{id}/setup": {
+      "post": {
+        "summary": "Setup Agent",
+        "description": "Sets up an agent with LinkedIn credentials and location",
+        "operationId": "setupAgent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the agent",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Agent setup information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetupAgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Agent setup successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Agent setup successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/{id}/pause": {
+      "post": {
+        "summary": "Pause Agent",
+        "description": "Pauses an agent's activities",
+        "operationId": "pauseAgent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the agent",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agent paused successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Agent paused successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/{id}/resume": {
+      "post": {
+        "summary": "Resume Agent",
+        "description": "Resumes a paused agent",
+        "operationId": "resumeAgent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the agent",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agent resumed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Agent resumed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Agent has active alerts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -130,79 +1399,678 @@
       }
     }
   },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+  "components": {
+    "schemas": {
+      "Campaign": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "campaign_12345abcde"
+          },
+          "name": {
+            "type": "string",
+            "example": "Q2 Sales Outreach"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "active", "paused", "completed"],
+            "example": "active"
+          },
+          "agent": {
+            "type": "string",
+            "example": "agent_abcdef123456"
+          },
+          "product": {
+            "type": "string",
+            "example": "prod_123456789"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T10:30:00Z"
+          },
+          "stats": {
+            "type": "object",
+            "properties": {
+              "prospects": {
+                "type": "integer",
+                "example": 150
+              },
+              "prospectsAnswers": {
+                "type": "integer",
+                "example": 42
+              },
+              "messages": {
+                "type": "integer",
+                "example": 320
+              },
+              "qualified": {
+                "type": "integer",
+                "example": 18
+              },
+              "closed": {
+                "type": "integer",
+                "example": 5
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+        }
+      },
+      "CreateCampaignRequest": {
+        "type": "object",
+        "required": ["name", "productId", "promptId", "agentId"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "example": "Q2 Sales Outreach"
+          },
+          "productId": {
+            "type": "string",
+            "example": "prod_123456789"
+          },
+          "promptId": {
+            "type": "string",
+            "example": "prompt_987654321"
+          },
+          "agentId": {
+            "type": "string",
+            "example": "agent_abcdef123456"
+          },
+          "qualificationAutomatic": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "default": 70,
+            "example": 75
+          },
+          "qualificationVerification": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "default": 50,
+            "example": 50
+          },
+          "variables": {
+            "type": "object",
+            "example": {
+              "companyValue": "Our AI-powered sales enablement platform",
+              "painPoint": "low response rates on cold outreach",
+              "benefit": "3x more qualified meetings"
+            }
           }
         }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      },
+      "UpdateCampaignRequest": {
         "type": "object",
         "properties": {
           "name": {
-            "description": "The name of the plant",
-            "type": "string"
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "example": "Updated Campaign Name"
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+          "qualificationAutomatic": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 80
+          },
+          "qualificationVerification": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 60
+          },
+          "variables": {
+            "type": "object",
+            "example": {
+              "companyValue": "Updated value proposition",
+              "painPoint": "Updated pain point",
+              "benefit": "Updated benefit statement"
+            }
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+      "Prospect": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "chat_12345abcde"
           },
-          {
-            "required": [
-              "id"
-            ],
+          "status": {
+            "type": "integer",
+            "enum": [0, 1, 2, 3, 4, 5],
+            "example": 2
+          },
+          "qualification": {
+            "type": "string",
+            "enum": ["unqualified", "needVerification", "inProgress", "qualified"],
+            "example": "inProgress"
+          },
+          "paused": {
+            "type": "boolean",
+            "example": false
+          },
+          "lastMessage": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T15:30:00Z"
+          },
+          "prospect": {
             "type": "object",
             "properties": {
               "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+                "type": "string",
+                "example": "prospect_12345abcde"
+              },
+              "name": {
+                "type": "string",
+                "example": "John Smith"
+              },
+              "url": {
+                "type": "string",
+                "example": "https://linkedin.com/in/johnsmith"
+              },
+              "headline": {
+                "type": "string",
+                "example": "VP of Sales at Acme Inc"
               }
             }
           }
-        ]
+        }
+      },
+      "ProspectDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "chat_12345abcde"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1, 2, 3, 4, 5],
+            "example": 2
+          },
+          "qualification": {
+            "type": "string",
+            "enum": ["unqualified", "needVerification", "inProgress", "qualified"],
+            "example": "inProgress"
+          },
+          "paused": {
+            "type": "boolean",
+            "example": false
+          },
+          "lastMessage": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T15:30:00Z"
+          },
+          "campaign": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "campaign_12345abcde"
+              },
+              "name": {
+                "type": "string",
+                "example": "Q2 Sales Outreach"
+              }
+            }
+          },
+          "prospect": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "prospect_12345abcde"
+              },
+              "name": {
+                "type": "string",
+                "example": "John Smith"
+              },
+              "url": {
+                "type": "string",
+                "example": "https://linkedin.com/in/johnsmith"
+              },
+              "headline": {
+                "type": "string",
+                "example": "VP of Sales at Acme Inc"
+              },
+              "location": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "example": "San Francisco"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "United States"
+                  }
+                }
+              },
+              "about": {
+                "type": "string",
+                "example": "Experienced sales leader with over 15 years in the software industry..."
+              }
+            }
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": ["assistant", "user"],
+                  "example": "assistant"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "Hi John, I noticed you're leading the sales team at Acme Inc. I wanted to reach out because we've been helping companies like yours improve their response rates on cold outreach. Would you be open to a quick chat about how we might be able to help?"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2023-06-15T10:30:00Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AddProspectRequest": {
+        "type": "object",
+        "required": ["campaignId", "name", "url"],
+        "properties": {
+          "campaignId": {
+            "type": "string",
+            "example": "campaign_12345abcde"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://linkedin.com/in/johnsmith"
+          },
+          "additionalFields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["fieldName", "fieldValue"],
+              "properties": {
+                "fieldName": {
+                  "type": "string",
+                  "example": "company"
+                },
+                "fieldValue": {
+                  "type": "string",
+                  "example": "Acme Inc"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AddProspectsBatchRequest": {
+        "type": "object",
+        "required": ["campaignId", "prospects"],
+        "properties": {
+          "campaignId": {
+            "type": "string",
+            "example": "campaign_12345abcde"
+          },
+          "prospects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "url"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "John Smith"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "example": "https://linkedin.com/in/johnsmith"
+                },
+                "additionalFields": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["fieldName", "fieldValue"],
+                    "properties": {
+                      "fieldName": {
+                        "type": "string",
+                        "example": "company"
+                      },
+                      "fieldValue": {
+                        "type": "string",
+                        "example": "Acme Inc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "prod_123456789"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sales Engagement Pro"
+          },
+          "description": {
+            "type": "string",
+            "example": "Sales Engagement Pro is an AI-powered platform that helps sales teams automate and optimize their outreach efforts..."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-05-10T08:15:00Z"
+          }
+        }
+      },
+      "CreateProductRequest": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "example": "Sales Engagement Pro"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "example": "Sales Engagement Pro is an AI-powered platform that helps sales teams automate and optimize their outreach efforts. The solution includes multi-channel communication capabilities, personalized messaging at scale, advanced analytics, and CRM integration.\n\nKey benefits include:\n- 3x increase in response rates compared to traditional outreach\n- 70% reduction in time spent on manual follow-ups\n- Seamless integration with existing CRM systems\n- Real-time insights on prospect engagement\n- Smart prioritization of high-potential leads\n\nOur customers typically see ROI within the first 60 days and experience a 40% increase in sales pipeline generation."
+          }
+        }
+      },
+      "Prompt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "prompt_987654321"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sales Outreach Sequence"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["message", "invitation"],
+            "example": "message"
+          },
+          "model": {
+            "type": "string",
+            "example": "model_claude3"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-05-15T09:20:00Z"
+          }
+        }
+      },
+      "CreatePromptRequest": {
+        "type": "object",
+        "required": ["name", "model", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "example": "Sales Outreach Sequence"
+          },
+          "model": {
+            "type": "string",
+            "enum": ["model_gpt4", "model_claude3", "model_gpt35"],
+            "example": "model_claude3"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["message", "invitation"],
+            "example": "message"
+          }
+        }
+      },
+      "Agent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "agent_abcdef123456"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["setup_needed", "auth_needed", "auth_in_progress", "running", "paused", "disabled"],
+            "example": "running"
+          },
+          "login": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "country": {
+            "type": "string",
+            "example": "US"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://example.com/avatar.jpg"
+          },
+          "nextTask": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-16T10:30:00Z"
+          },
+          "alerts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "auth"
+                },
+                "subType": {
+                  "type": "string",
+                  "example": "2fa_required"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please enter the verification code sent by LinkedIn to your email/phone"
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["info", "warning", "error"],
+                  "example": "warning"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AgentDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "agent_abcdef123456"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["setup_needed", "auth_needed", "auth_in_progress", "running", "paused", "disabled"],
+            "example": "running"
+          },
+          "login": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "country": {
+            "type": "string",
+            "example": "US"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://example.com/avatar.jpg"
+          },
+          "nextTask": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-16T10:30:00Z"
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "invitations": {
+                "type": "integer",
+                "example": 45
+              },
+              "invitationsDaily": {
+                "type": "integer",
+                "example": 15
+              },
+              "messages": {
+                "type": "integer",
+                "example": 120
+              },
+              "messagesDaily": {
+                "type": "integer",
+                "example": 25
+              },
+              "nextInvitation": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-06-16T10:45:00Z"
+              },
+              "nextMessage": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-06-16T11:15:00Z"
+              },
+              "workingHours": {
+                "type": "object",
+                "properties": {
+                  "days": {
+                    "type": "string",
+                    "example": "1:1:1:1:1:0:0"
+                  },
+                  "start": {
+                    "type": "string",
+                    "example": "09:00"
+                  },
+                  "stop": {
+                    "type": "string",
+                    "example": "17:00"
+                  },
+                  "timezone": {
+                    "type": "integer",
+                    "example": 0
+                  }
+                }
+              }
+            }
+          },
+          "alerts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "auth"
+                },
+                "subType": {
+                  "type": "string",
+                  "example": "2fa_required"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please enter the verification code sent by LinkedIn to your email/phone"
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["info", "warning", "error"],
+                  "example": "warning"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SetupAgentRequest": {
+        "type": "object",
+        "required": ["login", "password", "country"],
+        "properties": {
+          "login": {
+            "type": "string",
+            "format": "email",
+            "example": "linkedin_email@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "example": "secure_password_123"
+          },
+          "country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "example": "US"
+          }
+        }
       },
       "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
         "type": "object",
         "properties": {
           "error": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "example": "validation_error"
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": "The request parameters failed validation"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "example": "name"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "The name field is required"
+                }
+              }
+            }
           }
         }
       }
