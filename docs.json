@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Kakiyo API",
+  "name": "Kakiyo",
   "colors": {
     "primary": "#4E8CFF",
     "light": "#71a3ff",
@@ -54,6 +54,7 @@
               "api-reference/prospects/list",
               "api-reference/prospects/add-single",
               "api-reference/prospects/add-batch",
+              "api-reference/prospects/details",
               "api-reference/prospects/pause",
               "api-reference/prospects/resume",
               "api-reference/prospects/qualify"
@@ -78,10 +79,16 @@
             "pages": [
               "api-reference/agents/list",
               "api-reference/agents/create",
+              "api-reference/agents/details",
               "api-reference/agents/setup",
               "api-reference/agents/pause",
-              "api-reference/agents/resume",
-              "api-reference/agents/get-details"
+              "api-reference/agents/resume"
+            ]
+          },
+          {
+            "group": "Authentication",
+            "pages": [
+              "api-reference/auth/verify"
             ]
           }
         ]
