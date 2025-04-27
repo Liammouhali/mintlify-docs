@@ -1,0 +1,264 @@
+---
+title: 'Webhooks'
+description: 'Receive real-time notifications for LinkedIn outreach events'
+---
+
+## Overview
+
+Kakiyo webhooks allow you to receive real-time notifications when specific events occur within your LinkedIn outreach campaigns. This enables you to integrate Kakiyo with your existing tools and workflows, such as CRM systems, email platforms, or custom applications.
+
+## How Webhooks Work
+
+1. You create a webhook endpoint (URL) on your server that can receive POST requests
+2. You register this endpoint with Kakiyo, specifying which events you want to receive
+3. When a matching event occurs, Kakiyo sends a POST request to your endpoint with event data
+4. Your server processes the webhook payload and takes appropriate actions
+
+## Available Events
+
+Kakiyo supports the following webhook events:
+
+| Event ID | Description |
+| -------- | ----------- |
+| `linkedin.message.sent` | Triggered when an agent sends a message to a prospect |
+| `linkedin.message.received` | Triggered when a prospect responds to an agent |
+| `linkedin.invitation.sent` | Triggered when an agent sends a connection invitation |
+| `linkedin.invitation.accepted` | Triggered when a prospect accepts a connection invitation |
+| `prospect.qualification.manual` | Triggered when a prospect requires manual qualification review |
+| `prospect.unqualified` | Triggered when a prospect is automatically marked as unqualified |
+
+You can also use the wildcard event `*` to subscribe to all available events.
+
+## Webhook Payload
+
+When an event occurs, Kakiyo sends a JSON payload to your webhook endpoint. Here's an example payload for a `linkedin.message.received` event:
+
+```json
+{
+  "event": "linkedin.message.received",
+  "teamId": "team_12345abcde",
+  "timestamp": "2023-06-15T10:30:00Z",
+  "data": {
+    "agentId": "agent_67890",
+    "campaignId": "campaign_12345",
+    "chatId": "chat_54321",
+    "prospectId": "prospect_98765",
+    "message": "Thanks for reaching out! I'd be interested in learning more...",
+    "timestamp": "2023-06-15T10:30:00Z"
+  }
+}
+```
+
+## Securing Webhooks
+
+To ensure that webhook requests are coming from Kakiyo, we include a signature in the `X-Kakiyo-Signature` header. This signature is an HMAC SHA-256 hash of the request payload, using your webhook secret as the key.
+
+Here's how to verify the signature:
+
+<CodeGroup>
+    ```javascript JavaScript
+    const crypto = require('crypto');
+
+    function verifyWebhookSignature(payload, signature, secret) {
+    const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(JSON.stringify(payload))
+    .digest('hex');
+
+    return signature === expectedSignature;
+}
+
+    // In your webhook handler
+    function handleWebhook(req, res) {
+    const signature = req.headers['x-kakiyo-signature'];
+    const payload = req.body;
+    const secret = 'your_webhook_secret';
+
+    if (!verifyWebhookSignature(payload, signature, secret)) {
+    return res.status(401).send('Invalid signature');
+}
+
+    // Process the webhook
+    console.log(`Received event: ${payload.event}`);
+
+    // Your webhook handling logic here
+
+    res.status(200).send('Webhook received');
+}
+    ```
+
+    ```python Python
+    import hmac
+    import hashlib
+    import json
+
+    def verify_webhook_signature(payload, signature, secret):
+    expected_signature = hmac.new(
+    secret.encode('utf-8'),
+    json.dumps(payload).encode('utf-8'),
+    hashlib.sha256
+    ).hexdigest()
+
+    return signature == expected_signature
+
+    # In your webhook handler (using Flask as an example)
+    from flask import Flask, request, jsonify
+
+    app = Flask(__name__)
+
+    @app.route('/kakiyo/webhook', methods=['POST'])
+    def handle_webhook():
+    signature = request.headers.get('X-Kakiyo-Signature')
+    payload = request.json
+    secret = 'your_webhook_secret'
+
+    if not verify_webhook_signature(payload, signature, secret):
+    return jsonify({'error': 'Invalid signature'}), 401
+
+    # Process the webhook
+    print(f"Received event: {payload['event']}")
+
+    # Your webhook handling logic here
+
+    return jsonify({'status': 'success'}), 200
+    ```
+</CodeGroup>
+
+## Testing Webhooks
+
+You can test your webhook integration without waiting for real events to occur. Kakiyo provides a test endpoint that allows you to send a test webhook to your registered endpoints:
+
+<CodeGroup>
+    ```javascript JavaScript
+    const axios = require('axios');
+
+    const API_KEY = 'YOUR_API_KEY';
+    const BASE_URL = 'https://api.kakiyo.com/v1';
+
+    async function testWebhook() {
+    try {
+    const response = await axios.post(
+    `${BASE_URL}/webhooks/test`,
+{
+    event: "linkedin.message.received",
+    data: {
+    // Optional custom test data
+    message: "This is a test message"
+}
+},
+{
+    headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json'
+}
+}
+    );
+
+    console.log('Test webhook sent:', response.data);
+    return response.data;
+} catch (error) {
+    console.error('Error testing webhook:', error.response ? error.response.data : error.message);
+    throw error;
+}
+}
+
+    testWebhook();
+    ```
+
+    ```python Python
+    import requests
+
+    API_KEY = 'YOUR_API_KEY'
+    BASE_URL = 'https://api.kakiyo.com/v1'
+
+    def test_webhook():
+    try:
+    response = requests.post(
+    f'{BASE_URL}/webhooks/test',
+    json={
+    'event': 'linkedin.message.received',
+    'data': {
+    # Optional custom test data
+    'message': 'This is a test message'
+}
+},
+    headers={
+    'Authorization': f'Bearer {API_KEY}',
+    'Content-Type': 'application/json'
+}
+    )
+
+    response.raise_for_status()
+    print('Test webhook sent:', response.json())
+    return response.json()
+    except requests.exceptions.RequestException as e:
+    print('Error testing webhook:', e)
+    raise
+
+    test_webhook()
+    ```
+
+    ```curl cURL
+    curl -X POST "https://api.kakiyo.com/v1/webhooks/test" \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+    "event": "linkedin.message.received",
+    "data": {
+    "message": "This is a test message"
+}
+}'
+    ```
+</CodeGroup>
+
+You can also get example payloads for each event type to help you build your integration:
+
+<CodeGroup>
+    ```javascript JavaScript
+    async function getWebhookExample(eventType) {
+    try {
+    const response = await axios.get(
+    `${BASE_URL}/webhooks/test/example/${eventType}`,
+{
+    headers: {
+    'Authorization': `Bearer ${API_KEY}`
+}
+}
+    );
+
+    console.log('Example payload:', response.data);
+    return response.data;
+} catch (error) {
+    console.error('Error getting example:', error.response ? error.response.data : error.message);
+    throw error;
+}
+}
+
+    getWebhookExample('linkedin.message.received');
+    ```
+
+    ```python Python
+    def get_webhook_example(event_type):
+    try:
+    response = requests.get(
+    f'{BASE_URL}/webhooks/test/example/{event_type}',
+    headers={
+    'Authorization': f'Bearer {API_KEY}'
+}
+    )
+
+    response.raise_for_status()
+    print('Example payload:', response.json())
+    return response.json()
+    except requests.exceptions.RequestException as e:
+    print('Error getting example:', e)
+    raise
+
+    get_webhook_example('linkedin.message.received')
+    ```
+
+    ```curl cURL
+    curl -X GET "https://api.kakiyo.com/v1/webhooks/test/example/linkedin.message.received" \
+    -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+</CodeGroup>

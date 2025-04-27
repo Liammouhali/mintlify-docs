@@ -23,7 +23,8 @@
             "pages": [
               "introduction",
               "quickstart",
-              "authentication"
+              "authentication",
+              "webhooks"
             ]
           }
         ]
@@ -83,6 +84,17 @@
               "api-reference/agents/setup",
               "api-reference/agents/pause",
               "api-reference/agents/resume"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/list",
+              "api-reference/webhooks/create",
+              "api-reference/webhooks/update",
+              "api-reference/webhooks/delete",
+              "api-reference/webhooks/events",
+              "api-reference/webhooks/test"
             ]
           },
           {

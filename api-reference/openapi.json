@@ -1397,6 +1397,390 @@
           }
         }
       }
+    },
+    "/webhooks": {
+      "get": {
+        "summary": "List Webhooks",
+        "description": "Returns all webhooks for the authenticated team",
+        "operationId": "listWebhooks",
+        "responses": {
+          "200": {
+            "description": "List of webhooks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Webhook"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Webhook",
+        "description": "Creates a new webhook endpoint that will receive event notifications",
+        "operationId": "createWebhook",
+        "requestBody": {
+          "description": "Webhook to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "webhook_12345abcde"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "CRM Integration"
+                    },
+                    "url": {
+                      "type": "string",
+                      "example": "https://your-app.com/kakiyo/webhook"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["linkedin.message.received", "prospect.qualification.manual"]
+                    },
+                    "active": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Webhook created successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{webhookId}": {
+      "put": {
+        "summary": "Update Webhook",
+        "description": "Updates an existing webhook",
+        "operationId": "updateWebhook",
+        "parameters": [
+          {
+            "name": "webhookId",
+            "in": "path",
+            "description": "ID of the webhook to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Webhook properties to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "webhook_12345abcde"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Webhook updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Webhook",
+        "description": "Deletes an existing webhook",
+        "operationId": "deleteWebhook",
+        "parameters": [
+          {
+            "name": "webhookId",
+            "in": "path",
+            "description": "ID of the webhook to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "webhook_12345abcde"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Webhook deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/events": {
+      "get": {
+        "summary": "List Webhook Events",
+        "description": "Returns all available webhook event types",
+        "operationId": "listWebhookEvents",
+        "responses": {
+          "200": {
+            "description": "List of webhook events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "linkedin.message.received"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "LinkedIn Message Received"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/test": {
+      "post": {
+        "summary": "Test Webhook",
+        "description": "Sends a test event to all matching webhooks",
+        "operationId": "testWebhook",
+        "requestBody": {
+          "description": "Test webhook parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestWebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Test webhook sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Test webhook sent successfully"
+                    },
+                    "event": {
+                      "type": "string",
+                      "example": "linkedin.message.received"
+                    },
+                    "webhooksCount": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "webhooks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "webhook_12345abcde"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "CRM Integration"
+                          },
+                          "url": {
+                            "type": "string",
+                            "example": "https://your-app.com/kakiyo/webhook"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No webhooks found for this event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2042,6 +2426,154 @@
             "minLength": 2,
             "maxLength": 2,
             "example": "US"
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "webhook_12345abcde"
+          },
+          "name": {
+            "type": "string",
+            "example": "CRM Integration"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://your-app.com/kakiyo/webhook"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["linkedin.message.received", "prospect.qualification.manual"]
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "lastSuccess": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T10:30:00Z"
+          },
+          "lastFailure": {
+            "type": "string",
+            "format": "date-time",
+            "example": null
+          },
+          "successCount": {
+            "type": "integer",
+            "example": 42
+          },
+          "failureCount": {
+            "type": "integer",
+            "example": 0
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-05-10T08:15:00Z"
+          }
+        }
+      },
+      "CreateWebhookRequest": {
+        "type": "object",
+        "required": ["name", "url", "events"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "CRM Integration"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://your-app.com/kakiyo/webhook"
+          },
+          "secret": {
+            "type": "string",
+            "example": "your_webhook_secret"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "*",
+                "linkedin.message.sent",
+                "linkedin.message.received",
+                "linkedin.invitation.sent",
+                "linkedin.invitation.accepted",
+                "prospect.qualification.manual",
+                "prospect.unqualified"
+              ]
+            },
+            "example": ["linkedin.message.received", "prospect.qualification.manual"]
+          }
+        }
+      },
+      "UpdateWebhookRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Updated CRM Integration"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://your-app.com/kakiyo/webhook/v2"
+          },
+          "secret": {
+            "type": "string",
+            "example": "your_new_webhook_secret"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "*",
+                "linkedin.message.sent",
+                "linkedin.message.received",
+                "linkedin.invitation.sent",
+                "linkedin.invitation.accepted",
+                "prospect.qualification.manual",
+                "prospect.unqualified"
+              ]
+            },
+            "example": ["linkedin.message.received", "prospect.qualification.manual", "linkedin.message.sent"]
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "TestWebhookRequest": {
+        "type": "object",
+        "required": ["event"],
+        "properties": {
+          "event": {
+            "type": "string",
+            "enum": [
+              "linkedin.message.sent",
+              "linkedin.message.received",
+              "linkedin.invitation.sent",
+              "linkedin.invitation.accepted",
+              "prospect.qualification.manual",
+              "prospect.unqualified"
+            ],
+            "example": "linkedin.message.received"
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "message": "This is a test message"
+            }
           }
         }
       },
