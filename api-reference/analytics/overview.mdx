@@ -1,0 +1,145 @@
+---
+title: 'Analytics Overview'
+openapi: 'GET /analytics/overview'
+---
+
+## Overview
+
+Get comprehensive analytics and performance metrics for your entire team. This endpoint provides a complete dashboard view of all campaigns, agents, prospects, and key performance indicators.
+
+## Use Cases
+
+- **Dashboard Creation**: Build comprehensive analytics dashboards
+- **Performance Monitoring**: Track team-wide performance metrics
+- **Reporting**: Generate executive summaries and reports
+- **Trend Analysis**: Monitor activity trends over time
+
+## Response Structure
+
+The response includes four main sections:
+
+### Summary Statistics
+- Total campaigns (active, paused, completed)
+- Agent metrics (total and active agents)
+- Prospect metrics (total, qualified, responses)
+
+### Performance Metrics
+- Conversion rates and response rates
+- Average messages per prospect
+- Qualification rates
+
+### Activity Metrics
+- 24-hour activity summary
+- Weekly activity trends
+
+### Campaign Breakdown
+- Individual campaign performance
+- Status distribution
+
+## Example Response
+
+```json
+{
+  "summary": {
+    "totalCampaigns": 15,
+    "activeCampaigns": 8,
+    "pausedCampaigns": 5,
+    "completedCampaigns": 2,
+    "totalAgents": 3,
+    "activeAgents": 2,
+    "totalProspects": 1250,
+    "totalMessages": 3420,
+    "totalQualified": 89,
+    "totalAnswers": 234,
+    "totalClosed": 45
+  },
+  "metrics": {
+    "conversionRate": 7.12,
+    "responseRate": 18.72,
+    "averageMessagesPerProspect": 2.74,
+    "qualificationRate": 38.03
+  },
+  "activity": {
+    "last24Hours": {
+      "messages": 45,
+      "qualified": 3
+    },
+    "lastWeek": {
+      "messages": 312,
+      "qualified": 18
+    }
+  },
+  "campaigns": [
+    {
+      "id": "campaign_123",
+      "name": "Q4 Enterprise Outreach",
+      "status": "active",
+      "prospects": 150,
+      "messages": 420,
+      "qualified": 12,
+      "answers": 35,
+      "conversionRate": 8.0,
+      "responseRate": 23.33
+    }
+  ]
+}
+```
+
+## Testing Example
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/analytics/overview" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript
+// JavaScript/Node.js
+const response = await fetch('https://api.kakiyo.com/v1/analytics/overview', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  }
+});
+
+const analytics = await response.json();
+console.log('Team Analytics:', analytics);
+```
+
+```python
+# Python
+import requests
+
+response = requests.get(
+    'https://api.kakiyo.com/v1/analytics/overview',
+    headers={
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+    }
+)
+
+analytics = response.json()
+print('Team Analytics:', analytics)
+```
+
+## Key Metrics Explained
+
+### Conversion Rate
+Percentage of prospects that became qualified leads out of total prospects contacted.
+
+### Response Rate  
+Percentage of prospects that responded to outreach messages.
+
+### Qualification Rate
+Percentage of responding prospects that were marked as qualified.
+
+### Average Messages Per Prospect
+Average number of messages sent per prospect across all campaigns.
+
+## Best Practices
+
+1. **Regular Monitoring**: Check analytics daily to identify trends
+2. **Performance Comparison**: Compare metrics across different time periods
+3. **Campaign Optimization**: Use data to optimize underperforming campaigns
+4. **Resource Allocation**: Allocate agents based on performance metrics

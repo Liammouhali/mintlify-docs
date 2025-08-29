@@ -1,4 +1,162 @@
 ---
-title: 'Add single prospect'
+title: 'Add Single Prospect'
 openapi: 'POST /prospects'
 ---
+
+## Overview
+
+Add an individual prospect to a specific campaign. This endpoint is ideal for adding high-value prospects one at a time or integrating with CRM systems for real-time prospect addition.
+
+## Use Cases
+
+- **High-Value Prospects**: Add VIP prospects with special attention
+- **CRM Integration**: Real-time prospect sync from your CRM
+- **Manual Curation**: Add carefully researched prospects individually
+- **Testing**: Add test prospects before bulk operations
+
+## Key Features
+
+- **LinkedIn Profile Integration**: Automatic profile data enrichment
+- **Custom Fields**: Add additional prospect information
+- **Campaign Assignment**: Direct assignment to active campaigns
+- **Immediate Processing**: Prospect becomes available for outreach immediately
+
+## Testing Example
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/prospects" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "campaignId": "campaign_12345abcde",
+    "name": "John Smith",
+    "url": "https://linkedin.com/in/johnsmith",
+    "additionalFields": [
+      {
+        "fieldName": "company",
+        "fieldValue": "TechCorp Inc"
+      },
+      {
+        "fieldName": "title",
+        "fieldValue": "VP of Sales"
+      }
+    ]
+  }'
+```
+
+```javascript
+// JavaScript/Node.js
+const addProspect = async (prospectData) => {
+  const response = await fetch('https://api.kakiyo.com/v1/prospects', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(prospectData)
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const newProspect = await addProspect({
+  campaignId: 'campaign_12345abcde',
+  name: 'John Smith',
+  url: 'https://linkedin.com/in/johnsmith',
+  additionalFields: [
+    {
+      fieldName: 'company',
+      fieldValue: 'TechCorp Inc'
+    },
+    {
+      fieldName: 'title',
+      fieldValue: 'VP of Sales'
+    }
+  ]
+});
+
+console.log('Prospect Added:', newProspect);
+```
+
+```python
+# Python
+import requests
+
+def add_prospect(prospect_data):
+    """Add a single prospect to a campaign"""
+    response = requests.post(
+        'https://api.kakiyo.com/v1/prospects',
+        json=prospect_data,
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+
+    return response.json()
+
+# Usage example
+prospect_data = {
+    'campaignId': 'campaign_12345abcde',
+    'name': 'John Smith',
+    'url': 'https://linkedin.com/in/johnsmith',
+    'additionalFields': [
+        {
+            'fieldName': 'company',
+            'fieldValue': 'TechCorp Inc'
+        },
+        {
+            'fieldName': 'title',
+            'fieldValue': 'VP of Sales'
+        }
+    ]
+}
+
+result = add_prospect(prospect_data)
+print('Prospect Added:', result)
+```
+
+## Additional Fields
+
+Common additional fields to include:
+
+- **company**: Company name
+- **title**: Job title
+- **industry**: Industry sector
+- **location**: Geographic location
+- **employees**: Company size
+- **revenue**: Company revenue
+- **notes**: Custom notes or research
+
+## Best Practices
+
+1. **LinkedIn URL Validation**: Ensure URLs are valid LinkedIn profile links
+2. **Data Quality**: Provide accurate and complete prospect information
+3. **Campaign Verification**: Verify campaign exists and is active
+4. **Batch Operations**: For multiple prospects, use the batch endpoint instead
+5. **Error Handling**: Implement proper error handling for failed additions
+
+## Integration Tips
+
+### CRM Integration
+```javascript
+// Example: Sync from CRM to Kakiyo
+const syncProspectFromCRM = async (crmProspect, campaignId) => {
+  const kakiyoProspect = {
+    campaignId: campaignId,
+    name: `${crmProspect.firstName} ${crmProspect.lastName}`,
+    url: crmProspect.linkedinUrl,
+    additionalFields: [
+      { fieldName: 'company', fieldValue: crmProspect.company },
+      { fieldName: 'title', fieldValue: crmProspect.jobTitle },
+      { fieldName: 'crmId', fieldValue: crmProspect.id }
+    ]
+  };
+
+  return await addProspect(kakiyoProspect);
+};
+```
+
+### Webhook Integration
+Set up webhooks to receive notifications when prospects are added or their status changes.

@@ -1,0 +1,404 @@
+---
+title: 'Get Test Event Example'
+openapi: 'GET /webhooks/test/example/{event}'
+---
+
+## Overview
+
+Get an example payload for a specific webhook event type. This endpoint returns a realistic sample of what your webhook endpoint will receive when the specified event occurs, helping you develop and test your webhook integration.
+
+## Path Parameters
+
+<ParamField path="event" type="string" required>
+  The event type to get an example for (e.g., "prospect.qualified", "campaign.completed")
+</ParamField>
+
+## Use Cases
+
+- **Integration Development**: Understand the structure of webhook payloads
+- **Testing Setup**: Create test data for webhook endpoint development
+- **Documentation**: Generate examples for your own API documentation
+- **Validation**: Verify your webhook handler can process the expected data
+
+## Example Responses
+
+### Prospect Qualified Event
+**GET** `/webhooks/test/example/prospect.qualified`
+
+```json
+{
+  "event": "prospect.qualified",
+  "timestamp": "2024-01-20T15:30:00Z",
+  "data": {
+    "prospect": {
+      "id": "prospect_123",
+      "name": "John Smith",
+      "email": "john.smith@techcorp.com",
+      "headline": "VP of Sales at TechCorp",
+      "url": "https://linkedin.com/in/johnsmith",
+      "location": {
+        "city": "San Francisco",
+        "country": "United States"
+      },
+      "qualification": "qualified",
+      "qualifiedAt": "2024-01-20T15:30:00Z",
+      "qualifiedBy": "agent_456"
+    },
+    "campaign": {
+      "id": "campaign_789",
+      "name": "Enterprise Outreach Q4"
+    },
+    "conversation": {
+      "id": "chat_101112",
+      "messageCount": 5,
+      "lastMessage": "Thanks for the information! I'd love to schedule a call.",
+      "lastActivity": "2024-01-20T15:25:00Z"
+    }
+  },
+  "team": {
+    "id": "team_abc",
+    "name": "Sales Team Alpha"
+  }
+}
+```
+
+### Campaign Completed Event
+**GET** `/webhooks/test/example/campaign.completed`
+
+```json
+{
+  "event": "campaign.completed",
+  "timestamp": "2024-01-20T18:00:00Z",
+  "data": {
+    "campaign": {
+      "id": "campaign_789",
+      "name": "Enterprise Outreach Q4",
+      "status": "completed",
+      "completedAt": "2024-01-20T18:00:00Z",
+      "duration": "45 days",
+      "stats": {
+        "prospects": 150,
+        "messages": 420,
+        "responses": 35,
+        "qualified": 12,
+        "closed": 8,
+        "conversionRate": 8.0,
+        "responseRate": 23.33
+      }
+    },
+    "agent": {
+      "id": "agent_456",
+      "name": "Sales Agent - West Coast"
+    }
+  },
+  "team": {
+    "id": "team_abc",
+    "name": "Sales Team Alpha"
+  }
+}
+```
+
+### Message Sent Event
+**GET** `/webhooks/test/example/message.sent`
+
+```json
+{
+  "event": "message.sent",
+  "timestamp": "2024-01-20T14:15:00Z",
+  "data": {
+    "message": {
+      "id": "message_555",
+      "content": "Hi John, I noticed your work at TechCorp and thought you might be interested in our enterprise solution...",
+      "type": "initial",
+      "sentAt": "2024-01-20T14:15:00Z",
+      "platform": "linkedin"
+    },
+    "prospect": {
+      "id": "prospect_123",
+      "name": "John Smith",
+      "headline": "VP of Sales at TechCorp",
+      "url": "https://linkedin.com/in/johnsmith"
+    },
+    "campaign": {
+      "id": "campaign_789",
+      "name": "Enterprise Outreach Q4"
+    },
+    "agent": {
+      "id": "agent_456",
+      "name": "Sales Agent - West Coast"
+    }
+  },
+  "team": {
+    "id": "team_abc",
+    "name": "Sales Team Alpha"
+  }
+}
+```
+
+## Testing Examples
+
+```bash
+# Get example for prospect qualified event
+curl -X GET "https://api.kakiyo.com/v1/webhooks/test/example/prospect.qualified" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+
+# Get example for campaign completed event
+curl -X GET "https://api.kakiyo.com/v1/webhooks/test/example/campaign.completed" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript
+// JavaScript/Node.js
+const getEventExample = async (eventType) => {
+  const response = await fetch(`https://api.kakiyo.com/v1/webhooks/test/example/${eventType}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    }
+  });
+
+  return await response.json();
+};
+
+// Get examples for multiple events
+const getMultipleExamples = async (eventTypes) => {
+  const examples = {};
+  
+  for (const eventType of eventTypes) {
+    try {
+      examples[eventType] = await getEventExample(eventType);
+    } catch (error) {
+      console.error(`Failed to get example for ${eventType}:`, error);
+    }
+  }
+  
+  return examples;
+};
+
+// Usage example
+const examples = await getMultipleExamples([
+  'prospect.qualified',
+  'campaign.completed',
+  'message.sent'
+]);
+
+console.log('Event Examples:', examples);
+```
+
+```python
+# Python
+import requests
+
+def get_event_example(event_type):
+    """Get example payload for a specific event type"""
+    response = requests.get(
+        f'https://api.kakiyo.com/v1/webhooks/test/example/{event_type}',
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+    
+    return response.json()
+
+def generate_test_data(event_types):
+    """Generate test data for multiple event types"""
+    test_data = {}
+    
+    for event_type in event_types:
+        try:
+            test_data[event_type] = get_event_example(event_type)
+            print(f"✓ Generated example for {event_type}")
+        except Exception as e:
+            print(f"✗ Failed to get example for {event_type}: {e}")
+    
+    return test_data
+
+# Usage example
+event_types = [
+    'prospect.qualified',
+    'prospect.responded',
+    'campaign.completed',
+    'message.sent',
+    'agent.status_changed'
+]
+
+test_data = generate_test_data(event_types)
+```
+
+## Error Responses
+
+### Invalid Event Type
+```json
+{
+  "error": "invalid_event",
+  "message": "Invalid event: invalid.event.type",
+  "validEvents": [
+    "prospect.qualified",
+    "prospect.responded",
+    "campaign.completed",
+    "message.sent",
+    "agent.status_changed"
+  ]
+}
+```
+
+## Common Event Examples
+
+### Agent Status Changed
+```json
+{
+  "event": "agent.status_changed",
+  "timestamp": "2024-01-20T16:45:00Z",
+  "data": {
+    "agent": {
+      "id": "agent_456",
+      "name": "Sales Agent - West Coast",
+      "previousStatus": "running",
+      "currentStatus": "paused",
+      "statusChangedAt": "2024-01-20T16:45:00Z",
+      "reason": "Daily limits reached"
+    },
+    "stats": {
+      "dailyMessages": 60,
+      "dailyConnections": 25,
+      "dailyProfileViews": 120
+    }
+  },
+  "team": {
+    "id": "team_abc",
+    "name": "Sales Team Alpha"
+  }
+}
+```
+
+### Connection Accepted
+```json
+{
+  "event": "connection.accepted",
+  "timestamp": "2024-01-20T13:20:00Z",
+  "data": {
+    "connection": {
+      "id": "connection_777",
+      "acceptedAt": "2024-01-20T13:20:00Z",
+      "sentAt": "2024-01-18T10:30:00Z",
+      "responseTime": "2 days, 2 hours, 50 minutes"
+    },
+    "prospect": {
+      "id": "prospect_123",
+      "name": "John Smith",
+      "headline": "VP of Sales at TechCorp",
+      "url": "https://linkedin.com/in/johnsmith"
+    },
+    "campaign": {
+      "id": "campaign_789",
+      "name": "Enterprise Outreach Q4"
+    },
+    "agent": {
+      "id": "agent_456",
+      "name": "Sales Agent - West Coast"
+    }
+  },
+  "team": {
+    "id": "team_abc",
+    "name": "Sales Team Alpha"
+  }
+}
+```
+
+## Development Workflow
+
+### 1. Explore Available Events
+```bash
+# Get list of all available events
+curl -X GET "https://api.kakiyo.com/v1/webhooks/test/events" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### 2. Get Event Examples
+```bash
+# Get examples for events you want to handle
+curl -X GET "https://api.kakiyo.com/v1/webhooks/test/example/prospect.qualified" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### 3. Develop Webhook Handler
+Use the example payloads to develop your webhook endpoint handler.
+
+### 4. Test Integration
+```bash
+# Send test events to your webhook
+curl -X POST "https://api.kakiyo.com/v1/webhooks/test" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"event": "prospect.qualified"}'
+```
+
+## Best Practices
+
+1. **Schema Validation**: Use examples to create JSON schemas for validation
+2. **Error Handling**: Plan for missing or unexpected fields
+3. **Idempotency**: Handle duplicate webhook deliveries gracefully
+4. **Logging**: Log webhook payloads for debugging and monitoring
+5. **Testing**: Use examples to create comprehensive test suites
+
+## Integration Tips
+
+### Create Type Definitions
+```typescript
+// TypeScript example
+interface ProspectQualifiedEvent {
+  event: 'prospect.qualified';
+  timestamp: string;
+  data: {
+    prospect: {
+      id: string;
+      name: string;
+      email: string;
+      headline: string;
+      url: string;
+      location: {
+        city: string;
+        country: string;
+      };
+      qualification: 'qualified';
+      qualifiedAt: string;
+      qualifiedBy: string;
+    };
+    campaign: {
+      id: string;
+      name: string;
+    };
+    conversation: {
+      id: string;
+      messageCount: number;
+      lastMessage: string;
+      lastActivity: string;
+    };
+  };
+  team: {
+    id: string;
+    name: string;
+  };
+}
+```
+
+### Webhook Handler Template
+```javascript
+const handleWebhook = (payload) => {
+  const { event, data, timestamp, team } = payload;
+  
+  switch (event) {
+    case 'prospect.qualified':
+      return handleProspectQualified(data);
+    case 'campaign.completed':
+      return handleCampaignCompleted(data);
+    case 'message.sent':
+      return handleMessageSent(data);
+    default:
+      console.log(`Unhandled event type: ${event}`);
+  }
+};
+```

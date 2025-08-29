@@ -1,0 +1,218 @@
+---
+title: 'Delete Single Prospect'
+openapi: 'DELETE /prospects/{prospectId}'
+---
+
+## Overview
+
+Delete a single prospect and all associated conversation data. This operation removes the prospect from the campaign and permanently deletes all related messages, tasks, and analytics data. **This action cannot be undone.**
+
+## Path Parameters
+
+<ParamField path="prospectId" type="string" required>
+  The unique identifier of the prospect to delete
+</ParamField>
+
+## Use Cases
+
+- **Data Cleanup**: Remove invalid or duplicate prospects
+- **Compliance**: Delete prospects who requested removal
+- **Quality Control**: Remove prospects that don't meet criteria
+- **Campaign Optimization**: Remove unresponsive prospects
+
+## Important Considerations
+
+<Warning>
+**Permanent Deletion**: This operation permanently deletes:
+- Prospect profile and contact information
+- All conversation history and messages
+- All scheduled tasks and follow-ups
+- All analytics data related to this prospect
+- All webhook events for this prospect
+
+This action cannot be undone. Consider pausing the prospect instead if you might need the data later.
+</Warning>
+
+## Response Structure
+
+```json
+{
+  "message": "Prospect deleted successfully",
+  "deletionSummary": {
+    "prospectId": "prospect_123",
+    "prospectName": "John Smith",
+    "campaignId": "campaign_456",
+    "campaignName": "Enterprise Outreach Q4",
+    "deletedItems": {
+      "chats": 1,
+      "messages": 8,
+      "tasks": 3,
+      "webhookEvents": 2
+    },
+    "deletedAt": "2024-01-20T15:30:00Z"
+  },
+  "campaignStatsUpdated": {
+    "prospectsCount": 149,
+    "messagesCount": 412,
+    "qualifiedCount": 11
+  }
+}
+```
+
+## Testing Example
+
+```bash
+curl -X DELETE "https://api.kakiyo.com/v1/prospects/prospect_123" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript
+// JavaScript/Node.js
+const prospectId = 'prospect_123';
+const response = await fetch(`https://api.kakiyo.com/v1/prospects/${prospectId}`, {
+  method: 'DELETE',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  }
+});
+
+const result = await response.json();
+console.log('Deletion Result:', result);
+```
+
+```python
+# Python
+import requests
+
+prospect_id = 'prospect_123'
+response = requests.delete(
+    f'https://api.kakiyo.com/v1/prospects/{prospect_id}',
+    headers={
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+    }
+)
+
+result = response.json()
+print('Deletion Result:', result)
+```
+
+## Error Responses
+
+### Prospect Not Found
+```json
+{
+  "error": "not_found",
+  "message": "Prospect not found"
+}
+```
+
+### Access Denied
+```json
+{
+  "error": "forbidden",
+  "message": "You do not have access to this prospect"
+}
+```
+
+### Active Conversation
+```json
+{
+  "error": "prospect_active",
+  "message": "Cannot delete prospect with active conversation. Please pause first."
+}
+```
+
+## Pre-Deletion Checklist
+
+Before deleting a prospect, consider:
+
+1. **Export Data**: Save important conversation history
+2. **Pause Prospect**: Stop active outreach activities
+3. **Check Qualification**: Verify if prospect was qualified
+4. **Update CRM**: Sync status with external systems
+5. **Team Notification**: Inform relevant team members
+
+## Cascade Deletion Details
+
+When a prospect is deleted, the following data is automatically removed:
+
+### Prospect Data
+- Profile information and LinkedIn data
+- Additional fields and enrichment data
+- Contact information and preferences
+
+### Conversations
+- All chat records and message history
+- AI-generated responses and templates
+- Response tracking and engagement metrics
+
+### Tasks
+- Scheduled outreach tasks
+- Follow-up reminders
+- Automation triggers
+
+### Analytics
+- Individual prospect performance data
+- Engagement metrics and activity logs
+- Qualification tracking data
+
+### Campaign Statistics
+Campaign statistics are automatically updated to reflect the deletion:
+- Total prospects count decreased
+- Message counts adjusted
+- Qualification metrics recalculated
+
+## Best Practices
+
+1. **Data Export**: Always export critical data before deletion
+2. **Batch Processing**: For multiple deletions, use bulk delete endpoint
+3. **Audit Trail**: Keep records of deleted prospects for compliance
+4. **Alternative Actions**: Consider pausing instead of deleting
+5. **Team Communication**: Notify team members of deletions
+
+## Alternative Actions
+
+Instead of deletion, consider these alternatives:
+
+### Pause Prospect
+```bash
+curl -X POST "https://api.kakiyo.com/v1/prospects/prospect_123/pause" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Disqualify Prospect
+```bash
+curl -X POST "https://api.kakiyo.com/v1/prospects/prospect_123/disqualify" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Move to Different Campaign
+Use the campaign update endpoint to transfer the prospect to another campaign while preserving data.
+
+## Recovery Options
+
+<Info>
+**No Recovery Available**: Once a prospect is deleted, it cannot be recovered. To restore functionality:
+- Re-add the prospect to the campaign
+- Restart the conversation from the beginning
+- Rebuild any custom data or notes
+</Info>
+
+## Bulk Operations
+
+For deleting multiple prospects, use the bulk deletion endpoint:
+- More efficient for large operations
+- Better error handling for partial failures
+- Detailed results for each deletion attempt
+
+## Integration Considerations
+
+When integrating prospect deletion:
+
+1. **Webhook Events**: Deletion triggers webhook events if configured
+2. **CRM Sync**: Update external CRM systems accordingly
+3. **Analytics Impact**: Consider impact on historical analytics
+4. **Automation Rules**: Update any automation rules referencing the prospect

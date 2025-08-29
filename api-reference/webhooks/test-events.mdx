@@ -1,0 +1,254 @@
+---
+title: 'List Test Events'
+openapi: 'GET /webhooks/test/events'
+---
+
+## Overview
+
+Get a list of available webhook event types that can be used for testing. This endpoint returns all supported webhook events with their identifiers and descriptions, useful for webhook configuration and testing.
+
+## Use Cases
+
+- **Webhook Setup**: Discover available event types during webhook configuration
+- **Testing Preparation**: Identify which events to test for your integration
+- **Documentation**: Reference event types for webhook development
+- **Validation**: Verify supported events before creating webhooks
+
+## Response Structure
+
+The response includes an array of available webhook events with their details:
+
+```json
+[
+  {
+    "id": "prospect.qualified",
+    "name": "Prospect Qualified",
+    "description": "Triggered when a prospect is marked as qualified",
+    "category": "prospect"
+  },
+  {
+    "id": "prospect.responded",
+    "name": "Prospect Responded", 
+    "description": "Triggered when a prospect responds to outreach",
+    "category": "prospect"
+  },
+  {
+    "id": "campaign.completed",
+    "name": "Campaign Completed",
+    "description": "Triggered when a campaign reaches completion",
+    "category": "campaign"
+  },
+  {
+    "id": "agent.status_changed",
+    "name": "Agent Status Changed",
+    "description": "Triggered when an agent's status changes",
+    "category": "agent"
+  },
+  {
+    "id": "message.sent",
+    "name": "Message Sent",
+    "description": "Triggered when a message is sent to a prospect",
+    "category": "message"
+  },
+  {
+    "id": "connection.accepted",
+    "name": "Connection Accepted",
+    "description": "Triggered when a LinkedIn connection is accepted",
+    "category": "connection"
+  }
+]
+```
+
+## Testing Example
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/webhooks/test/events" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript
+// JavaScript/Node.js
+const getTestEvents = async () => {
+  const response = await fetch('https://api.kakiyo.com/v1/webhooks/test/events', {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    }
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const events = await getTestEvents();
+console.log('Available Test Events:', events);
+
+// Filter events by category
+const prospectEvents = events.filter(event => event.category === 'prospect');
+console.log('Prospect Events:', prospectEvents);
+```
+
+```python
+# Python
+import requests
+
+def get_test_events():
+    """Get list of available webhook test events"""
+    response = requests.get(
+        'https://api.kakiyo.com/v1/webhooks/test/events',
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+    
+    return response.json()
+
+# Usage example
+events = get_test_events()
+print('Available Test Events:', events)
+
+# Group events by category
+from collections import defaultdict
+events_by_category = defaultdict(list)
+for event in events:
+    events_by_category[event['category']].append(event)
+
+for category, category_events in events_by_category.items():
+    print(f"\n{category.title()} Events:")
+    for event in category_events:
+        print(f"  - {event['id']}: {event['name']}")
+```
+
+## Event Categories
+
+### Prospect Events
+Events related to prospect interactions and status changes:
+- `prospect.qualified` - Prospect marked as qualified
+- `prospect.responded` - Prospect responded to outreach
+- `prospect.disqualified` - Prospect marked as disqualified
+- `prospect.paused` - Prospect conversation paused
+- `prospect.resumed` - Prospect conversation resumed
+
+### Campaign Events
+Events related to campaign lifecycle and status:
+- `campaign.started` - Campaign activated and started
+- `campaign.paused` - Campaign paused
+- `campaign.resumed` - Campaign resumed
+- `campaign.completed` - Campaign completed
+- `campaign.deleted` - Campaign deleted
+
+### Message Events
+Events related to message sending and responses:
+- `message.sent` - Message sent to prospect
+- `message.failed` - Message sending failed
+- `message.received` - Response received from prospect
+- `message.scheduled` - Message scheduled for sending
+
+### Connection Events
+Events related to LinkedIn connection activities:
+- `connection.sent` - Connection request sent
+- `connection.accepted` - Connection request accepted
+- `connection.rejected` - Connection request rejected
+- `connection.withdrawn` - Connection request withdrawn
+
+### Agent Events
+Events related to agent status and health:
+- `agent.status_changed` - Agent status changed
+- `agent.health_alert` - Agent health alert triggered
+- `agent.limits_reached` - Agent daily limits reached
+- `agent.offline` - Agent went offline
+
+## Integration Examples
+
+### Event Selection for Webhook Creation
+```javascript
+const createWebhookWithEvents = async (url, selectedEventIds) => {
+  // First, get available events to validate selection
+  const availableEvents = await getTestEvents();
+  const validEventIds = availableEvents.map(event => event.id);
+  
+  // Validate selected events
+  const invalidEvents = selectedEventIds.filter(id => !validEventIds.includes(id));
+  if (invalidEvents.length > 0) {
+    throw new Error(`Invalid event IDs: ${invalidEvents.join(', ')}`);
+  }
+  
+  // Create webhook with validated events
+  const response = await fetch('https://api.kakiyo.com/v1/webhooks', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: 'My Integration Webhook',
+      url: url,
+      events: selectedEventIds
+    })
+  });
+  
+  return await response.json();
+};
+```
+
+### Dynamic Event Configuration
+```python
+def configure_webhook_events(webhook_url, categories=None):
+    """Configure webhook with events from specific categories"""
+    events = get_test_events()
+    
+    if categories:
+        # Filter events by categories
+        selected_events = [
+            event['id'] for event in events 
+            if event['category'] in categories
+        ]
+    else:
+        # Use all events
+        selected_events = [event['id'] for event in events]
+    
+    # Create webhook with selected events
+    webhook_data = {
+        'name': 'Auto-configured Webhook',
+        'url': webhook_url,
+        'events': selected_events
+    }
+    
+    response = requests.post(
+        'https://api.kakiyo.com/v1/webhooks',
+        json=webhook_data,
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+    
+    return response.json()
+
+# Usage: Configure webhook for prospect and campaign events only
+result = configure_webhook_events(
+    'https://myapp.com/webhooks/kakiyo',
+    categories=['prospect', 'campaign']
+)
+```
+
+## Best Practices
+
+1. **Event Selection**: Choose only the events your application needs
+2. **Category Filtering**: Use categories to organize event subscriptions
+3. **Validation**: Always validate event IDs before webhook creation
+4. **Documentation**: Keep a reference of event types for your team
+5. **Testing**: Use this endpoint to plan your webhook testing strategy
+
+## Next Steps
+
+After getting the list of test events:
+
+1. **Select Events**: Choose relevant events for your integration
+2. **Get Examples**: Use `/webhooks/test/example/{event}` to see payload examples
+3. **Create Webhook**: Create webhook with selected events
+4. **Test Integration**: Use `/webhooks/test` to send test events
+5. **Monitor**: Set up monitoring for webhook delivery and processing
