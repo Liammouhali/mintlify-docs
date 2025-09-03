@@ -101,7 +101,9 @@
               "api-reference/agents/details",
               "api-reference/agents/setup",
               "api-reference/agents/pause",
-              "api-reference/agents/resume"
+              "api-reference/agents/resume",
+              "api-reference/agents/delete",
+              "api-reference/agents/relaunch"
             ]
           },
           {
