@@ -1,4 +1,178 @@
 ---
-title: 'Create webhook'
+title: 'Create Webhook'
 openapi: 'POST /webhooks'
 ---
+
+## Overview
+
+Register a webhook endpoint to receive real-time notifications about events in your Kakiyo campaigns. Webhooks enable seamless integration with your CRM, analytics tools, and custom applications.
+
+## Use Cases
+
+- **CRM Integration**: Sync qualified prospects to your CRM automatically
+- **Analytics Tracking**: Send campaign events to analytics platforms
+- **Notification Systems**: Alert team members about important events
+- **Workflow Automation**: Trigger automated workflows based on prospect actions
+
+## Supported Events
+
+- **prospect.qualified** - Prospect marked as qualified
+- **prospect.responded** - Prospect responded to outreach
+- **campaign.completed** - Campaign reached completion
+- **message.sent** - Message sent to prospect
+- **connection.accepted** - LinkedIn connection accepted
+- **agent.status_changed** - Agent status changed
+
+## Security
+
+Webhooks support optional secret-based authentication. Include a secret to verify webhook authenticity using HMAC-SHA256 signatures.
+
+## Testing Example
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/webhooks" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "CRM Integration",
+    "url": "https://your-app.com/kakiyo/webhook",
+    "secret": "your_webhook_secret_key",
+    "events": [
+      "prospect.qualified",
+      "prospect.responded",
+      "campaign.completed"
+    ]
+  }'
+```
+
+```javascript
+// JavaScript/Node.js
+const createWebhook = async (webhookData) => {
+  const response = await fetch('https://api.kakiyo.com/v1/webhooks', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(webhookData)
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const newWebhook = await createWebhook({
+  name: 'CRM Integration',
+  url: 'https://your-app.com/kakiyo/webhook',
+  secret: 'your_webhook_secret_key',
+  events: [
+    'prospect.qualified',
+    'prospect.responded',
+    'campaign.completed'
+  ]
+});
+
+console.log('Webhook Created:', newWebhook);
+```
+
+```python
+# Python
+import requests
+
+def create_webhook(webhook_data):
+    """Create a new webhook endpoint"""
+    response = requests.post(
+        'https://api.kakiyo.com/v1/webhooks',
+        json=webhook_data,
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+
+    return response.json()
+
+# Usage example
+webhook_data = {
+    'name': 'CRM Integration',
+    'url': 'https://your-app.com/kakiyo/webhook',
+    'secret': 'your_webhook_secret_key',
+    'events': [
+        'prospect.qualified',
+        'prospect.responded',
+        'campaign.completed'
+    ]
+}
+
+result = create_webhook(webhook_data)
+print('Webhook Created:', result)
+```
+
+## Webhook Handler Example
+
+```javascript
+// Express.js webhook handler
+const express = require('express');
+const crypto = require('crypto');
+const app = express();
+
+app.use(express.json());
+
+app.post('/kakiyo/webhook', (req, res) => {
+  const signature = req.headers['x-kakiyo-signature'];
+  const payload = JSON.stringify(req.body);
+  const secret = 'your_webhook_secret_key';
+
+  // Verify signature
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+
+  if (signature !== `sha256=${expectedSignature}`) {
+    return res.status(401).send('Invalid signature');
+  }
+
+  // Process webhook event
+  const { event, data, timestamp } = req.body;
+
+  switch (event) {
+    case 'prospect.qualified':
+      handleProspectQualified(data);
+      break;
+    case 'prospect.responded':
+      handleProspectResponded(data);
+      break;
+    case 'campaign.completed':
+      handleCampaignCompleted(data);
+      break;
+    default:
+      console.log(`Unhandled event: ${event}`);
+  }
+
+  res.status(200).send('OK');
+});
+
+const handleProspectQualified = (data) => {
+  // Sync to CRM
+  console.log('Qualified prospect:', data.prospect.name);
+  // Add your CRM integration logic here
+};
+```
+
+## Best Practices
+
+1. **HTTPS Only**: Always use HTTPS URLs for webhook endpoints
+2. **Signature Verification**: Implement signature verification for security
+3. **Idempotency**: Handle duplicate webhook deliveries gracefully
+4. **Error Handling**: Return appropriate HTTP status codes
+5. **Timeout Handling**: Respond within 30 seconds to avoid retries
+6. **Event Filtering**: Subscribe only to events you need
+
+## Testing Your Webhook
+
+Use the webhook test endpoints to validate your integration:
+
+1. **Get Available Events**: `GET /webhooks/test/events`
+2. **Get Event Examples**: `GET /webhooks/test/example/{event}`
+3. **Send Test Event**: `POST /webhooks/test`

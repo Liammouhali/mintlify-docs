@@ -1,0 +1,271 @@
+---
+title: 'List Models'
+openapi: 'GET /models'
+---
+
+## Overview
+
+Get a list of all available AI models with their pricing information. This endpoint returns active models that can be used for prompt configuration and campaign creation.
+
+## Use Cases
+
+- **Prompt Configuration**: Discover available models for AI prompt setup
+- **Cost Estimation**: Calculate expected costs based on model pricing
+- **Model Selection**: Choose appropriate models for different use cases
+- **Integration Planning**: Plan model usage across campaigns and workflows
+
+## Response Structure
+
+The response includes an array of available models with pricing details:
+
+```json
+{
+  "models": [
+    {
+      "id": "67fcab2e0032f8b20363",
+      "name": "Claude 4 Sonnet",
+      "pricing": {
+        "input": 3,
+        "output": 15,
+        "cached": 3.75
+      },
+      "status": "active"
+    },
+    {
+      "id": "67fccf2900258424236f",
+      "name": "Claude OPUS 4.1",
+      "pricing": {
+        "input": 15,
+        "output": 75,
+        "cached": 7.5
+      },
+      "status": "active"
+    },
+    {
+      "id": "680321e500318611796d",
+      "name": "Gemini 2.5 Flash",
+      "pricing": {
+        "input": 0.3,
+        "output": 2.5,
+        "cached": 0.15
+      },
+      "status": "active"
+    },
+    {
+      "id": "682c0dfc0036ded6b90b",
+      "name": "Gemini 2.5 Pro",
+      "pricing": {
+        "input": 1.25,
+        "output": 10,
+        "cached": null
+      },
+      "status": "active"
+    },
+    {
+      "id": "680321aa001300a6673d",
+      "name": "GPT 4.1",
+      "pricing": {
+        "input": 2,
+        "output": 8,
+        "cached": 0.5
+      },
+      "status": "active"
+    },
+    {
+      "id": "689f6adb001e16e22378",
+      "name": "GPT 5",
+      "pricing": {
+        "input": 1.25,
+        "output": 10,
+        "cached": 3
+      },
+      "status": "active"
+    },
+    {
+      "id": "680321c8001e2f527d82",
+      "name": "GPT 5 Mini",
+      "pricing": {
+        "input": 0.25,
+        "output": 2,
+        "cached": 0.1
+      },
+      "status": "active"
+    },
+    {
+      "id": "689f1e61000b7da834bf",
+      "name": "Grok 4",
+      "pricing": {
+        "input": 3,
+        "output": 15,
+        "cached": null
+      },
+      "status": "active"
+    }
+  ],
+  "total": 8
+}
+```
+
+## Testing Example
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/models" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript
+// JavaScript/Node.js
+const getModels = async () => {
+  const response = await fetch('https://api.kakiyo.com/v1/models', {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    }
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const models = await getModels();
+console.log('Available Models:', models);
+
+// Find most cost-effective model
+const cheapestModel = models.models.reduce((prev, current) => 
+  (prev.pricing.input + prev.pricing.output) < (current.pricing.input + current.pricing.output) ? prev : current
+);
+console.log('Most cost-effective model:', cheapestModel.name);
+```
+
+```python
+# Python
+import requests
+
+def get_models():
+    """Get list of available AI models"""
+    response = requests.get(
+        'https://api.kakiyo.com/v1/models',
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+    
+    return response.json()
+
+# Usage example
+models = get_models()
+print('Available Models:', models)
+
+# Filter models by pricing
+budget_models = [
+    model for model in models['models'] 
+    if model['pricing']['input'] <= 1.0
+]
+print(f'Budget-friendly models: {len(budget_models)}')
+```
+
+## Pricing Information
+
+### Pricing Structure
+- **Input**: Cost per 1,000 input tokens
+- **Output**: Cost per 1,000 output tokens  
+- **Cached**: Cost per 1,000 cached tokens (if supported, otherwise `null`)
+
+### Model Categories by Cost
+
+**Budget Models** (Input ≤ $1.00):
+- GPT 5 Mini: $0.25 input / $2.00 output
+- Gemini 2.5 Flash: $0.30 input / $2.50 output
+
+**Standard Models** ($1.00 < Input ≤ $3.00):
+- GPT 4.1: $2.00 input / $8.00 output
+- GPT 5: $1.25 input / $10.00 output
+- Gemini 2.5 Pro: $1.25 input / $10.00 output
+- Claude 4 Sonnet: $3.00 input / $15.00 output
+- Grok 4: $3.00 input / $15.00 output
+
+**Premium Models** (Input > $3.00):
+- Claude OPUS 4.1: $15.00 input / $75.00 output
+
+## Integration Examples
+
+### Model Selection for Prompts
+```javascript
+const selectModelForPrompt = async (maxBudget) => {
+  const models = await getModels();
+  
+  // Filter models within budget
+  const affordableModels = models.models.filter(model => 
+    model.pricing.input <= maxBudget
+  );
+  
+  // Sort by performance/cost ratio (assuming higher price = better performance)
+  return affordableModels.sort((a, b) => b.pricing.input - a.pricing.input)[0];
+};
+
+// Usage
+const bestModel = await selectModelForPrompt(2.0);
+console.log('Selected model:', bestModel.name);
+```
+
+### Cost Calculation
+```javascript
+const calculateCost = (model, inputTokens, outputTokens) => {
+  const inputCost = (inputTokens / 1000) * model.pricing.input;
+  const outputCost = (outputTokens / 1000) * model.pricing.output;
+  
+  return {
+    input: inputCost,
+    output: outputCost,
+    total: inputCost + outputCost
+  };
+};
+
+// Usage
+const cost = calculateCost(
+  models.models.find(m => m.name === 'GPT 5 Mini'),
+  5000, // 5K input tokens
+  2000  // 2K output tokens
+);
+console.log('Estimated cost:', cost);
+```
+
+## Best Practices
+
+1. **Cost Optimization**: Choose models based on your use case requirements
+2. **Performance vs Cost**: Balance model capabilities with budget constraints
+3. **Caching**: Utilize cached pricing when available for repeated content
+4. **Model Monitoring**: Regularly check for new models and pricing updates
+5. **Budget Planning**: Use pricing information for accurate cost forecasting
+
+## Common Use Cases
+
+### Campaign Planning
+Use model pricing to estimate campaign costs based on expected message volume and complexity.
+
+### Prompt Optimization
+Select appropriate models for different prompt types - use budget models for simple tasks, premium models for complex reasoning.
+
+### Cost Management
+Monitor and control AI usage costs by selecting models that fit your budget requirements.
+
+## Error Responses
+
+### Authentication Failed
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key"
+}
+```
+
+### Internal Server Error
+```json
+{
+  "error": "internal_error",
+  "message": "An internal error occurred while fetching models"
+}
+```

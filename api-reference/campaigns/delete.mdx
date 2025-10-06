@@ -1,0 +1,186 @@
+---
+title: 'Delete Campaign'
+openapi: 'DELETE /campaigns/{id}'
+---
+
+## Overview
+
+Permanently delete a campaign and all associated data. This operation cascades to remove all related prospects, conversations, tasks, and analytics data. **This action cannot be undone.**
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the campaign to delete
+</ParamField>
+
+## Use Cases
+
+- **Campaign Cleanup**: Remove completed or obsolete campaigns
+- **Data Management**: Clean up test campaigns and outdated data
+- **Compliance**: Remove campaigns for data retention compliance
+- **Resource Management**: Free up resources by removing unused campaigns
+
+## Important Considerations
+
+<Warning>
+**Permanent Deletion**: This operation permanently deletes the campaign and ALL associated data including:
+- All prospects in the campaign
+- All conversation history and messages
+- All tasks and scheduled activities
+- All analytics and performance data
+- All webhook events related to the campaign
+
+This action cannot be undone. Consider exporting important data before deletion.
+</Warning>
+
+## Response Structure
+
+The response provides a detailed summary of what was deleted:
+
+```json
+{
+  "message": "Campaign deleted successfully",
+  "deletionSummary": {
+    "campaignId": "campaign_123",
+    "campaignName": "Q4 Enterprise Outreach",
+    "deletedItems": {
+      "prospects": 150,
+      "chats": 150,
+      "messages": 420,
+      "tasks": 75,
+      "webhookEvents": 12
+    },
+    "deletedAt": "2024-01-20T15:30:00Z"
+  }
+}
+```
+
+## Testing Example
+
+```bash
+curl -X DELETE "https://api.kakiyo.com/v1/campaigns/campaign_123" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript
+// JavaScript/Node.js
+const campaignId = 'campaign_123';
+const response = await fetch(`https://api.kakiyo.com/v1/campaigns/${campaignId}`, {
+  method: 'DELETE',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  }
+});
+
+const result = await response.json();
+console.log('Deletion Result:', result);
+```
+
+```python
+# Python
+import requests
+
+campaign_id = 'campaign_123'
+response = requests.delete(
+    f'https://api.kakiyo.com/v1/campaigns/{campaign_id}',
+    headers={
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+    }
+)
+
+result = response.json()
+print('Deletion Result:', result)
+```
+
+## Error Responses
+
+### Campaign Not Found
+```json
+{
+  "error": "not_found",
+  "message": "Campaign not found"
+}
+```
+
+### Access Denied
+```json
+{
+  "error": "forbidden",
+  "message": "You do not have access to this campaign"
+}
+```
+
+### Campaign In Use
+```json
+{
+  "error": "campaign_active",
+  "message": "Cannot delete active campaign. Please pause the campaign first."
+}
+```
+
+## Pre-Deletion Checklist
+
+Before deleting a campaign, consider:
+
+1. **Export Data**: Download important analytics and prospect data
+2. **Pause Campaign**: Stop all active outreach activities
+3. **Notify Team**: Inform team members about the deletion
+4. **Backup Conversations**: Save important conversation history
+5. **Update Integrations**: Remove campaign references from external systems
+
+## Cascade Deletion Details
+
+When a campaign is deleted, the following related data is automatically removed:
+
+### Prospects
+- All prospect records associated with the campaign
+- Prospect profile information and additional fields
+- LinkedIn profile data and enrichment information
+
+### Conversations
+- All chat records and conversation history
+- Message threads and AI-generated content
+- Response tracking and engagement metrics
+
+### Tasks
+- Scheduled outreach tasks
+- Follow-up reminders and activities
+- Automation workflows and triggers
+
+### Analytics
+- Campaign performance metrics
+- Historical analytics data
+- Activity logs and engagement tracking
+
+### Webhooks
+- Campaign-related webhook events
+- Event history and delivery logs
+
+## Best Practices
+
+1. **Data Export**: Always export critical data before deletion
+2. **Team Communication**: Notify relevant team members
+3. **Gradual Cleanup**: Delete campaigns in batches for large cleanups
+4. **Audit Trail**: Keep records of deleted campaigns for compliance
+5. **Test Environment**: Practice deletion process in test environment first
+
+## Recovery Options
+
+<Info>
+**No Recovery Available**: Once a campaign is deleted, it cannot be recovered. The only way to restore functionality is to:
+- Create a new campaign with similar settings
+- Re-import prospect lists
+- Reconfigure automation workflows
+- Rebuild analytics from scratch
+</Info>
+
+## Alternative Actions
+
+Instead of deletion, consider these alternatives:
+
+- **Pause Campaign**: Temporarily stop activities while preserving data
+- **Archive Campaign**: Mark as inactive but keep data accessible
+- **Export & Recreate**: Export data, delete, then recreate with improvements

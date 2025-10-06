@@ -1,0 +1,258 @@
+---
+title: 'Get Model Details'
+openapi: 'GET /models/{modelId}'
+---
+
+## Overview
+
+Get detailed information about a specific AI model by its ID. This endpoint returns comprehensive model information including pricing details and current status.
+
+## Path Parameters
+
+<ParamField path="modelId" type="string" required>
+  The unique identifier of the model to retrieve
+</ParamField>
+
+## Use Cases
+
+- **Model Verification**: Confirm model availability before using in prompts
+- **Pricing Lookup**: Get current pricing for cost calculations
+- **Integration Validation**: Verify model details during system integration
+- **Cost Analysis**: Analyze specific model costs for budget planning
+
+## Response Structure
+
+```json
+{
+  "id": "680321c8001e2f527d82",
+  "name": "GPT 5 Mini",
+  "pricing": {
+    "input": 0.25,
+    "output": 2,
+    "cached": 0.1
+  },
+  "status": "active"
+}
+```
+
+## Testing Example
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/models/680321c8001e2f527d82" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript
+// JavaScript/Node.js
+const getModelDetails = async (modelId) => {
+  const response = await fetch(`https://api.kakiyo.com/v1/models/${modelId}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    }
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const modelDetails = await getModelDetails('680321c8001e2f527d82');
+console.log('Model Details:', modelDetails);
+
+// Calculate cost for specific usage
+const calculateUsageCost = (model, inputTokens, outputTokens) => {
+  const inputCost = (inputTokens / 1000) * model.pricing.input;
+  const outputCost = (outputTokens / 1000) * model.pricing.output;
+  
+  return {
+    model: model.name,
+    inputCost: inputCost.toFixed(4),
+    outputCost: outputCost.toFixed(4),
+    totalCost: (inputCost + outputCost).toFixed(4)
+  };
+};
+
+const cost = calculateUsageCost(modelDetails, 10000, 5000);
+console.log('Usage Cost:', cost);
+```
+
+```python
+# Python
+import requests
+
+def get_model_details(model_id):
+    """Get detailed information about a specific model"""
+    response = requests.get(
+        f'https://api.kakiyo.com/v1/models/{model_id}',
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+    
+    return response.json()
+
+# Usage example
+model_details = get_model_details('680321c8001e2f527d82')
+print('Model Details:', model_details)
+
+# Cost calculation function
+def calculate_cost(model, input_tokens, output_tokens):
+    """Calculate cost for given token usage"""
+    input_cost = (input_tokens / 1000) * model['pricing']['input']
+    output_cost = (output_tokens / 1000) * model['pricing']['output']
+    
+    return {
+        'model': model['name'],
+        'input_cost': round(input_cost, 4),
+        'output_cost': round(output_cost, 4),
+        'total_cost': round(input_cost + output_cost, 4)
+    }
+
+# Calculate cost for 10K input, 5K output tokens
+cost = calculate_cost(model_details, 10000, 5000)
+print('Estimated Cost:', cost)
+```
+
+## Error Responses
+
+### Model Not Found
+```json
+{
+  "error": "not_found",
+  "message": "Model not found"
+}
+```
+
+### Authentication Failed
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key"
+}
+```
+
+### Internal Server Error
+```json
+{
+  "error": "internal_error",
+  "message": "An internal error occurred while fetching model details"
+}
+```
+
+## Integration Examples
+
+### Model Validation
+```javascript
+const validateModel = async (modelId) => {
+  try {
+    const model = await getModelDetails(modelId);
+    
+    if (model.status !== 'active') {
+      throw new Error(`Model ${model.name} is not active`);
+    }
+    
+    return {
+      valid: true,
+      model: model
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      error: error.message
+    };
+  }
+};
+
+// Usage
+const validation = await validateModel('680321c8001e2f527d82');
+if (validation.valid) {
+  console.log('Model is valid:', validation.model.name);
+} else {
+  console.error('Model validation failed:', validation.error);
+}
+```
+
+### Cost Comparison
+```javascript
+const compareModelCosts = async (modelIds, inputTokens, outputTokens) => {
+  const comparisons = [];
+  
+  for (const modelId of modelIds) {
+    try {
+      const model = await getModelDetails(modelId);
+      const cost = calculateUsageCost(model, inputTokens, outputTokens);
+      comparisons.push(cost);
+    } catch (error) {
+      console.error(`Failed to get details for model ${modelId}:`, error);
+    }
+  }
+  
+  // Sort by total cost
+  return comparisons.sort((a, b) => parseFloat(a.totalCost) - parseFloat(b.totalCost));
+};
+
+// Usage
+const modelIds = ['680321c8001e2f527d82', '680321aa001300a6673d', '689f6adb001e16e22378'];
+const costComparison = await compareModelCosts(modelIds, 10000, 5000);
+console.log('Cost Comparison (cheapest first):', costComparison);
+```
+
+### Prompt Configuration Helper
+```javascript
+const getModelForPrompt = async (modelId) => {
+  const model = await getModelDetails(modelId);
+  
+  return {
+    id: model.id,
+    name: model.name,
+    isActive: model.status === 'active',
+    costPer1KTokens: {
+      input: model.pricing.input,
+      output: model.pricing.output,
+      cached: model.pricing.cached
+    },
+    recommendedFor: getRecommendation(model)
+  };
+};
+
+const getRecommendation = (model) => {
+  const totalCost = model.pricing.input + model.pricing.output;
+  
+  if (totalCost <= 3) return 'Budget-friendly tasks, high-volume operations';
+  if (totalCost <= 15) return 'Standard tasks, balanced performance and cost';
+  return 'Complex tasks requiring highest quality output';
+};
+
+// Usage
+const promptModel = await getModelForPrompt('680321c8001e2f527d82');
+console.log('Model for Prompt:', promptModel);
+```
+
+## Best Practices
+
+1. **Model Verification**: Always verify model status before using in production
+2. **Cost Monitoring**: Use model details for accurate cost tracking and budgeting
+3. **Error Handling**: Implement proper error handling for model not found scenarios
+4. **Caching**: Cache model details to reduce API calls for frequently used models
+5. **Validation**: Validate model availability before creating prompts or campaigns
+
+## Common Integration Patterns
+
+### Pre-Campaign Validation
+Verify all models used in campaign prompts are active and available before launching campaigns.
+
+### Dynamic Model Selection
+Use model details to dynamically select the most appropriate model based on current pricing and requirements.
+
+### Cost Optimization
+Compare model costs for different scenarios to optimize AI usage expenses.
+
+## Model Status
+
+- **active**: Model is available for use
+- **inactive**: Model is temporarily unavailable (not returned by list endpoint)
+
+Only active models are returned by the API endpoints, ensuring you only work with available models.

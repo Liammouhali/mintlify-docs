@@ -266,6 +266,82 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Delete Campaign",
+        "description": "Permanently delete a campaign and all associated data",
+        "operationId": "deleteCampaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "campaign_12345abcde"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Campaign deleted successfully"
+                    },
+                    "deletionSummary": {
+                      "type": "object",
+                      "properties": {
+                        "campaignId": {
+                          "type": "string",
+                          "example": "campaign_123"
+                        },
+                        "deletedItems": {
+                          "type": "object",
+                          "properties": {
+                            "prospects": {
+                              "type": "integer",
+                              "example": 150
+                            },
+                            "chats": {
+                              "type": "integer",
+                              "example": 150
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/campaigns/{id}/pause": {
@@ -615,6 +691,92 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Bulk Delete Prospects",
+        "description": "Delete multiple prospects in a single operation",
+        "operationId": "bulkDeleteProspects",
+        "requestBody": {
+          "description": "Prospect IDs to delete",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prospectIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100,
+                    "example": ["prospect_123", "prospect_456"]
+                  },
+                  "campaignId": {
+                    "type": "string",
+                    "example": "campaign_abc"
+                  }
+                },
+                "required": ["prospectIds"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Bulk deletion completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bulk deletion completed"
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "requested": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "successful": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "failed": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/prospects/campaign/{campaignId}": {
@@ -659,6 +821,198 @@
           },
           "404": {
             "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/search": {
+      "get": {
+        "summary": "Search Prospects",
+        "description": "Advanced search and filtering across all prospects",
+        "operationId": "searchProspects",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Text search across prospect names and headlines",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "Filter by specific campaign ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "qualification",
+            "in": "query",
+            "description": "Filter by qualification status",
+            "schema": {
+              "type": "string",
+              "enum": ["pending", "qualified", "disqualified"]
+            }
+          },
+          {
+            "name": "hasResponded",
+            "in": "query",
+            "description": "Filter prospects who have responded",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of results to skip",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "prospects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Prospect"
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer",
+                          "example": 1250
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "example": 50
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "hasMore": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/{prospectId}": {
+      "delete": {
+        "summary": "Delete Single Prospect",
+        "description": "Delete a single prospect and all associated data",
+        "operationId": "deleteProspect",
+        "parameters": [
+          {
+            "name": "prospectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "prospect_123"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Prospect deleted successfully"
+                    },
+                    "deletionSummary": {
+                      "type": "object",
+                      "properties": {
+                        "prospectId": {
+                          "type": "string",
+                          "example": "prospect_123"
+                        },
+                        "deletedItems": {
+                          "type": "object",
+                          "properties": {
+                            "chats": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "messages": {
+                              "type": "integer",
+                              "example": 8
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Prospect not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1781,6 +2135,389 @@
           }
         }
       }
+    },
+    "/webhooks/test/events": {
+      "get": {
+        "summary": "List Test Events",
+        "description": "Get a list of available webhook event types for testing",
+        "operationId": "listTestEvents",
+        "responses": {
+          "200": {
+            "description": "List of available test events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "prospect.qualified"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Prospect Qualified"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "Triggered when a prospect is marked as qualified"
+                      },
+                      "category": {
+                        "type": "string",
+                        "example": "prospect"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/test/example/{event}": {
+      "get": {
+        "summary": "Get Test Event Example",
+        "description": "Get an example payload for a specific webhook event type",
+        "operationId": "getTestEventExample",
+        "parameters": [
+          {
+            "name": "event",
+            "in": "path",
+            "required": true,
+            "description": "The event type to get an example for",
+            "schema": {
+              "type": "string"
+            },
+            "example": "prospect.qualified"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Example event payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "event": {
+                      "type": "string",
+                      "example": "prospect.qualified"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2024-01-20T15:30:00Z"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Event-specific data payload"
+                    },
+                    "team": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "team_abc"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Sales Team Alpha"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid event type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/overview": {
+      "get": {
+        "summary": "Analytics Overview",
+        "description": "Get comprehensive analytics and performance metrics for your entire team",
+        "operationId": "getAnalyticsOverview",
+        "responses": {
+          "200": {
+            "description": "Analytics overview retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "totalCampaigns": {
+                          "type": "integer",
+                          "example": 15
+                        },
+                        "activeCampaigns": {
+                          "type": "integer",
+                          "example": 8
+                        },
+                        "totalProspects": {
+                          "type": "integer",
+                          "example": 1250
+                        },
+                        "totalQualified": {
+                          "type": "integer",
+                          "example": 89
+                        }
+                      }
+                    },
+                    "metrics": {
+                      "type": "object",
+                      "properties": {
+                        "conversionRate": {
+                          "type": "number",
+                          "example": 7.12
+                        },
+                        "responseRate": {
+                          "type": "number",
+                          "example": 18.72
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/campaigns/{campaignId}": {
+      "get": {
+        "summary": "Campaign Analytics",
+        "description": "Get detailed analytics for a specific campaign",
+        "operationId": "getCampaignAnalytics",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "campaign_12345abcde"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign analytics retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "campaign": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "campaign_123"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Q4 Enterprise Outreach"
+                        }
+                      }
+                    },
+                    "metrics": {
+                      "type": "object",
+                      "properties": {
+                        "totalProspects": {
+                          "type": "integer",
+                          "example": 150
+                        },
+                        "conversionRate": {
+                          "type": "number",
+                          "example": 8.0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/models": {
+      "get": {
+        "summary": "List Models",
+        "description": "Get a list of all available AI models with pricing information",
+        "operationId": "listModels",
+        "responses": {
+          "200": {
+            "description": "Models retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "models": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Model"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "example": 8
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/models/{modelId}": {
+      "get": {
+        "summary": "Get Model Details",
+        "description": "Get detailed information about a specific AI model",
+        "operationId": "getModelDetails",
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "680321c8001e2f527d82"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Model details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2574,6 +3311,45 @@
             "example": {
               "message": "This is a test message"
             }
+          }
+        }
+      },
+      "Model": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "680321c8001e2f527d82"
+          },
+          "name": {
+            "type": "string",
+            "example": "GPT 5 Mini"
+          },
+          "pricing": {
+            "type": "object",
+            "properties": {
+              "input": {
+                "type": "number",
+                "description": "Price per 1,000 input tokens",
+                "example": 0.25
+              },
+              "output": {
+                "type": "number",
+                "description": "Price per 1,000 output tokens",
+                "example": 2
+              },
+              "cached": {
+                "type": "number",
+                "nullable": true,
+                "description": "Price per 1,000 cached tokens (if supported)",
+                "example": 0.1
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive"],
+            "example": "active"
           }
         }
       },

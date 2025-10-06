@@ -39,11 +39,26 @@
             ]
           },
           {
+            "group": "Analytics",
+            "pages": [
+              "api-reference/analytics/overview",
+              "api-reference/analytics/campaigns"
+            ]
+          },
+          {
+            "group": "Models",
+            "pages": [
+              "api-reference/models/list",
+              "api-reference/models/details"
+            ]
+          },
+          {
             "group": "Campaigns",
             "pages": [
               "api-reference/campaigns/list",
               "api-reference/campaigns/create",
               "api-reference/campaigns/update",
+              "api-reference/campaigns/delete",
               "api-reference/campaigns/pause",
               "api-reference/campaigns/resume",
               "api-reference/campaigns/stats"
@@ -55,7 +70,10 @@
               "api-reference/prospects/list",
               "api-reference/prospects/add-single",
               "api-reference/prospects/add-batch",
+              "api-reference/prospects/search",
               "api-reference/prospects/details",
+              "api-reference/prospects/delete-single",
+              "api-reference/prospects/delete-bulk",
               "api-reference/prospects/pause",
               "api-reference/prospects/resume",
               "api-reference/prospects/qualify"
@@ -83,7 +101,9 @@
               "api-reference/agents/details",
               "api-reference/agents/setup",
               "api-reference/agents/pause",
-              "api-reference/agents/resume"
+              "api-reference/agents/resume",
+              "api-reference/agents/delete",
+              "api-reference/agents/relaunch"
             ]
           },
           {
@@ -94,7 +114,9 @@
               "api-reference/webhooks/update",
               "api-reference/webhooks/delete",
               "api-reference/webhooks/events",
-              "api-reference/webhooks/test"
+              "api-reference/webhooks/test",
+              "api-reference/webhooks/test-events",
+              "api-reference/webhooks/test-example"
             ]
           },
           {

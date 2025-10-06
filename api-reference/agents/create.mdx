@@ -1,4 +1,284 @@
 ---
-title: 'Create agents'
-openapi: 'Post /agents'
+title: 'Create Agent'
+openapi: 'POST /agents'
 ---
+
+## Overview
+
+Create a new LinkedIn automation agent for your team. This endpoint handles the complete agent setup process including profile creation, proxy assignment, and initial configuration. The agent will be ready for campaign assignment once created.
+
+## Request Body
+
+<ParamField body="name" type="string" required>
+  Display name for the agent (used in dashboard and reports)
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Email address for the LinkedIn account (must be unique)
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Password for the LinkedIn account (minimum 8 characters)
+</ParamField>
+
+<ParamField body="firstName" type="string" required>
+  First name for the LinkedIn profile
+</ParamField>
+
+<ParamField body="lastName" type="string" required>
+  Last name for the LinkedIn profile
+</ParamField>
+
+<ParamField body="workingHours" type="object">
+  Agent working hours configuration
+  <Expandable title="workingHours properties">
+    <ParamField body="start" type="string" default="09:00">
+      Start time in HH:MM format
+    </ParamField>
+    <ParamField body="end" type="string" default="17:00">
+      End time in HH:MM format
+    </ParamField>
+    <ParamField body="timezone" type="string" default="UTC">
+      Timezone for working hours
+    </ParamField>
+    <ParamField body="days" type="array" default="['monday', 'tuesday', 'wednesday', 'thursday', 'friday']">
+      Working days of the week
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="limits" type="object">
+  Daily activity limits for the agent
+  <Expandable title="limits properties">
+    <ParamField body="dailyConnections" type="number" default="20">
+      Maximum connection requests per day
+    </ParamField>
+    <ParamField body="dailyMessages" type="number" default="50">
+      Maximum messages per day
+    </ParamField>
+    <ParamField body="dailyProfileViews" type="number" default="100">
+      Maximum profile views per day
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Use Cases
+
+- **Team Expansion**: Add new agents to increase outreach capacity
+- **Geographic Coverage**: Create agents for different time zones
+- **Campaign Specialization**: Dedicated agents for specific campaigns
+- **Load Distribution**: Balance workload across multiple agents
+
+## Request Example
+
+```json
+{
+  "name": "Sales Agent - West Coast",
+  "email": "agent.westcoast@company.com",
+  "password": "SecurePassword123!",
+  "firstName": "Sarah",
+  "lastName": "Johnson",
+  "workingHours": {
+    "start": "08:00",
+    "end": "16:00",
+    "timezone": "America/Los_Angeles",
+    "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
+  },
+  "limits": {
+    "dailyConnections": 25,
+    "dailyMessages": 60,
+    "dailyProfileViews": 120
+  }
+}
+```
+
+## Response Structure
+
+```json
+{
+  "message": "Agent created successfully",
+  "agent": {
+    "id": "agent_123",
+    "name": "Sales Agent - West Coast",
+    "email": "agent.westcoast@company.com",
+    "status": "setup_pending",
+    "healthStatus": "initializing",
+    "profile": {
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "profileId": "gologin_profile_456"
+    },
+    "workingHours": {
+      "start": "08:00",
+      "end": "16:00",
+      "timezone": "America/Los_Angeles",
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
+    },
+    "limits": {
+      "dailyConnections": 25,
+      "dailyMessages": 60,
+      "dailyProfileViews": 120
+    },
+    "proxy": {
+      "assigned": true,
+      "location": "United States",
+      "type": "residential"
+    },
+    "createdAt": "2024-01-20T15:30:00Z",
+    "teamId": "team_789"
+  },
+  "nextSteps": [
+    "Complete LinkedIn profile setup",
+    "Verify email address",
+    "Configure automation settings",
+    "Assign to campaigns"
+  ]
+}
+```
+
+## Testing Example
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/agents" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Sales Agent - West Coast",
+    "email": "agent.westcoast@company.com",
+    "password": "SecurePassword123!",
+    "firstName": "Sarah",
+    "lastName": "Johnson",
+    "workingHours": {
+      "start": "08:00",
+      "end": "16:00",
+      "timezone": "America/Los_Angeles"
+    }
+  }'
+```
+
+```javascript
+// JavaScript/Node.js
+const createAgent = async (agentData) => {
+  const response = await fetch('https://api.kakiyo.com/v1/agents', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(agentData)
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const newAgent = await createAgent({
+  name: 'Sales Agent - West Coast',
+  email: 'agent.westcoast@company.com',
+  password: 'SecurePassword123!',
+  firstName: 'Sarah',
+  lastName: 'Johnson',
+  workingHours: {
+    start: '08:00',
+    end: '16:00',
+    timezone: 'America/Los_Angeles'
+  },
+  limits: {
+    dailyConnections: 25,
+    dailyMessages: 60,
+    dailyProfileViews: 120
+  }
+});
+
+console.log('New Agent Created:', newAgent);
+```
+
+```python
+# Python
+import requests
+
+def create_agent(agent_data):
+    """Create a new LinkedIn agent"""
+    response = requests.post(
+        'https://api.kakiyo.com/v1/agents',
+        json=agent_data,
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+
+    return response.json()
+
+# Usage example
+agent_data = {
+    'name': 'Sales Agent - West Coast',
+    'email': 'agent.westcoast@company.com',
+    'password': 'SecurePassword123!',
+    'firstName': 'Sarah',
+    'lastName': 'Johnson',
+    'workingHours': {
+        'start': '08:00',
+        'end': '16:00',
+        'timezone': 'America/Los_Angeles'
+    },
+    'limits': {
+        'dailyConnections': 25,
+        'dailyMessages': 60,
+        'dailyProfileViews': 120
+    }
+}
+
+result = create_agent(agent_data)
+print('New Agent Created:', result)
+```
+
+## Error Responses
+
+### Email Already Exists
+```json
+{
+  "error": "email_exists",
+  "message": "An agent with this email already exists"
+}
+```
+
+### Invalid Email Format
+```json
+{
+  "error": "invalid_email",
+  "message": "Please provide a valid email address"
+}
+```
+
+### Weak Password
+```json
+{
+  "error": "weak_password",
+  "message": "Password must be at least 8 characters long"
+}
+```
+
+### Team Limit Reached
+```json
+{
+  "error": "agent_limit_reached",
+  "message": "Maximum number of agents reached for your plan"
+}
+```
+
+### Proxy Assignment Failed
+```json
+{
+  "error": "proxy_assignment_failed",
+  "message": "Unable to assign proxy to agent. Please try again."
+}
+```
+
+## Best Practices
+
+1. **Unique Emails**: Use unique email addresses for each agent
+2. **Strong Passwords**: Use complex passwords with mixed characters
+3. **Realistic Limits**: Set conservative daily limits to avoid restrictions
+4. **Geographic Distribution**: Create agents in different time zones
+5. **Professional Names**: Use professional names for LinkedIn profiles
