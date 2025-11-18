@@ -1386,6 +1386,475 @@
         }
       }
     },
+    "/dnc": {
+      "get": {
+        "summary": "List DNC entries",
+        "description": "Retrieve a paginated list of all Do Not Contact entries for your team",
+        "operationId": "listDNC",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entries to return (1-1000)",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of entries to skip for pagination",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of DNC entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "null"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "entries": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DNCEntry"
+                          }
+                        },
+                        "total": {
+                          "type": "integer",
+                          "description": "Count of entries in current response (not total across all pages)",
+                          "example": 2
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "example": 50
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "example": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single DNC entry",
+        "description": "Add a single LinkedIn URL to your team's Do Not Contact list",
+        "operationId": "addDNC",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["url"],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "LinkedIn profile URL to add to DNC list",
+                    "example": "https://linkedin.com/in/johnsmith"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "DNC entry created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "null"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/DNCEntry"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Added to Do Not Contact list"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "URL already on DNC list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dnc/check": {
+      "get": {
+        "summary": "Check DNC status",
+        "description": "Check if a specific LinkedIn URL is on your team's Do Not Contact list",
+        "operationId": "checkDNC",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "description": "LinkedIn profile URL to check",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "https://linkedin.com/in/johnsmith"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DNC check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "null"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "onList": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "entry": {
+                          "oneOf": [
+                            {
+                              "$ref": "#/components/schemas/DNCEntry"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request - missing URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dnc/batch": {
+      "post": {
+        "summary": "Add batch DNC entries",
+        "description": "Bulk import multiple LinkedIn URLs to your team's Do Not Contact list",
+        "operationId": "addBatchDNC",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["entries"],
+                "properties": {
+                  "entries": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "required": ["url"],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "LinkedIn profile URL",
+                          "example": "https://linkedin.com/in/johnsmith"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bulk import completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "null"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "added": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "duplicates": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "errors": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "details": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": ["added", "duplicate", "error"]
+                              },
+                              "error": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Bulk import completed: 3 added, 1 duplicates, 0 errors"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dnc/{id}": {
+      "delete": {
+        "summary": "Delete DNC entry",
+        "description": "Remove a specific LinkedIn URL from your team's Do Not Contact list",
+        "operationId": "deleteDNC",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique ID of the DNC entry to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "dnc_12345abcde"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DNC entry deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "null"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "DNC entry deleted successfully"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized - entry belongs to different team",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "DNC entry not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/products": {
       "get": {
         "summary": "List Products",
@@ -3578,6 +4047,57 @@
                 }
               }
             }
+          }
+        }
+      },
+      "DNCEntry": {
+        "type": "object",
+        "properties": {
+          "$id": {
+            "type": "string",
+            "description": "Unique identifier for the DNC entry",
+            "example": "dnc_12345abcde"
+          },
+          "teamId": {
+            "type": "string",
+            "description": "Team ID that owns this entry",
+            "example": "team_67890fghij"
+          },
+          "url": {
+            "type": "string",
+            "description": "Normalized LinkedIn profile URL",
+            "example": "https://linkedin.com/in/johnsmith"
+          },
+          "$createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when entry was created",
+            "example": "2025-11-18T10:30:00.000Z"
+          },
+          "$updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when entry was last updated",
+            "example": "2025-11-18T10:30:00.000Z"
+          }
+        }
+      },
+      "RateLimitError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "rate_limit_exceeded"
+          },
+          "message": {
+            "type": "string",
+            "example": "Too many requests. Please try again later."
+          },
+          "resetTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp (in milliseconds) when the rate limit resets",
+            "example": 1700308800000
           }
         }
       }

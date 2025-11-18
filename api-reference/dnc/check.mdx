@@ -1,0 +1,492 @@
+---
+title: 'Check DNC status'
+openapi: 'GET /dnc/check'
+---
+
+## Overview
+
+Check if a specific LinkedIn URL is on your team's Do Not Contact (DNC) list. This endpoint performs a fast lookup with intelligent caching to determine if a prospect should be excluded from outreach campaigns.
+
+## Use Cases
+
+- **Pre-Import Validation**: Check URLs before importing prospects to avoid DNC violations
+- **Real-time Filtering**: Validate contacts in real-time before adding to campaigns
+- **Compliance Verification**: Ensure a contact isn't on the DNC list before outreach
+- **Integration Checks**: Validate contacts from external systems against your DNC list
+- **Automated Workflows**: Build automated systems that respect DNC preferences
+
+## Key Features
+
+- **Intelligent Caching**: 5-minute TTL cache for ultra-fast repeated lookups
+- **URL Normalization**: Automatically normalizes LinkedIn URLs for accurate matching
+- **Rate Limited**: 60 requests per minute for optimal performance
+- **Team Isolation**: Only checks against your team's DNC entries
+- **Detailed Response**: Returns full entry details if URL is found on list
+
+## Testing Example
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/dnc/check?url=https://linkedin.com/in/johnsmith" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+// JavaScript/Node.js
+const checkDNCStatus = async (linkedinUrl) => {
+  const response = await fetch(
+    `https://api.kakiyo.com/v1/dnc/check?url=${encodeURIComponent(linkedinUrl)}`,
+    {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer YOUR_API_KEY'
+      }
+    }
+  );
+
+  return await response.json();
+};
+
+// Usage example
+const status = await checkDNCStatus('https://linkedin.com/in/johnsmith');
+
+if (status.data.onList) {
+  console.log('⚠️ Contact is on DNC list');
+  console.log('Entry:', status.data.entry);
+} else {
+  console.log('✅ Contact is NOT on DNC list');
+}
+```
+
+```python
+# Python
+import requests
+from urllib.parse import quote
+
+def check_dnc_status(linkedin_url):
+    """Check if a LinkedIn URL is on the DNC list"""
+    encoded_url = quote(linkedin_url, safe='')
+    response = requests.get(
+        f'https://api.kakiyo.com/v1/dnc/check?url={encoded_url}',
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY'
+        }
+    )
+
+    return response.json()
+
+# Usage example
+result = check_dnc_status('https://linkedin.com/in/johnsmith')
+
+if result['data']['onList']:
+    print('⚠️ Contact is on DNC list')
+    print('Entry:', result['data']['entry'])
+else:
+    print('✅ Contact is NOT on DNC list')
+```
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | `string` | **Yes** | LinkedIn profile URL to check (will be URL-encoded) |
+
+### URL Format
+
+The endpoint accepts various LinkedIn URL formats:
+- `https://linkedin.com/in/username`
+- `https://www.linkedin.com/in/username/`
+- `linkedin.com/in/username`
+- `in/username`
+
+All formats are automatically normalized to: `https://linkedin.com/in/username`
+
+## Response Format
+
+### Success Response (200 OK)
+
+#### URL Found on DNC List
+
+```json
+{
+  "error": null,
+  "data": {
+    "onList": true,
+    "entry": {
+      "$id": "dnc_12345abcde",
+      "teamId": "team_67890fghij",
+      "url": "https://linkedin.com/in/johnsmith",
+      "$createdAt": "2025-11-18T10:30:00.000Z",
+      "$updatedAt": "2025-11-18T10:30:00.000Z"
+    }
+  }
+}
+```
+
+#### URL NOT Found on DNC List
+
+```json
+{
+  "error": null,
+  "data": {
+    "onList": false,
+    "entry": null
+  }
+}
+```
+
+### Error Responses
+
+#### 400 Bad Request - Missing URL
+
+```json
+{
+  "error": "invalid_request",
+  "message": "LinkedIn URL is required"
+}
+```
+
+#### 429 Too Many Requests - Rate Limit Exceeded
+
+```json
+{
+  "error": "rate_limit_exceeded",
+  "message": "Too many requests. Please try again later.",
+  "resetTime": 1700308800000
+}
+```
+
+#### 401 Unauthorized - Invalid API Key
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key"
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "error": "internal_error",
+  "message": "An internal error occurred"
+}
+```
+
+## Caching Mechanism
+
+The DNC check endpoint uses intelligent caching to optimize performance:
+
+### Cache Details
+
+- **TTL**: 5 minutes (300 seconds)
+- **Scope**: Team-level isolation
+- **Key**: Based on normalized LinkedIn URL
+- **Invalidation**: Automatic on DNC list modifications
+
+### Cache Benefits
+
+1. **Fast Lookups**: Cached responses returned in < 10ms
+2. **Reduced Load**: Minimizes database queries for repeated checks
+3. **Cost Savings**: Fewer database operations
+4. **Better UX**: Near-instant responses for cached URLs
+
+### Cache Behavior
+
+```javascript
+// First check - hits database (slower)
+const check1 = await checkDNCStatus('linkedin.com/in/john');
+// Response time: ~100ms
+
+// Second check within 5 minutes - hits cache (faster)
+const check2 = await checkDNCStatus('linkedin.com/in/john');
+// Response time: ~10ms
+
+// After 5 minutes - hits database again
+// OR if URL is added/removed from DNC list - cache invalidated
+```
+
+## URL Normalization
+
+All LinkedIn URLs are automatically normalized before checking:
+
+### Normalization Rules
+
+| Input | Normalized Output |
+|-------|-------------------|
+| `https://www.linkedin.com/in/john/` | `https://linkedin.com/in/john` |
+| `linkedin.com/in/john` | `https://linkedin.com/in/john` |
+| `in/john` | `https://linkedin.com/in/john` |
+| `LINKEDIN.COM/IN/JOHN` | `https://linkedin.com/in/john` |
+
+This ensures consistent matching regardless of URL format.
+
+## Rate Limiting
+
+- **Limit**: 60 requests per minute per team
+- **Window**: Rolling 60-second window
+- **Shared Limit**: Shared with other DNC read operations
+- **Exceeded**: Returns 429 status with `resetTime` timestamp
+
+## Integration Examples
+
+### Pre-Import Validation
+
+```javascript
+const validateProspectsBeforeImport = async (prospects) => {
+  const validationResults = [];
+
+  for (const prospect of prospects) {
+    const dncStatus = await checkDNCStatus(prospect.linkedinUrl);
+
+    validationResults.push({
+      name: prospect.name,
+      url: prospect.linkedinUrl,
+      onDNC: dncStatus.data.onList,
+      canImport: !dncStatus.data.onList
+    });
+
+    // Rate limit protection
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  return validationResults;
+};
+
+// Usage
+const prospects = [
+  { name: 'John Smith', linkedinUrl: 'linkedin.com/in/john' },
+  { name: 'Jane Doe', linkedinUrl: 'linkedin.com/in/jane' }
+];
+
+const validation = await validateProspectsBeforeImport(prospects);
+const canImport = validation.filter(v => v.canImport);
+
+console.log(`${canImport.length} of ${prospects.length} can be imported`);
+```
+
+### Real-time Campaign Filtering
+
+```javascript
+const filterCampaignProspects = async (campaignProspects) => {
+  const filtered = [];
+
+  for (const prospect of campaignProspects) {
+    const status = await checkDNCStatus(prospect.linkedinUrl);
+
+    if (!status.data.onList) {
+      filtered.push(prospect);
+    } else {
+      console.log(`Skipping ${prospect.name} - on DNC list`);
+    }
+  }
+
+  return filtered;
+};
+```
+
+### Batch Validation with Caching
+
+```javascript
+const batchCheckDNC = async (urls) => {
+  // Group URLs to check
+  const results = [];
+
+  // Process in batches to respect rate limits
+  const batchSize = 50; // 50 per minute to stay under 60/min limit
+
+  for (let i = 0; i < urls.length; i += batchSize) {
+    const batch = urls.slice(i, i + batchSize);
+
+    const batchResults = await Promise.all(
+      batch.map(async (url) => {
+        const status = await checkDNCStatus(url);
+        return {
+          url,
+          onDNC: status.data.onList,
+          entry: status.data.entry
+        };
+      })
+    );
+
+    results.push(...batchResults);
+
+    // Wait before next batch if needed
+    if (i + batchSize < urls.length) {
+      await new Promise(resolve => setTimeout(resolve, 60000));
+    }
+  }
+
+  return results;
+};
+```
+
+### Integration with CRM
+
+```javascript
+const validateCRMContact = async (contact) => {
+  if (!contact.linkedinUrl) {
+    return { valid: false, reason: 'No LinkedIn URL' };
+  }
+
+  const dncStatus = await checkDNCStatus(contact.linkedinUrl);
+
+  if (dncStatus.data.onList) {
+    return {
+      valid: false,
+      reason: 'On DNC list',
+      dncEntry: dncStatus.data.entry
+    };
+  }
+
+  return { valid: true };
+};
+
+// Usage
+const contact = {
+  name: 'John Smith',
+  linkedinUrl: 'linkedin.com/in/john'
+};
+
+const validation = await validateCRMContact(contact);
+
+if (validation.valid) {
+  await crmClient.addToCampaign(contact);
+} else {
+  console.log(`Cannot add ${contact.name}: ${validation.reason}`);
+}
+```
+
+### Automated Compliance Check
+
+```javascript
+const runComplianceCheck = async (prospectList) => {
+  const report = {
+    total: prospectList.length,
+    onDNC: 0,
+    safe: 0,
+    violations: []
+  };
+
+  for (const prospect of prospectList) {
+    const status = await checkDNCStatus(prospect.linkedinUrl);
+
+    if (status.data.onList) {
+      report.onDNC++;
+      report.violations.push({
+        name: prospect.name,
+        url: prospect.linkedinUrl,
+        addedToDNC: status.data.entry.$createdAt
+      });
+    } else {
+      report.safe++;
+    }
+  }
+
+  return report;
+};
+```
+
+## Best Practices
+
+1. **Always Check Before Adding**: Validate URLs before adding to campaigns
+2. **Handle Rate Limits**: Implement exponential backoff for 429 responses
+3. **Batch with Delays**: Add delays between batch checks to respect rate limits
+4. **URL Encoding**: Always URL-encode the LinkedIn URL parameter
+5. **Cache Awareness**: Understand that results are cached for 5 minutes
+6. **Error Handling**: Always check for `error` field in response
+7. **Automated Integration**: Integrate checks into your import workflows
+
+## Performance Considerations
+
+- **Cached Response**: < 10ms for cached entries
+- **Database Query**: ~100ms for non-cached entries
+- **URL Normalization**: Automatic and fast
+- **Team Isolation**: Permissions enforced at database level
+- **Composite Index**: Optimized queries with `teamId` + `url` index
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `error` | `string\|null` | Error code if request failed, `null` on success |
+| `data.onList` | `boolean` | `true` if URL is on DNC list, `false` otherwise |
+| `data.entry` | `object\|null` | Full DNC entry details if found, `null` if not on list |
+
+## Common Use Cases
+
+### Pre-Campaign Validation
+
+```javascript
+const validateCampaignProspects = async (campaignId) => {
+  const prospects = await getProspectsForCampaign(campaignId);
+
+  const validation = await Promise.all(
+    prospects.map(async (p) => {
+      const status = await checkDNCStatus(p.linkedinUrl);
+      return {
+        prospectId: p.id,
+        name: p.name,
+        blocked: status.data.onList
+      };
+    })
+  );
+
+  const blocked = validation.filter(v => v.blocked);
+
+  if (blocked.length > 0) {
+    console.log(`⚠️ ${blocked.length} prospects are on DNC list`);
+    return { canLaunch: false, blocked };
+  }
+
+  return { canLaunch: true, blocked: [] };
+};
+```
+
+### Import Wizard Integration
+
+```javascript
+const importWizardStep = async (csvData) => {
+  const validation = {
+    valid: [],
+    invalid: [],
+    onDNC: []
+  };
+
+  for (const row of csvData) {
+    if (!row.linkedinUrl) {
+      validation.invalid.push({ ...row, reason: 'Missing URL' });
+      continue;
+    }
+
+    const dncStatus = await checkDNCStatus(row.linkedinUrl);
+
+    if (dncStatus.data.onList) {
+      validation.onDNC.push({
+        ...row,
+        dncEntry: dncStatus.data.entry
+      });
+    } else {
+      validation.valid.push(row);
+    }
+  }
+
+  return validation;
+};
+```
+
+## Next Steps
+
+After checking DNC status:
+
+1. **Add to DNC**: If not on list, use [Add Single](/api-reference/dnc/add-single) endpoint
+2. **Import Prospects**: Proceed with import if URL is not on DNC list
+3. **View All Entries**: Use [List DNC](/api-reference/dnc/list) endpoint
+4. **Remove Entry**: Use [Delete DNC](/api-reference/dnc/delete) endpoint if needed
+
+## Related Endpoints
+
+- [List DNC Entries](/api-reference/dnc/list) - View all DNC entries
+- [Add Single Entry](/api-reference/dnc/add-single) - Add a URL to DNC list
+- [Bulk Add Entries](/api-reference/dnc/add-batch) - Add multiple URLs to DNC list
+- [Delete Entry](/api-reference/dnc/delete) - Remove a URL from DNC list

@@ -81,6 +81,16 @@
             ]
           },
           {
+            "group": "DNC",
+            "pages": [
+              "api-reference/dnc/list",
+              "api-reference/dnc/check",
+              "api-reference/dnc/add-single",
+              "api-reference/dnc/add-batch",
+              "api-reference/dnc/delete"
+            ]
+          },
+          {
             "group": "Products",
             "pages": [
               "api-reference/products/list",

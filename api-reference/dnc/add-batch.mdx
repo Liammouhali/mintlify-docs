@@ -1,0 +1,652 @@
+---
+title: 'Add batch DNC entries'
+openapi: 'POST /dnc/batch'
+---
+
+## Overview
+
+Bulk import multiple LinkedIn URLs to your team's Do Not Contact (DNC) list in a single operation. This endpoint efficiently processes large lists of opt-outs, providing detailed reports on successes, duplicates, and errors.
+
+## Use Cases
+
+- **CSV Import**: Bulk import DNC lists from CSV files or spreadsheets
+- **CRM Sync**: Synchronize opt-outs from external CRM systems
+- **Compliance Migration**: Import historical opt-out lists from legacy systems
+- **Mass Opt-Outs**: Process multiple opt-out requests simultaneously
+- **System Integration**: Batch sync DNC entries from other platforms
+
+## Key Features
+
+- **Bulk Processing**: Add hundreds of URLs in a single request
+- **Duplicate Handling**: Automatically skips existing entries without errors
+- **Error Resilience**: Continues processing even if individual URLs fail
+- **Detailed Reporting**: Returns comprehensive stats (added, duplicates, errors)
+- **Automatic Normalization**: All URLs standardized before storage
+- **Rate Limited**: 10 requests per minute for bulk operations
+- **Team Isolation**: All entries scoped to your team
+
+## Testing Example
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/dnc/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "entries": [
+      {
+        "url": "https://linkedin.com/in/johnsmith"
+      },
+      {
+        "url": "https://linkedin.com/in/sarahjohnson"
+      },
+      {
+        "url": "https://linkedin.com/in/michaelchen"
+      }
+    ]
+  }'
+```
+
+```javascript
+// JavaScript/Node.js
+const bulkAddToDNC = async (linkedinUrls) => {
+  const response = await fetch('https://api.kakiyo.com/v1/dnc/batch', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      entries: linkedinUrls.map(url => ({ url }))
+    })
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const urls = [
+  'https://linkedin.com/in/john',
+  'https://linkedin.com/in/jane',
+  'https://linkedin.com/in/bob'
+];
+
+const result = await bulkAddToDNC(urls);
+
+console.log(`✅ Added: ${result.data.added}`);
+console.log(`⚠️ Duplicates: ${result.data.duplicates}`);
+console.log(`❌ Errors: ${result.data.errors}`);
+console.log('Details:', result.data.details);
+```
+
+```python
+# Python
+import requests
+
+def bulk_add_to_dnc(linkedin_urls):
+    """Bulk add LinkedIn URLs to the DNC list"""
+    response = requests.post(
+        'https://api.kakiyo.com/v1/dnc/batch',
+        json={
+            'entries': [{'url': url} for url in linkedin_urls]
+        },
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+
+    return response.json()
+
+# Usage example
+urls = [
+    'https://linkedin.com/in/john',
+    'https://linkedin.com/in/jane',
+    'https://linkedin.com/in/bob'
+]
+
+result = bulk_add_to_dnc(urls)
+
+print(f"✅ Added: {result['data']['added']}")
+print(f"⚠️ Duplicates: {result['data']['duplicates']}")
+print(f"❌ Errors: {result['data']['errors']}")
+print('Details:', result['data']['details'])
+```
+
+## Request Body
+
+### Required Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `entries` | `array<object>` | **Yes** | Array of entry objects to add (minimum 1 entry) |
+
+### Entry Object Structure
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | `string` | **Yes** | LinkedIn profile URL to add to DNC list |
+
+### Example Request Body
+
+```json
+{
+  "entries": [
+    {
+      "url": "https://linkedin.com/in/johnsmith"
+    },
+    {
+      "url": "https://linkedin.com/in/sarahjohnson"
+    },
+    {
+      "url": "https://linkedin.com/in/michaelchen"
+    },
+    {
+      "url": "linkedin.com/in/emilydavis"
+    },
+    {
+      "url": "in/davidwilson"
+    }
+  ]
+}
+```
+
+## Response Format
+
+### Success Response (201 Created)
+
+```json
+{
+  "error": null,
+  "data": {
+    "added": 3,
+    "duplicates": 1,
+    "errors": 1,
+    "details": [
+      {
+        "url": "https://linkedin.com/in/johnsmith",
+        "status": "added"
+      },
+      {
+        "url": "https://linkedin.com/in/sarahjohnson",
+        "status": "added"
+      },
+      {
+        "url": "https://linkedin.com/in/michaelchen",
+        "status": "duplicate"
+      },
+      {
+        "url": "https://linkedin.com/in/emilydavis",
+        "status": "added"
+      },
+      {
+        "url": "invalid-url",
+        "status": "error",
+        "error": "Invalid LinkedIn URL format"
+      }
+    ]
+  },
+  "message": "Bulk import completed: 3 added, 1 duplicates, 1 errors"
+}
+```
+
+### Error Responses
+
+#### 400 Bad Request - Missing Entries Array
+
+```json
+{
+  "error": "invalid_request",
+  "message": "Entries array is required"
+}
+```
+
+#### 400 Bad Request - Empty Entries Array
+
+```json
+{
+  "error": "invalid_request",
+  "message": "Entries array is required"
+}
+```
+
+#### 400 Bad Request - Invalid Entry Format
+
+```json
+{
+  "error": "invalid_request",
+  "message": "Each entry must have a url field"
+}
+```
+
+#### 429 Too Many Requests - Rate Limit Exceeded
+
+```json
+{
+  "error": "rate_limit_exceeded",
+  "message": "Too many requests. Please try again later.",
+  "resetTime": 1700308800000
+}
+```
+
+#### 401 Unauthorized - Invalid API Key
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key"
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "error": "internal_error",
+  "message": "An internal error occurred"
+}
+```
+
+## Response Fields
+
+### Summary Statistics
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `data.added` | `integer` | Number of URLs successfully added |
+| `data.duplicates` | `integer` | Number of URLs already on DNC list (skipped) |
+| `data.errors` | `integer` | Number of URLs that failed to process |
+
+### Details Array
+
+Each entry in the `details` array contains:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `url` | `string` | The normalized LinkedIn URL |
+| `status` | `string` | Status: `added`, `duplicate`, or `error` |
+| `error` | `string` | Error message (only present if `status: "error"`) |
+
+## Bulk Processing Behavior
+
+### Error Handling
+
+- **Resilient Processing**: Continues processing even if individual entries fail
+- **Duplicate Skipping**: Existing URLs marked as `duplicate`, not errors
+- **Individual Errors**: Each error tracked separately in `details` array
+- **Partial Success**: Returns 201 even if some entries fail
+
+### Processing Order
+
+1. **Validate Request**: Check entries array format
+2. **Loop Through Entries**: Process each URL sequentially
+3. **Normalize URL**: Standardize LinkedIn URL format
+4. **Check Duplicate**: Query existing DNC entries
+5. **Add or Skip**: Insert new entry or mark as duplicate
+6. **Track Stats**: Update counters for added/duplicates/errors
+7. **Invalidate Cache**: Clear team cache after all processing
+
+## Rate Limiting
+
+- **Limit**: 10 requests per minute per team
+- **Window**: Rolling 60-second window
+- **Reason**: Bulk operations require more resources
+- **Exceeded**: Returns 429 status with `resetTime` timestamp
+
+### Rate Limit Best Practices
+
+1. **Batch Size**: Process 100-500 URLs per request for optimal performance
+2. **Wait Between Batches**: Add 6+ second delay between bulk requests
+3. **Handle 429**: Implement exponential backoff with `resetTime`
+4. **Queue System**: Use a queue for very large imports (1000+ URLs)
+
+## Integration Examples
+
+### CSV Import
+
+```javascript
+const importDNCFromCSV = async (csvContent) => {
+  // Parse CSV (assuming first column is LinkedIn URL)
+  const rows = csvContent.split('\n').slice(1); // Skip header
+  const urls = rows
+    .map(row => row.split(',')[0].trim())
+    .filter(url => url.length > 0);
+
+  // Process in batches
+  const batchSize = 100;
+  const results = {
+    totalAdded: 0,
+    totalDuplicates: 0,
+    totalErrors: 0,
+    allDetails: []
+  };
+
+  for (let i = 0; i < urls.length; i += batchSize) {
+    const batch = urls.slice(i, i + batchSize);
+
+    const result = await bulkAddToDNC(batch);
+
+    if (result.error) {
+      console.error('Batch failed:', result.error);
+      continue;
+    }
+
+    results.totalAdded += result.data.added;
+    results.totalDuplicates += result.data.duplicates;
+    results.totalErrors += result.data.errors;
+    results.allDetails.push(...result.data.details);
+
+    // Rate limit protection: wait 6 seconds between batches
+    if (i + batchSize < urls.length) {
+      await new Promise(resolve => setTimeout(resolve, 6000));
+    }
+  }
+
+  return results;
+};
+
+// Usage
+const csvData = `LinkedIn URL,Name,Reason
+https://linkedin.com/in/john,John Smith,Opt-out request
+https://linkedin.com/in/jane,Jane Doe,Unsubscribed
+linkedin.com/in/bob,Bob Wilson,Customer request`;
+
+const importResults = await importDNCFromCSV(csvData);
+console.log('Import complete:', importResults);
+```
+
+### CRM Synchronization
+
+```javascript
+const syncCRMOptOuts = async (crmClient) => {
+  // Fetch opt-outs from CRM since last sync
+  const lastSync = await getLastSyncTimestamp();
+  const crmOptOuts = await crmClient.getOptOuts({ since: lastSync });
+
+  console.log(`Syncing ${crmOptOuts.length} opt-outs from CRM`);
+
+  // Convert to format expected by API
+  const entries = crmOptOuts.map(optOut => ({
+    url: optOut.linkedinUrl
+  }));
+
+  // Bulk add to DNC
+  const result = await fetch('https://api.kakiyo.com/v1/dnc/batch', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ entries })
+  }).then(r => r.json());
+
+  // Update sync timestamp
+  await updateLastSyncTimestamp(new Date().toISOString());
+
+  // Log results
+  await logSyncResults({
+    timestamp: new Date().toISOString(),
+    source: 'CRM',
+    added: result.data.added,
+    duplicates: result.data.duplicates,
+    errors: result.data.errors
+  });
+
+  return result;
+};
+
+// Run every hour
+setInterval(syncCRMOptOuts, 60 * 60 * 1000);
+```
+
+### Migration from Legacy System
+
+```javascript
+const migrateLegacyDNC = async (legacySystem) => {
+  console.log('Starting DNC migration from legacy system...');
+
+  // Fetch all DNC entries from legacy system
+  const legacyEntries = await legacySystem.getAllDNC();
+
+  // Process in batches
+  const batchSize = 200;
+  const totalBatches = Math.ceil(legacyEntries.length / batchSize);
+
+  for (let i = 0; i < totalBatches; i++) {
+    const start = i * batchSize;
+    const end = Math.min(start + batchSize, legacyEntries.length);
+    const batch = legacyEntries.slice(start, end);
+
+    console.log(`Processing batch ${i + 1}/${totalBatches} (${batch.length} entries)`);
+
+    try {
+      const result = await bulkAddToDNC(batch.map(e => e.linkedinUrl));
+
+      console.log(`Batch ${i + 1} complete:`, {
+        added: result.data.added,
+        duplicates: result.data.duplicates,
+        errors: result.data.errors
+      });
+
+      // Log errors for review
+      const errors = result.data.details.filter(d => d.status === 'error');
+      if (errors.length > 0) {
+        await logMigrationErrors(errors);
+      }
+
+    } catch (error) {
+      console.error(`Batch ${i + 1} failed:`, error);
+      await logMigrationError({ batch: i + 1, error: error.message });
+    }
+
+    // Rate limit protection
+    if (i < totalBatches - 1) {
+      await new Promise(resolve => setTimeout(resolve, 6000));
+    }
+  }
+
+  console.log('Migration complete');
+};
+```
+
+### Webhook Batch Processing
+
+```javascript
+const processWebhookBatch = async (webhookPayload) => {
+  const { optOuts, source } = webhookPayload;
+
+  // Validate payload
+  if (!Array.isArray(optOuts)) {
+    throw new Error('Invalid webhook payload: optOuts must be an array');
+  }
+
+  // Convert to API format
+  const entries = optOuts.map(optOut => ({
+    url: optOut.linkedinUrl
+  }));
+
+  // Bulk add to DNC
+  const result = await bulkAddToDNC(entries.map(e => e.url));
+
+  // Log the webhook event
+  await auditLog({
+    action: 'dnc_batch_added',
+    source: source,
+    timestamp: new Date().toISOString(),
+    stats: {
+      added: result.data.added,
+      duplicates: result.data.duplicates,
+      errors: result.data.errors
+    }
+  });
+
+  return result;
+};
+```
+
+### Export and Re-Import
+
+```javascript
+const exportAndReimportDNC = async () => {
+  // Export current DNC list
+  const currentList = await fetch('https://api.kakiyo.com/v1/dnc?limit=1000', {
+    headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+  }).then(r => r.json());
+
+  // Transform data
+  const transformed = currentList.data.entries.map(entry => ({
+    url: entry.url,
+    // Add any transformations here
+  }));
+
+  // Re-import with transformations
+  const result = await bulkAddToDNC(transformed.map(e => e.url));
+
+  return result;
+};
+```
+
+## Best Practices
+
+1. **Batch Size**: Use 100-500 URLs per request for optimal performance
+2. **Rate Limiting**: Wait 6+ seconds between batch requests
+3. **Error Handling**: Review `details` array for failed entries
+4. **Validation**: Pre-validate URLs before sending to API
+5. **Progress Tracking**: Log batch results for large imports
+6. **Duplicate Handling**: Expect duplicates, don't treat as errors
+7. **Retry Logic**: Retry failed batches with exponential backoff
+8. **Audit Trail**: Log all bulk operations with timestamps
+
+## URL Format Support
+
+The endpoint accepts various LinkedIn URL formats per entry:
+- `https://linkedin.com/in/username`
+- `https://www.linkedin.com/in/username/`
+- `linkedin.com/in/username`
+- `in/username`
+
+All formats are automatically normalized to: `https://linkedin.com/in/username`
+
+## Performance Considerations
+
+- **Sequential Processing**: Entries processed one at a time within batch
+- **Duplicate Check**: Each URL checked against database (indexed query)
+- **Cache Invalidation**: Team cache cleared once after all processing
+- **Typical Speed**: ~10-20 entries per second
+- **Large Batches**: 500 URLs typically processes in 25-50 seconds
+
+## Status Codes
+
+| Status | Description |
+|--------|-------------|
+| `added` | URL successfully added to DNC list |
+| `duplicate` | URL already exists on DNC list (skipped) |
+| `error` | URL failed to process (see `error` field for reason) |
+
+## Compliance Considerations
+
+### GDPR
+
+- **Batch Processing**: Process bulk opt-out requests within 24-48 hours
+- **Audit Trail**: Maintain logs of all bulk imports
+- **Data Source**: Document source of bulk DNC entries
+- **Verification**: Verify consent withdrawal before bulk import
+
+### CAN-SPAM
+
+- **Opt-Out Lists**: Accept and process bulk unsubscribe lists
+- **Third-Party Lists**: Honor opt-outs from third-party sources
+- **Suppression Lists**: Maintain and respect suppression lists
+- **Processing Time**: Process within 10 business days
+
+## Common Use Cases
+
+### Daily CRM Sync
+
+```javascript
+const dailyCRMSync = async () => {
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const optOuts = await crmClient.getOptOuts({ since: yesterday });
+
+  if (optOuts.length === 0) {
+    console.log('No new opt-outs to sync');
+    return;
+  }
+
+  const result = await bulkAddToDNC(optOuts.map(o => o.linkedinUrl));
+
+  console.log('Daily sync complete:', {
+    date: new Date().toISOString(),
+    processed: optOuts.length,
+    added: result.data.added,
+    duplicates: result.data.duplicates,
+    errors: result.data.errors
+  });
+};
+
+// Run daily at midnight
+const schedule = require('node-schedule');
+schedule.scheduleJob('0 0 * * *', dailyCRMSync);
+```
+
+### Large-Scale Migration
+
+```javascript
+const migrateFromPlatform = async (platform) => {
+  const allDNC = await platform.exportDNCList();
+
+  console.log(`Migrating ${allDNC.length} DNC entries`);
+
+  // Split into batches
+  const batches = [];
+  const batchSize = 200;
+
+  for (let i = 0; i < allDNC.length; i += batchSize) {
+    batches.push(allDNC.slice(i, i + batchSize));
+  }
+
+  // Process batches with progress tracking
+  const progress = {
+    total: allDNC.length,
+    processed: 0,
+    added: 0,
+    duplicates: 0,
+    errors: 0
+  };
+
+  for (let i = 0; i < batches.length; i++) {
+    const batch = batches[i];
+    const result = await bulkAddToDNC(batch.map(e => e.url));
+
+    progress.processed += batch.length;
+    progress.added += result.data.added;
+    progress.duplicates += result.data.duplicates;
+    progress.errors += result.data.errors;
+
+    console.log(`Progress: ${progress.processed}/${progress.total} (${Math.round(progress.processed / progress.total * 100)}%)`);
+
+    // Wait between batches
+    if (i < batches.length - 1) {
+      await new Promise(resolve => setTimeout(resolve, 6000));
+    }
+  }
+
+  return progress;
+};
+```
+
+## Next Steps
+
+After bulk importing DNC entries:
+
+1. **Verify Import**: Use [List DNC](/api-reference/dnc/list) to review entries
+2. **Check Specific URLs**: Use [Check DNC](/api-reference/dnc/check) to validate
+3. **Review Errors**: Investigate and retry failed entries
+4. **Monitor Campaigns**: Ensure affected contacts are paused
+5. **Audit Compliance**: Document import for compliance records
+
+## Related Endpoints
+
+- [Add Single Entry](/api-reference/dnc/add-single) - Add individual URLs one at a time
+- [Check DNC Status](/api-reference/dnc/check) - Verify if a URL is on the DNC list
+- [List DNC Entries](/api-reference/dnc/list) - View all DNC entries
+- [Delete Entry](/api-reference/dnc/delete) - Remove a URL from DNC list
