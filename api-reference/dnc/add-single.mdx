@@ -1,0 +1,563 @@
+---
+title: 'Add single DNC entry'
+openapi: 'POST /dnc'
+---
+
+## Overview
+
+Add a single LinkedIn URL to your team's Do Not Contact (DNC) list. Once added, this contact will be automatically excluded from all current and future campaigns, ensuring compliance with opt-out requests.
+
+## Use Cases
+
+- **Opt-Out Requests**: Add contacts who have requested to stop receiving messages
+- **Compliance Management**: Maintain GDPR/CAN-SPAM compliance
+- **Manual Exclusions**: Exclude specific individuals from campaigns
+- **Customer Requests**: Honor removal requests from existing customers
+- **Integration Workflows**: Add DNCs from external systems via API
+
+## Key Features
+
+- **Automatic URL Normalization**: LinkedIn URLs automatically standardized
+- **Duplicate Prevention**: Prevents adding the same URL twice
+- **Immediate Effect**: Contact excluded from all campaigns instantly
+- **Cache Invalidation**: Automatically updates cache for instant checks
+- **Rate Limited**: 30 requests per minute for reliable performance
+- **Team Isolation**: DNC entries only visible to your team
+
+## Testing Example
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/dnc" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://linkedin.com/in/johnsmith"
+  }'
+```
+
+```javascript
+// JavaScript/Node.js
+const addToDNC = async (linkedinUrl) => {
+  const response = await fetch('https://api.kakiyo.com/v1/dnc', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      url: linkedinUrl
+    })
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const result = await addToDNC('https://linkedin.com/in/johnsmith');
+
+if (result.error) {
+  console.log('❌ Failed to add:', result.error);
+} else {
+  console.log('✅ Added to DNC list:', result.data);
+}
+```
+
+```python
+# Python
+import requests
+
+def add_to_dnc(linkedin_url):
+    """Add a LinkedIn URL to the DNC list"""
+    response = requests.post(
+        'https://api.kakiyo.com/v1/dnc',
+        json={'url': linkedin_url},
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+        }
+    )
+
+    return response.json()
+
+# Usage example
+result = add_to_dnc('https://linkedin.com/in/johnsmith')
+
+if result['error']:
+    print('❌ Failed to add:', result['error'])
+else:
+    print('✅ Added to DNC list:', result['data'])
+```
+
+## Request Body
+
+### Required Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | `string` | **Yes** | LinkedIn profile URL to add to DNC list |
+
+### URL Format Support
+
+The endpoint accepts various LinkedIn URL formats:
+- `https://linkedin.com/in/username`
+- `https://www.linkedin.com/in/username/`
+- `linkedin.com/in/username`
+- `in/username`
+
+All formats are automatically normalized to: `https://linkedin.com/in/username`
+
+### Example Request Body
+
+```json
+{
+  "url": "https://linkedin.com/in/johnsmith"
+}
+```
+
+## Response Format
+
+### Success Response (201 Created)
+
+```json
+{
+  "error": null,
+  "data": {
+    "$id": "dnc_12345abcde",
+    "teamId": "team_67890fghij",
+    "url": "https://linkedin.com/in/johnsmith",
+    "$createdAt": "2025-11-18T10:30:00.000Z",
+    "$updatedAt": "2025-11-18T10:30:00.000Z"
+  },
+  "message": "Added to Do Not Contact list"
+}
+```
+
+### Error Responses
+
+#### 409 Conflict - URL Already on DNC List
+
+```json
+{
+  "error": "dnc_entry_exists",
+  "message": "URL already on DNC list"
+}
+```
+
+#### 400 Bad Request - Missing URL
+
+```json
+{
+  "error": "invalid_request",
+  "message": "LinkedIn URL is required"
+}
+```
+
+#### 400 Bad Request - Invalid URL Format
+
+```json
+{
+  "error": "invalid_url",
+  "message": "Invalid LinkedIn URL format"
+}
+```
+
+#### 429 Too Many Requests - Rate Limit Exceeded
+
+```json
+{
+  "error": "rate_limit_exceeded",
+  "message": "Too many requests. Please try again later.",
+  "resetTime": 1700308800000
+}
+```
+
+#### 401 Unauthorized - Invalid API Key
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key"
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "error": "internal_error",
+  "message": "An internal error occurred"
+}
+```
+
+## URL Normalization
+
+All LinkedIn URLs are automatically normalized before storage:
+
+### Normalization Process
+
+1. **Lowercase**: Convert to lowercase
+2. **Protocol**: Add `https://` if missing
+3. **Remove www**: Strip `www.` subdomain
+4. **Trim Trailing Slash**: Remove trailing `/`
+5. **Extract Username**: Extract username from various formats
+
+### Normalization Examples
+
+| Input | Normalized Output |
+|-------|-------------------|
+| `https://www.linkedin.com/in/john/` | `https://linkedin.com/in/john` |
+| `LINKEDIN.COM/IN/JOHN` | `https://linkedin.com/in/john` |
+| `linkedin.com/in/john` | `https://linkedin.com/in/john` |
+| `in/john` | `https://linkedin.com/in/john` |
+
+This ensures no duplicate entries for the same profile.
+
+## Rate Limiting
+
+- **Limit**: 30 requests per minute per team
+- **Window**: Rolling 60-second window
+- **Shared with**: Other DNC write operations
+- **Exceeded**: Returns 429 status with `resetTime` timestamp
+
+### Rate Limit Best Practices
+
+1. **Implement Backoff**: Wait for `resetTime` before retrying
+2. **Batch Operations**: Use [Bulk Add](/api-reference/dnc/add-batch) for multiple URLs
+3. **Queue System**: Implement a queue for high-volume additions
+4. **Error Handling**: Gracefully handle 429 responses
+
+## Integration Examples
+
+### Handle Opt-Out Request
+
+```javascript
+const handleOptOutRequest = async (linkedinUrl, reason) => {
+  try {
+    // Add to DNC list
+    const result = await addToDNC(linkedinUrl);
+
+    if (result.error === 'dnc_entry_exists') {
+      console.log('Already on DNC list');
+      return { success: true, alreadyExists: true };
+    }
+
+    if (result.error) {
+      console.error('Failed to add to DNC:', result.error);
+      return { success: false, error: result.error };
+    }
+
+    // Log the opt-out
+    await logOptOut({
+      url: linkedinUrl,
+      reason: reason,
+      timestamp: new Date().toISOString(),
+      dncId: result.data.$id
+    });
+
+    // Notify team
+    await notifyTeam(`Contact opted out: ${linkedinUrl}`);
+
+    return { success: true, entry: result.data };
+
+  } catch (error) {
+    console.error('Error handling opt-out:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Usage
+await handleOptOutRequest(
+  'linkedin.com/in/john',
+  'User replied with STOP'
+);
+```
+
+### Webhook Integration
+
+```javascript
+const handleWebhookOptOut = async (webhookPayload) => {
+  const { contact, source } = webhookPayload;
+
+  // Validate payload
+  if (!contact.linkedinUrl) {
+    throw new Error('LinkedIn URL missing in webhook payload');
+  }
+
+  // Add to DNC
+  const result = await addToDNC(contact.linkedinUrl);
+
+  if (result.error && result.error !== 'dnc_entry_exists') {
+    throw new Error(`Failed to add to DNC: ${result.error}`);
+  }
+
+  // Log the source
+  await auditLog({
+    action: 'dnc_added',
+    source: source,
+    contact: contact.linkedinUrl,
+    timestamp: new Date().toISOString()
+  });
+
+  return result;
+};
+```
+
+### CRM Integration
+
+```javascript
+const syncCRMOptOuts = async (crmClient) => {
+  // Get opt-outs from CRM
+  const optOuts = await crmClient.getOptOuts({
+    since: getLastSyncTime()
+  });
+
+  const results = {
+    added: 0,
+    alreadyExists: 0,
+    failed: 0,
+    errors: []
+  };
+
+  for (const optOut of optOuts) {
+    try {
+      const result = await addToDNC(optOut.linkedinUrl);
+
+      if (result.error === 'dnc_entry_exists') {
+        results.alreadyExists++;
+      } else if (result.error) {
+        results.failed++;
+        results.errors.push({
+          url: optOut.linkedinUrl,
+          error: result.error
+        });
+      } else {
+        results.added++;
+      }
+
+      // Rate limit protection
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+    } catch (error) {
+      results.failed++;
+      results.errors.push({
+        url: optOut.linkedinUrl,
+        error: error.message
+      });
+    }
+  }
+
+  // Update sync timestamp
+  await updateLastSyncTime(new Date().toISOString());
+
+  return results;
+};
+```
+
+### Form Submission Handler
+
+```javascript
+const handleUnsubscribeForm = async (formData) => {
+  const { linkedinUrl, email, reason } = formData;
+
+  // Validate input
+  if (!linkedinUrl) {
+    return {
+      success: false,
+      message: 'LinkedIn URL is required'
+    };
+  }
+
+  // Add to DNC
+  const result = await addToDNC(linkedinUrl);
+
+  if (result.error === 'dnc_entry_exists') {
+    return {
+      success: true,
+      message: 'You have already been removed from our contact list'
+    };
+  }
+
+  if (result.error) {
+    return {
+      success: false,
+      message: 'An error occurred. Please try again later.'
+    };
+  }
+
+  // Send confirmation email
+  if (email) {
+    await sendEmail({
+      to: email,
+      subject: 'Unsubscribe Confirmation',
+      body: `You have been removed from our contact list.`
+    });
+  }
+
+  return {
+    success: true,
+    message: 'You have been successfully removed from our contact list'
+  };
+};
+```
+
+### Automated Campaign Monitoring
+
+```javascript
+const monitorCampaignResponses = async (campaignId) => {
+  // Get campaign responses
+  const responses = await getCampaignResponses(campaignId);
+
+  // Check for opt-out keywords
+  const optOutKeywords = ['stop', 'unsubscribe', 'remove', 'opt out'];
+
+  for (const response of responses) {
+    const message = response.message.toLowerCase();
+
+    // Check if response contains opt-out keywords
+    const hasOptOut = optOutKeywords.some(keyword =>
+      message.includes(keyword)
+    );
+
+    if (hasOptOut) {
+      // Add to DNC
+      await addToDNC(response.prospect.linkedinUrl);
+
+      // Pause prospect in campaign
+      await pauseProspect(campaignId, response.prospect.id);
+
+      // Notify team
+      await notifyTeam({
+        type: 'opt_out_detected',
+        prospect: response.prospect.name,
+        campaign: campaignId,
+        message: response.message
+      });
+    }
+  }
+};
+```
+
+## Best Practices
+
+1. **Validate URLs**: Ensure LinkedIn URLs are valid before adding
+2. **Handle Duplicates**: Gracefully handle 409 responses (URL already exists)
+3. **Immediate Action**: Add to DNC as soon as opt-out is received
+4. **Audit Trail**: Log all DNC additions with timestamp and reason
+5. **Team Notification**: Alert team when contacts are added to DNC
+6. **Bulk Operations**: Use bulk endpoint for multiple URLs
+7. **Error Handling**: Implement proper error handling and retries
+8. **Compliance**: Document the reason for each DNC addition
+
+## Compliance Considerations
+
+### GDPR Compliance
+
+- **Right to Object**: Honor opt-out requests within 24 hours
+- **Proof of Consent**: Maintain audit logs of all DNC additions
+- **Data Retention**: Keep DNC list indefinitely or per policy
+- **Transparency**: Provide clear opt-out mechanisms
+
+### CAN-SPAM Compliance
+
+- **Opt-Out Mechanism**: Provide clear unsubscribe links
+- **Honor Requests**: Process opt-outs within 10 business days
+- **Permanent**: Keep opt-outs permanent (don't remove from DNC)
+- **No Charges**: Never charge for processing opt-outs
+
+## Automatic Campaign Integration
+
+Once a URL is added to the DNC list:
+
+1. **Active Campaigns**: Contact is automatically paused in all active campaigns
+2. **Future Campaigns**: Contact cannot be added to new campaigns
+3. **CSV Imports**: DNC entries are skipped during prospect imports
+4. **API Checks**: All prospect creation endpoints check DNC list
+5. **Worker Tasks**: Agent tasks are automatically skipped for DNC contacts
+
+## Performance Considerations
+
+- **URL Normalization**: Automatic, adds ~5ms to request time
+- **Duplicate Check**: Uses indexed query, typically < 50ms
+- **Database Write**: Typically < 100ms
+- **Cache Invalidation**: Immediate, affects team-wide checks
+- **Team Isolation**: Permissions enforced at database level
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `error` | `string\|null` | Error code if failed, `null` on success |
+| `data.$id` | `string` | Unique identifier for the DNC entry |
+| `data.teamId` | `string` | Team ID that owns this entry |
+| `data.url` | `string` | Normalized LinkedIn URL |
+| `data.$createdAt` | `string` | ISO 8601 timestamp when entry was created |
+| `data.$updatedAt` | `string` | ISO 8601 timestamp when entry was last updated |
+| `message` | `string` | Success message |
+
+## Common Use Cases
+
+### Real-time Opt-Out Processing
+
+```javascript
+const processOptOut = async (prospectId, linkedinUrl) => {
+  // 1. Add to DNC list
+  const dncResult = await addToDNC(linkedinUrl);
+
+  if (dncResult.error && dncResult.error !== 'dnc_entry_exists') {
+    throw new Error(`Failed to add to DNC: ${dncResult.error}`);
+  }
+
+  // 2. Pause in all campaigns
+  await pauseProspectInAllCampaigns(prospectId);
+
+  // 3. Log the action
+  await auditLog({
+    action: 'opt_out_processed',
+    prospectId: prospectId,
+    url: linkedinUrl,
+    timestamp: new Date().toISOString()
+  });
+
+  // 4. Send confirmation
+  return {
+    success: true,
+    message: 'Opt-out processed successfully',
+    dncId: dncResult.data.$id
+  };
+};
+```
+
+### Compliance Dashboard
+
+```javascript
+const addToComplianceDashboard = async (linkedinUrl, reason) => {
+  // Add to DNC
+  const result = await addToDNC(linkedinUrl);
+
+  // Update compliance metrics
+  await updateMetrics({
+    type: 'dnc_addition',
+    timestamp: new Date().toISOString(),
+    reason: reason,
+    successful: !result.error
+  });
+
+  return result;
+};
+```
+
+## Next Steps
+
+After adding a single DNC entry:
+
+1. **Verify Addition**: Use [Check DNC](/api-reference/dnc/check) to confirm
+2. **View All Entries**: Use [List DNC](/api-reference/dnc/list) to see complete list
+3. **Bulk Operations**: Use [Bulk Add](/api-reference/dnc/add-batch) for multiple URLs
+4. **Monitor Campaigns**: Ensure contact is paused in all active campaigns
+
+## Related Endpoints
+
+- [Check DNC Status](/api-reference/dnc/check) - Check if a URL is on the DNC list
+- [List DNC Entries](/api-reference/dnc/list) - View all DNC entries
+- [Bulk Add Entries](/api-reference/dnc/add-batch) - Add multiple URLs to DNC list
+- [Delete Entry](/api-reference/dnc/delete) - Remove a URL from DNC list

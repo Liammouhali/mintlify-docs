@@ -1,0 +1,653 @@
+---
+title: 'Delete DNC entry'
+openapi: 'DELETE /dnc/{id}'
+---
+
+## Overview
+
+Remove a specific LinkedIn URL from your team's Do Not Contact (DNC) list. This allows the contact to be included in campaigns again and reverses the opt-out status.
+
+## Use Cases
+
+- **Consent Restoration**: Re-enable contact after receiving new consent
+- **Error Correction**: Remove URLs added to DNC list by mistake
+- **Customer Return**: Allow returning customers to receive outreach again
+- **Testing**: Clean up test entries from DNC list
+- **Data Management**: Maintain accurate DNC list by removing outdated entries
+
+## Key Features
+
+- **Team Authorization**: Ensures only team owners can delete their DNC entries
+- **Immediate Effect**: Contact can be added to campaigns immediately after deletion
+- **Cache Invalidation**: Automatically updates cache for instant availability
+- **Rate Limited**: 30 requests per minute for reliable performance
+- **Audit Trail**: Deletion logged for compliance tracking
+- **Permanent Deletion**: Entry completely removed from database
+
+## Testing Example
+
+```bash
+curl -X DELETE "https://api.kakiyo.com/v1/dnc/dnc_12345abcde" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+// JavaScript/Node.js
+const deleteDNCEntry = async (dncId) => {
+  const response = await fetch(`https://api.kakiyo.com/v1/dnc/${dncId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY'
+    }
+  });
+
+  return await response.json();
+};
+
+// Usage example
+const result = await deleteDNCEntry('dnc_12345abcde');
+
+if (result.error) {
+  console.log('❌ Failed to delete:', result.error);
+} else {
+  console.log('✅ DNC entry deleted successfully');
+}
+```
+
+```python
+# Python
+import requests
+
+def delete_dnc_entry(dnc_id):
+    """Delete a DNC entry by ID"""
+    response = requests.delete(
+        f'https://api.kakiyo.com/v1/dnc/{dnc_id}',
+        headers={
+            'Authorization': 'Bearer YOUR_API_KEY'
+        }
+    )
+
+    return response.json()
+
+# Usage example
+result = delete_dnc_entry('dnc_12345abcde')
+
+if result['error']:
+    print('❌ Failed to delete:', result['error'])
+else:
+    print('✅ DNC entry deleted successfully')
+```
+
+## URL Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | `string` | **Yes** | The unique ID of the DNC entry to delete |
+
+### ID Format
+
+The DNC entry ID follows the format: `dnc_[alphanumeric]`
+
+Example: `dnc_12345abcde`
+
+## Response Format
+
+### Success Response (200 OK)
+
+```json
+{
+  "error": null,
+  "data": {
+    "message": "DNC entry deleted successfully"
+  }
+}
+```
+
+### Error Responses
+
+#### 404 Not Found - DNC Entry Not Found
+
+```json
+{
+  "error": "dnc_not_found",
+  "message": "DNC entry not found"
+}
+```
+
+#### 403 Forbidden - Unauthorized Access
+
+```json
+{
+  "error": "unauthorized_dnc",
+  "message": "You do not have access to this DNC entry"
+}
+```
+
+#### 429 Too Many Requests - Rate Limit Exceeded
+
+```json
+{
+  "error": "rate_limit_exceeded",
+  "message": "Too many requests. Please try again later.",
+  "resetTime": 1700308800000
+}
+```
+
+#### 401 Unauthorized - Invalid API Key
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key"
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "error": "internal_error",
+  "message": "An internal error occurred"
+}
+```
+
+## Authorization & Security
+
+### Team Ownership Verification
+
+The endpoint performs two-level authorization:
+
+1. **API Key Verification**: Validates your API key
+2. **Team Ownership Check**: Ensures the DNC entry belongs to your team
+
+```javascript
+// Authorization flow
+// 1. Fetch DNC entry by ID
+const entry = await getDNCEntry(dncId);
+
+// 2. Verify team ownership
+if (entry.teamId !== requestTeamId) {
+  throw new UnauthorizedError('DNC entry belongs to different team');
+}
+
+// 3. Delete entry
+await deleteDNCEntry(dncId);
+```
+
+### Security Features
+
+- **Team Isolation**: Cannot delete DNC entries from other teams
+- **Permission Enforcement**: Database-level permission checks
+- **Audit Logging**: All deletions logged to BetterStack
+- **API Key Validation**: Requires valid API key with proper scope
+
+## Rate Limiting
+
+- **Limit**: 30 requests per minute per team
+- **Window**: Rolling 60-second window
+- **Shared with**: Other DNC write operations
+- **Exceeded**: Returns 429 status with `resetTime` timestamp
+
+### Rate Limit Best Practices
+
+1. **Sequential Processing**: Delete entries one at a time
+2. **Batch Tracking**: Maintain local queue for multiple deletions
+3. **Exponential Backoff**: Wait for `resetTime` on 429 responses
+4. **Error Handling**: Gracefully handle rate limit errors
+
+## Integration Examples
+
+### Delete with Error Handling
+
+```javascript
+const safeDNCDelete = async (dncId) => {
+  try {
+    const result = await deleteDNCEntry(dncId);
+
+    if (result.error === 'dnc_not_found') {
+      console.log('Entry not found - may already be deleted');
+      return { success: true, alreadyDeleted: true };
+    }
+
+    if (result.error === 'unauthorized_dnc') {
+      console.log('Cannot delete - entry belongs to different team');
+      return { success: false, error: 'unauthorized' };
+    }
+
+    if (result.error) {
+      console.error('Failed to delete:', result.error);
+      return { success: false, error: result.error };
+    }
+
+    console.log('✅ DNC entry deleted successfully');
+    return { success: true };
+
+  } catch (error) {
+    console.error('Error deleting DNC entry:', error);
+    return { success: false, error: error.message };
+  }
+};
+```
+
+### Bulk Delete with Rate Limiting
+
+```javascript
+const bulkDeleteDNC = async (dncIds) => {
+  const results = {
+    deleted: 0,
+    notFound: 0,
+    unauthorized: 0,
+    failed: 0,
+    details: []
+  };
+
+  for (const dncId of dncIds) {
+    try {
+      const result = await deleteDNCEntry(dncId);
+
+      if (result.error === 'dnc_not_found') {
+        results.notFound++;
+        results.details.push({ id: dncId, status: 'not_found' });
+      } else if (result.error === 'unauthorized_dnc') {
+        results.unauthorized++;
+        results.details.push({ id: dncId, status: 'unauthorized' });
+      } else if (result.error) {
+        results.failed++;
+        results.details.push({ id: dncId, status: 'error', error: result.error });
+      } else {
+        results.deleted++;
+        results.details.push({ id: dncId, status: 'deleted' });
+      }
+
+      // Rate limit protection: 30 per minute = ~2 second delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+    } catch (error) {
+      results.failed++;
+      results.details.push({ id: dncId, status: 'error', error: error.message });
+    }
+  }
+
+  return results;
+};
+
+// Usage
+const idsToDelete = ['dnc_123', 'dnc_456', 'dnc_789'];
+const deleteResults = await bulkDeleteDNC(idsToDelete);
+
+console.log('Bulk delete complete:', {
+  deleted: deleteResults.deleted,
+  notFound: deleteResults.notFound,
+  unauthorized: deleteResults.unauthorized,
+  failed: deleteResults.failed
+});
+```
+
+### Re-Enable Contact Workflow
+
+```javascript
+const reEnableContact = async (linkedinUrl) => {
+  // 1. Check if contact is on DNC list
+  const dncStatus = await fetch(
+    `https://api.kakiyo.com/v1/dnc/check?url=${encodeURIComponent(linkedinUrl)}`,
+    {
+      headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+    }
+  ).then(r => r.json());
+
+  if (!dncStatus.data.onList) {
+    console.log('Contact is not on DNC list');
+    return { success: true, wasOnList: false };
+  }
+
+  // 2. Delete from DNC list
+  const dncId = dncStatus.data.entry.$id;
+  const deleteResult = await deleteDNCEntry(dncId);
+
+  if (deleteResult.error) {
+    console.error('Failed to remove from DNC:', deleteResult.error);
+    return { success: false, error: deleteResult.error };
+  }
+
+  // 3. Verify removal
+  const verifyStatus = await fetch(
+    `https://api.kakiyo.com/v1/dnc/check?url=${encodeURIComponent(linkedinUrl)}`,
+    {
+      headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+    }
+  ).then(r => r.json());
+
+  if (verifyStatus.data.onList) {
+    console.error('Failed to verify removal from DNC');
+    return { success: false, error: 'verification_failed' };
+  }
+
+  console.log('✅ Contact re-enabled successfully');
+  return { success: true, wasOnList: true };
+};
+
+// Usage
+await reEnableContact('https://linkedin.com/in/johnsmith');
+```
+
+### Cleanup Test Entries
+
+```javascript
+const cleanupTestDNC = async () => {
+  // Get all DNC entries
+  const allEntries = await fetch('https://api.kakiyo.com/v1/dnc?limit=1000', {
+    headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+  }).then(r => r.json());
+
+  // Filter test entries (e.g., URLs containing 'test' or 'example')
+  const testEntries = allEntries.data.entries.filter(entry =>
+    entry.url.includes('test') || entry.url.includes('example')
+  );
+
+  console.log(`Found ${testEntries.length} test entries to clean up`);
+
+  // Delete test entries
+  const results = await bulkDeleteDNC(testEntries.map(e => e.$id));
+
+  console.log('Cleanup complete:', results);
+  return results;
+};
+```
+
+### Consent Management Integration
+
+```javascript
+const handleConsentUpdate = async (contact) => {
+  const { linkedinUrl, hasConsent, consentDate } = contact;
+
+  if (hasConsent) {
+    // User gave consent - remove from DNC if present
+    const dncStatus = await fetch(
+      `https://api.kakiyo.com/v1/dnc/check?url=${encodeURIComponent(linkedinUrl)}`,
+      {
+        headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+      }
+    ).then(r => r.json());
+
+    if (dncStatus.data.onList) {
+      const dncId = dncStatus.data.entry.$id;
+      await deleteDNCEntry(dncId);
+
+      // Log consent restoration
+      await auditLog({
+        action: 'consent_restored',
+        linkedinUrl: linkedinUrl,
+        consentDate: consentDate,
+        dncId: dncId
+      });
+    }
+
+  } else {
+    // User withdrew consent - add to DNC
+    await fetch('https://api.kakiyo.com/v1/dnc', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url: linkedinUrl })
+    });
+
+    // Log consent withdrawal
+    await auditLog({
+      action: 'consent_withdrawn',
+      linkedinUrl: linkedinUrl,
+      timestamp: new Date().toISOString()
+    });
+  }
+};
+```
+
+### Dashboard Integration
+
+```javascript
+const dncDashboardActions = {
+  // View DNC entry details
+  async viewEntry(dncId) {
+    const entries = await fetch('https://api.kakiyo.com/v1/dnc', {
+      headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+    }).then(r => r.json());
+
+    return entries.data.entries.find(e => e.$id === dncId);
+  },
+
+  // Delete with confirmation
+  async deleteWithConfirm(dncId) {
+    const entry = await this.viewEntry(dncId);
+
+    if (!entry) {
+      return { success: false, error: 'Entry not found' };
+    }
+
+    const confirmed = await confirmDialog({
+      title: 'Remove from DNC List?',
+      message: `Are you sure you want to remove ${entry.url} from the DNC list?`,
+      confirmText: 'Remove',
+      cancelText: 'Cancel'
+    });
+
+    if (!confirmed) {
+      return { success: false, cancelled: true };
+    }
+
+    const result = await deleteDNCEntry(dncId);
+    return result.error ? { success: false, error: result.error } : { success: true };
+  },
+
+  // Delete multiple with progress
+  async deleteMultiple(dncIds, onProgress) {
+    const total = dncIds.length;
+    let processed = 0;
+    const results = { deleted: 0, failed: 0 };
+
+    for (const dncId of dncIds) {
+      const result = await deleteDNCEntry(dncId);
+
+      if (result.error) {
+        results.failed++;
+      } else {
+        results.deleted++;
+      }
+
+      processed++;
+      onProgress({ processed, total, results });
+
+      // Rate limit protection
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+
+    return results;
+  }
+};
+
+// Usage in UI
+const handleBulkDelete = async (selectedIds) => {
+  await dncDashboardActions.deleteMultiple(
+    selectedIds,
+    (progress) => {
+      updateProgressBar(progress.processed / progress.total * 100);
+      updateStats(progress.results);
+    }
+  );
+};
+```
+
+## Best Practices
+
+1. **Verify Ownership**: Endpoint automatically verifies team ownership
+2. **Handle 404s**: Entry may have been deleted by another process
+3. **Rate Limit Awareness**: Add delays when deleting multiple entries
+4. **Audit Trail**: Log all deletions with reason and timestamp
+5. **Confirmation UI**: Implement confirmation dialogs in user interfaces
+6. **Error Handling**: Gracefully handle all error responses
+7. **Cache Awareness**: Deletion invalidates team cache immediately
+8. **Re-verification**: Check DNC status after deletion if critical
+
+## Cache Invalidation
+
+Deleting a DNC entry automatically invalidates:
+
+- **Team Cache**: All cached DNC checks for your team
+- **Immediate Effect**: Next check for the URL will return `onList: false`
+- **TTL Reset**: New checks will create fresh cache entries
+
+## Performance Considerations
+
+- **Authorization Check**: ~50ms for ownership verification
+- **Database Deletion**: ~100ms for actual deletion
+- **Cache Invalidation**: Immediate, adds ~5ms
+- **Total Response Time**: Typically 150-200ms
+- **Team Isolation**: Permissions enforced at database level
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `error` | `string\|null` | Error code if failed, `null` on success |
+| `data.message` | `string` | Success message: "DNC entry deleted successfully" |
+
+## Common Error Scenarios
+
+### Entry Not Found
+
+```javascript
+// Entry may have been deleted by another process
+const result = await deleteDNCEntry('dnc_invalid_id');
+// Result: { error: 'dnc_not_found', message: 'DNC entry not found' }
+
+// Handle gracefully
+if (result.error === 'dnc_not_found') {
+  console.log('Entry already deleted or never existed');
+}
+```
+
+### Unauthorized Access
+
+```javascript
+// Trying to delete another team's DNC entry
+const result = await deleteDNCEntry('dnc_other_team_entry');
+// Result: { error: 'unauthorized_dnc', message: 'You do not have access...' }
+
+// Security check passed - cannot delete other team's entries
+```
+
+### Rate Limit Exceeded
+
+```javascript
+// Too many delete requests
+const result = await deleteDNCEntry('dnc_12345');
+// Result: { error: 'rate_limit_exceeded', resetTime: 1700308800000 }
+
+// Wait until resetTime before retrying
+const waitTime = result.resetTime - Date.now();
+await new Promise(resolve => setTimeout(resolve, waitTime));
+```
+
+## Compliance Considerations
+
+### GDPR
+
+- **Audit Trail**: Log all deletions with reason and timestamp
+- **Right to Withdraw**: Allow contacts to re-enable communications
+- **Data Retention**: Document deletion for compliance audits
+- **Consent Management**: Link deletions to consent restoration
+
+### CAN-SPAM
+
+- **Opt-In Verification**: Only delete after verified opt-in
+- **Documentation**: Maintain records of consent restoration
+- **Automated Processing**: Process re-enable requests promptly
+
+## Important Warnings
+
+⚠️ **Permanent Deletion**: Once deleted, the entry is permanently removed. The contact can be added to campaigns immediately.
+
+⚠️ **Team Authorization**: You can only delete DNC entries belonging to your team. Attempts to delete other teams' entries will fail with 403 Forbidden.
+
+⚠️ **Immediate Effect**: Deletion takes effect immediately. The contact becomes available for campaigns right away.
+
+⚠️ **No Bulk Endpoint**: There is no bulk delete endpoint. Delete entries one at a time with rate limit considerations.
+
+## Common Use Cases
+
+### Error Correction
+
+```javascript
+const correctDNCMistake = async (wrongUrl, correctUrl) => {
+  // 1. Find wrong entry
+  const entries = await fetch('https://api.kakiyo.com/v1/dnc', {
+    headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+  }).then(r => r.json());
+
+  const wrongEntry = entries.data.entries.find(e => e.url === wrongUrl);
+
+  if (wrongEntry) {
+    // 2. Delete wrong entry
+    await deleteDNCEntry(wrongEntry.$id);
+  }
+
+  // 3. Add correct entry
+  await fetch('https://api.kakiyo.com/v1/dnc', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ url: correctUrl })
+  });
+
+  console.log('DNC entry corrected');
+};
+```
+
+### Periodic Cleanup
+
+```javascript
+const periodicDNCCleanup = async () => {
+  const cutoffDate = new Date();
+  cutoffDate.setFullYear(cutoffDate.getFullYear() - 2); // 2 years old
+
+  const allEntries = await fetch('https://api.kakiyo.com/v1/dnc?limit=1000', {
+    headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+  }).then(r => r.json());
+
+  // Find entries older than cutoff
+  const oldEntries = allEntries.data.entries.filter(entry =>
+    new Date(entry.$createdAt) < cutoffDate
+  );
+
+  console.log(`Found ${oldEntries.length} entries older than 2 years`);
+
+  // Delete with confirmation
+  if (oldEntries.length > 0) {
+    const confirmed = await confirmCleanup(oldEntries.length);
+    if (confirmed) {
+      await bulkDeleteDNC(oldEntries.map(e => e.$id));
+    }
+  }
+};
+
+// Run monthly
+setInterval(periodicDNCCleanup, 30 * 24 * 60 * 60 * 1000);
+```
+
+## Next Steps
+
+After deleting a DNC entry:
+
+1. **Verify Deletion**: Use [Check DNC](/api-reference/dnc/check) to confirm removal
+2. **Add to Campaign**: Contact can now be added to campaigns
+3. **Update Records**: Update any external systems or CRM records
+4. **Monitor**: Track if contact needs to be re-added to DNC
+
+## Related Endpoints
+
+- [Check DNC Status](/api-reference/dnc/check) - Verify if a URL is on the DNC list
+- [List DNC Entries](/api-reference/dnc/list) - View all DNC entries
+- [Add Single Entry](/api-reference/dnc/add-single) - Add a URL to DNC list
+- [Bulk Add Entries](/api-reference/dnc/add-batch) - Add multiple URLs to DNC list
