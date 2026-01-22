@@ -1,0 +1,44 @@
+---
+title: 'Unassign Agent'
+openapi: 'DELETE /workspaces/{id}/agents/{agentId}'
+---
+
+<Note>
+**Agency Plan Required** - This endpoint is only available for teams on the Agency plan.
+</Note>
+
+## Endpoint
+
+```
+DELETE https://api.kakiyo.com/v1/workspaces/:workspaceId/agents/:agentId
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `workspaceId` | string | Yes | The workspace ID |
+| `agentId` | string | Yes | The agent ID to unassign |
+
+## Response
+
+```json
+{
+  "message": "Agent unassigned from workspace",
+  "agentId": "69724b7100331796aae2",
+  "propagated": {
+    "campaigns": 5,
+    "chats": 150,
+    "prospects": 150
+  }
+}
+```
+
+## Example Request
+
+```bash
+curl -X DELETE "https://api.kakiyo.com/v1/workspaces/69724d900007cfde1d88/agents/69724b7100331796aae2" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+The agent is not deleted, only unassigned. Client permissions are automatically removed from all associated campaigns, chats, and prospects.

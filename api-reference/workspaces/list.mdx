@@ -1,0 +1,37 @@
+---
+title: 'List Workspaces'
+openapi: 'GET /workspaces'
+---
+
+<Note>
+**Agency Plan Required** - This endpoint is only available for teams on the Agency plan.
+</Note>
+
+## Endpoint
+
+```
+GET https://api.kakiyo.com/v1/workspaces
+```
+
+## Response
+
+```json
+{
+  "workspaces": [
+    {
+      "id": "69724d900007cfde1d88",
+      "name": "Acme Corporation",
+      "clientTeamId": "69724d91000403019498",
+      "createdAt": "2024-01-15T10:30:00.000Z"
+    }
+  ],
+  "total": 1
+}
+```
+
+## Example Request
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/workspaces" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

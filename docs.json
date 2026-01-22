@@ -118,6 +118,18 @@
             ]
           },
           {
+            "group": "Workspaces",
+            "pages": [
+              "api-reference/workspaces/list",
+              "api-reference/workspaces/create",
+              "api-reference/workspaces/delete",
+              "api-reference/workspaces/invite-client",
+              "api-reference/workspaces/remove-client",
+              "api-reference/workspaces/assign-agent",
+              "api-reference/workspaces/unassign-agent"
+            ]
+          },
+          {
             "group": "Webhooks",
             "pages": [
               "api-reference/webhooks/list",

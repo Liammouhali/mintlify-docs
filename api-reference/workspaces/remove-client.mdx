@@ -1,0 +1,44 @@
+---
+title: 'Remove Client'
+openapi: 'DELETE /workspaces/{id}/clients'
+---
+
+<Note>
+**Agency Plan Required** - This endpoint is only available for teams on the Agency plan.
+</Note>
+
+## Endpoint
+
+```
+DELETE https://api.kakiyo.com/v1/workspaces/:workspaceId/clients
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `workspaceId` | string | Yes | The workspace ID |
+
+## Request Body
+
+| Field | Type | Required | Description |
+| ----- | ---- | -------- | ----------- |
+| `email` | string | Yes | Email address of the client to remove |
+
+## Response
+
+```json
+{
+  "message": "Client removed from workspace",
+  "email": "john@acmecorp.com"
+}
+```
+
+## Example Request
+
+```bash
+curl -X DELETE "https://api.kakiyo.com/v1/workspaces/69724d900007cfde1d88/clients" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "john@acmecorp.com"}'
+```

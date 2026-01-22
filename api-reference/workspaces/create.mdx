@@ -1,0 +1,40 @@
+---
+title: 'Create Workspace'
+openapi: 'POST /workspaces'
+---
+
+<Note>
+**Agency Plan Required** - This endpoint is only available for teams on the Agency plan.
+</Note>
+
+## Endpoint
+
+```
+POST https://api.kakiyo.com/v1/workspaces
+```
+
+## Request Body
+
+| Field | Type | Required | Description |
+| ----- | ---- | -------- | ----------- |
+| `name` | string | Yes | Display name for the workspace |
+
+## Response
+
+```json
+{
+  "id": "69724d900007cfde1d88",
+  "name": "Acme Corporation",
+  "clientTeamId": "69724d91000403019498",
+  "createdAt": "2024-01-15T10:30:00.000Z"
+}
+```
+
+## Example Request
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/workspaces" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Acme Corporation"}'
+```
