@@ -1,0 +1,44 @@
+---
+title: 'Assign Agent'
+openapi: 'POST /workspaces/{id}/agents/{agentId}'
+---
+
+<Note>
+**Agency Plan Required** - This endpoint is only available for teams on the Agency plan.
+</Note>
+
+## Endpoint
+
+```
+POST https://api.kakiyo.com/v1/workspaces/:workspaceId/agents/:agentId
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `workspaceId` | string | Yes | The workspace ID |
+| `agentId` | string | Yes | The agent ID to assign |
+
+## Response
+
+```json
+{
+  "agentId": "69724b7100331796aae2",
+  "workspaceId": "69724d900007cfde1d88",
+  "propagated": {
+    "campaigns": 5,
+    "chats": 150,
+    "prospects": 150
+  }
+}
+```
+
+## Example Request
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/workspaces/69724d900007cfde1d88/agents/69724b7100331796aae2" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+When an agent is assigned, client permissions are automatically propagated to all associated campaigns, chats, and prospects.

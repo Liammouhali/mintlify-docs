@@ -1,0 +1,44 @@
+---
+title: 'Delete Workspace'
+openapi: 'DELETE /workspaces/{id}'
+---
+
+<Note>
+**Agency Plan Required** - This endpoint is only available for teams on the Agency plan.
+</Note>
+
+## Endpoint
+
+```
+DELETE https://api.kakiyo.com/v1/workspaces/:workspaceId
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `workspaceId` | string | Yes | The workspace ID to delete |
+
+## Response
+
+```json
+{
+  "message": "Workspace deleted successfully",
+  "stats": {
+    "agentsUnassigned": 3,
+    "campaignsUpdated": 5,
+    "chatsUpdated": 150
+  }
+}
+```
+
+## Example Request
+
+```bash
+curl -X DELETE "https://api.kakiyo.com/v1/workspaces/69724d900007cfde1d88" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+<Warning>
+This is a destructive operation. Deleting a workspace permanently removes client access and unassigns all agents.
+</Warning>

@@ -1,0 +1,51 @@
+---
+title: 'Invite Client'
+openapi: 'POST /workspaces/{id}/invite'
+---
+
+<Note>
+**Agency Plan Required** - This endpoint is only available for teams on the Agency plan.
+</Note>
+
+## Endpoint
+
+```
+POST https://api.kakiyo.com/v1/workspaces/:workspaceId/invite
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `workspaceId` | string | Yes | The workspace ID |
+
+## Request Body
+
+| Field | Type | Required | Description |
+| ----- | ---- | -------- | ----------- |
+| `email` | string | Yes | Email address of the client to invite |
+| `roles` | array | No | Roles to assign (default: `["member"]`) |
+| `redirectUrl` | string | No | Custom redirect URL after authentication |
+
+## Response
+
+```json
+{
+  "membershipId": "69724d91001234567890",
+  "userId": "69724d91009876543210",
+  "email": "john@acmecorp.com",
+  "portalUrl": "https://youragency.kakiyo.agency",
+  "emailSent": true
+}
+```
+
+## Example Request
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/workspaces/69724d900007cfde1d88/invite" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "john@acmecorp.com"}'
+```
+
+An invitation email with a magic link is sent to the client. The email is sent from your custom domain if configured, otherwise from `noreply@kakiyo.com`.
