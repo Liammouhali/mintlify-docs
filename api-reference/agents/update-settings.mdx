@@ -1,0 +1,146 @@
+---
+title: 'Update Agent Settings'
+openapi: 'PUT /agents/{id}'
+---
+
+## Endpoint
+
+```
+PUT https://api.kakiyo.com/v1/agents/:agentId
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `agentId` | string | Yes | The agent ID to update |
+
+## Request Body
+
+All sections are optional. You can update just one section or multiple at once.
+
+### Working Hours
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `days` | string | Working days (Mon-Sun). Format: `1:1:1:1:1:0:0` where 1=active, 0=off |
+| `start` | string | Start time in HH:MM format (24-hour) |
+| `stop` | string | End time in HH:MM format (24-hour) |
+
+### Limits
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `invitationsMin` | integer | Minimum daily invitations (1-100) |
+| `invitationsMax` | integer | Maximum daily invitations (2-100) |
+| `messagesMin` | integer | Minimum daily messages (1-500) |
+| `messagesMax` | integer | Maximum daily messages (2-500) |
+
+### Settings
+
+Array of key-value pairs for behavior settings:
+
+| Key | Type | Description |
+| --- | ---- | ----------- |
+| `skipInNetwork` | boolean | Don't send messages to prospects already in your LinkedIn network |
+| `invitationsOnly` | boolean | Only send invitations, skip follow-up messages |
+
+## Response
+
+```json
+{
+  "id": "69724b7100331796aae2",
+  "message": "Agent settings updated successfully"
+}
+```
+
+## Example Requests
+
+### Update Working Hours Only
+
+```bash
+curl -X PUT "https://api.kakiyo.com/v1/agents/69724b7100331796aae2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "workingHours": {
+      "days": "1:1:1:1:1:0:0",
+      "start": "08:00",
+      "stop": "18:00"
+    }
+  }'
+```
+
+### Update Limits Only
+
+```bash
+curl -X PUT "https://api.kakiyo.com/v1/agents/69724b7100331796aae2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "limits": {
+      "invitationsMin": 20,
+      "invitationsMax": 30,
+      "messagesMin": 100,
+      "messagesMax": 150
+    }
+  }'
+```
+
+### Update Settings Only
+
+```bash
+curl -X PUT "https://api.kakiyo.com/v1/agents/69724b7100331796aae2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "settings": [
+      { "key": "skipInNetwork", "value": true }
+    ]
+  }'
+```
+
+### Update Everything
+
+```bash
+curl -X PUT "https://api.kakiyo.com/v1/agents/69724b7100331796aae2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "workingHours": {
+      "days": "1:1:1:1:1:0:0",
+      "start": "08:00",
+      "stop": "18:00"
+    },
+    "limits": {
+      "invitationsMin": 20,
+      "invitationsMax": 30,
+      "messagesMin": 100,
+      "messagesMax": 150
+    },
+    "settings": [
+      { "key": "skipInNetwork", "value": true }
+    ]
+  }'
+```
+
+## Working Days Format
+
+The `days` parameter uses a colon-separated format representing Monday through Sunday:
+
+| Position | Day |
+|----------|-----|
+| 1st | Monday |
+| 2nd | Tuesday |
+| 3rd | Wednesday |
+| 4th | Thursday |
+| 5th | Friday |
+| 6th | Saturday |
+| 7th | Sunday |
+
+**Examples:**
+- `1:1:1:1:1:0:0` - Monday to Friday
+- `1:1:1:1:1:1:0` - Monday to Saturday
+- `0:1:1:1:1:1:0` - Tuesday to Saturday
+
+Changes are applied immediately. If the agent is running, the scheduler is automatically re-triggered with the new settings.
