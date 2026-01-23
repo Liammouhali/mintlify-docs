@@ -1909,6 +1909,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "product_12345abcde"
+                    },
                     "message": {
                       "type": "string",
                       "example": "Product created successfully"
@@ -2145,6 +2149,95 @@
           },
           "401": {
             "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Agent Settings",
+        "description": "Updates an agent's working hours and scheduling settings. Changes are applied immediately and the scheduler is re-triggered if the agent is running.",
+        "operationId": "updateAgentSettings",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the agent",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Agent settings to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAgentSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Agent settings updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "agent_12345abcde"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Agent settings updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - agent belongs to another team",
             "content": {
               "application/json": {
                 "schema": {
@@ -4458,6 +4551,106 @@
             "minLength": 2,
             "maxLength": 2,
             "example": "US"
+          }
+        }
+      },
+      "UpdateAgentSettingsRequest": {
+        "type": "object",
+        "minProperties": 1,
+        "example": {
+          "workingHours": {
+            "days": "1:1:1:1:1:0:0",
+            "start": "08:00",
+            "stop": "18:00"
+          },
+          "limits": {
+            "invitationsMin": 20,
+            "invitationsMax": 30,
+            "messagesMin": 100,
+            "messagesMax": 150
+          },
+          "settings": [
+            {"key": "skipInNetwork", "value": true}
+          ]
+        },
+        "properties": {
+          "workingHours": {
+            "type": "object",
+            "description": "Configure when the agent should be active",
+            "properties": {
+              "days": {
+                "type": "string",
+                "pattern": "^[01]:[01]:[01]:[01]:[01]:[01]:[01]$",
+                "description": "Working days (Mon-Sun). Format: 7 values separated by colons, 1=working, 0=off",
+                "example": "1:1:1:1:1:0:0"
+              },
+              "start": {
+                "type": "string",
+                "pattern": "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+                "description": "Start time in HH:MM format (24-hour)",
+                "example": "08:00"
+              },
+              "stop": {
+                "type": "string",
+                "pattern": "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+                "description": "End time in HH:MM format (24-hour)",
+                "example": "18:00"
+              }
+            }
+          },
+          "limits": {
+            "type": "object",
+            "description": "Daily activity limits for the agent",
+            "properties": {
+              "invitationsMin": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100,
+                "description": "Minimum daily invitations",
+                "example": 20
+              },
+              "invitationsMax": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 100,
+                "description": "Maximum daily invitations",
+                "example": 30
+              },
+              "messagesMin": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 500,
+                "description": "Minimum daily messages",
+                "example": 100
+              },
+              "messagesMax": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 500,
+                "description": "Maximum daily messages",
+                "example": 150
+              }
+            }
+          },
+          "settings": {
+            "type": "array",
+            "description": "Agent behavior settings",
+            "items": {
+              "type": "object",
+              "required": ["key", "value"],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "enum": ["skipInNetwork", "invitationsOnly"],
+                  "description": "Setting key"
+                },
+                "value": {
+                  "type": "boolean",
+                  "description": "Setting value"
+                }
+              }
+            },
+            "example": [{"key": "skipInNetwork", "value": true}]
           }
         }
       },
