@@ -1,0 +1,190 @@
+---
+title: 'LeadShark'
+description: 'Automatically capture LinkedIn engagement leads and add them to your campaigns'
+---
+
+## Overview
+
+[LeadShark](https://leadshark.io) is a LinkedIn automation platform that captures leads from your post engagement - comments, likes, and profile visits. By connecting LeadShark to Kakiyo, these engaged leads automatically become prospects in your outreach campaigns.
+
+<Info>
+  **Use Case**: You post valuable content on LinkedIn. When someone comments "Interested!" or likes your post, LeadShark captures their profile and Kakiyo automatically adds them to your campaign for personalized AI-powered follow-up.
+</Info>
+
+## Prerequisites
+
+- A Kakiyo account with an active campaign
+- A LeadShark account ([sign up here](https://leadshark.io))
+- An active or "prospects needed" campaign in Kakiyo
+
+---
+
+## Step 1: Navigate to Integrations
+
+Go to your Kakiyo dashboard and click on **Integrations** in the sidebar under the Developer section.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.10.12%E2%80%AFPM.png" alt="Kakiyo Integrations Page" />
+</Frame>
+
+You'll see LeadShark listed as an available integration. Click on the card to view details.
+
+---
+
+## Step 2: Open LeadShark Integration
+
+Click on the LeadShark card to open the integration detail page.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.11.34%E2%80%AFPM.png" alt="LeadShark Integration Detail" />
+</Frame>
+
+Here you can see your existing connections or add a new one.
+
+---
+
+## Step 3: Add New Connection
+
+Click the **Add Connection** button to start the setup wizard.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.12.21%E2%80%AFPM.png" alt="Add Connection Dialog - Step 1" />
+</Frame>
+
+The connection wizard has 3 simple steps.
+
+---
+
+## Step 4: Configure Connection Details
+
+Enter a name for your connection (optional) and select the campaign where leads should be added.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.13.11%E2%80%AFPM.png" alt="Configure Connection" />
+</Frame>
+
+<Note>
+  Only active campaigns or campaigns with "prospects needed" status are shown in the dropdown.
+</Note>
+
+Click **Next** to continue.
+
+---
+
+## Step 5: Copy the Webhook URL
+
+Kakiyo generates a unique webhook URL for this connection. Click the copy button to copy it to your clipboard.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.14.42%E2%80%AFPM.png" alt="Copy Webhook URL" />
+</Frame>
+
+<Warning>
+  Keep this URL secure. Anyone with this URL could send data to your campaign.
+</Warning>
+
+---
+
+## Step 6: Configure LeadShark Webhook
+
+Open a new tab and go to your [LeadShark Dashboard Settings](https://apex.leadshark.io/dashboard/settings).
+
+Navigate to the **Webhooks** section and click to add a new webhook.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.16.47%E2%80%AFPM.png" alt="LeadShark Webhook Settings" />
+</Frame>
+
+Paste the webhook URL you copied from Kakiyo and save.
+
+---
+
+## Step 7: Copy the Webhook Secret
+
+After creating the webhook in LeadShark, you'll receive a **webhook secret**. Copy this secret.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.17.42%E2%80%AFPM.png" alt="LeadShark Webhook Secret" />
+</Frame>
+
+<Tip>
+  The secret is used to verify that webhooks are actually coming from LeadShark, not a malicious third party.
+</Tip>
+
+---
+
+## Step 8: Activate the Connection
+
+Return to the Kakiyo dashboard. Your connection shows as **Pending** because we need the secret to verify webhooks.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.18.05%E2%80%AFPM.png" alt="Pending Connection" />
+</Frame>
+
+Click the **Activate** button to enter your secret.
+
+---
+
+## Step 9: Enter the Secret
+
+Paste the webhook secret from LeadShark into the dialog.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.18.44%E2%80%AFPM.png" alt="Enter Secret Dialog" />
+</Frame>
+
+Click **Activate** to complete the setup.
+
+---
+
+## Step 10: Connection Active
+
+Your LeadShark integration is now active and ready to receive leads.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-28%20at%207.19.21%E2%80%AFPM.png" alt="Active Connection" />
+</Frame>
+
+<Check>
+  **You're all set!** When someone engages with your LinkedIn content, LeadShark will automatically send their profile to Kakiyo, where they'll be added as prospects to your campaign.
+</Check>
+
+---
+
+## What Happens Next?
+
+Once active, the integration works automatically:
+
+1. **Lead Captured** - Someone comments/likes your LinkedIn post
+2. **Webhook Sent** - LeadShark sends lead data to Kakiyo
+3. **Prospect Created** - Kakiyo adds them to your campaign
+4. **AI Outreach** - Your AI agent can follow up with personalized messages
+
+## Managing Connections
+
+From the integration detail page, you can:
+
+- **View Stats** - See how many leads have been captured
+- **Edit Settings** - Change the target campaign
+- **Copy URL** - Get the webhook URL again
+- **Delete** - Remove the connection
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Leads not appearing in campaign">
+    1. Check that your connection shows as **Active** (not Pending)
+    2. Verify the webhook URL is correctly configured in LeadShark
+    3. Ensure your campaign is in **Active** or **Prospects Needed** status
+  </Accordion>
+  <Accordion title="Webhook signature errors">
+    Make sure the secret in Kakiyo exactly matches the secret from LeadShark. Re-copy and paste if needed.
+  </Accordion>
+  <Accordion title="Duplicate leads">
+    Kakiyo automatically deduplicates leads by LinkedIn URL. If a lead is already in your campaign, they won't be added again.
+  </Accordion>
+</AccordionGroup>
+
+## Need Help?
+
+If you're having issues with the LeadShark integration, contact us at [help.kakiyo.com](https://help.kakiyo.com) or reach out to LeadShark support for platform-specific questions.
