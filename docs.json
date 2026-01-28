@@ -15,20 +15,27 @@
   },
   "navigation": {
     "tabs": [
+{
+    "tab": "Getting Started",
+    "groups": [
       {
-        "tab": "Getting Started",
-        "groups": [
-          {
-            "group": "Introduction",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "authentication",
-              "webhooks"
-            ]
-          }
+        "group": "Introduction",
+        "pages": [
+          "introduction",
+          "quickstart",
+          "authentication",
+          "webhooks"
         ]
       },
+      {
+        "group": "Integrations",
+        "pages": [
+          "integrations/overview",
+          "integrations/leadshark"
+        ]
+      }
+    ]
+  },
       {
         "tab": "API Reference",
         "groups": [
