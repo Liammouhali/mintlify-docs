@@ -31,7 +31,8 @@
         "group": "Integrations",
         "pages": [
           "integrations/overview",
-          "integrations/leadshark"
+          "integrations/leadshark",
+          "integrations/hubspot"
         ]
       }
     ]
