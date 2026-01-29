@@ -1,0 +1,238 @@
+---
+title: 'HubSpot'
+description: 'Sync your LinkedIn outreach prospects with HubSpot CRM'
+---
+
+## Overview
+
+[HubSpot](https://www.hubspot.com) is a leading CRM platform for sales, marketing, and customer service. By connecting HubSpot to Kakiyo, your LinkedIn outreach prospects automatically sync to HubSpot as contacts, keeping your CRM up-to-date with all your outreach activities.
+
+<Info>
+  **Use Case**: Your AI agent qualifies a prospect on LinkedIn. HubSpot automatically receives their contact information, status updates, timeline events, and even creates deals when prospects are qualified.
+</Info>
+
+## What Gets Synced
+
+| Kakiyo | HubSpot |
+|--------|---------|
+| Prospect name, headline, location | Contact properties |
+| LinkedIn profile URL | Custom `linkedin_profile_url` property |
+| Campaign name | Custom `kakiyo_campaign` property |
+| Prospect status | Custom `kakiyo_status` property |
+| Status changes | Timeline events (notes) |
+| Qualified prospects | Deals (optional) |
+
+## Prerequisites
+
+- A Kakiyo account with prospects in campaigns
+- A HubSpot account ([sign up here](https://www.hubspot.com))
+- HubSpot permissions to connect third-party apps
+
+---
+
+## Step 1: Navigate to Integrations
+
+Go to your Kakiyo dashboard and click on **Integrations** in the sidebar.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-29%20at%205.42.35%E2%80%AFPM.png" alt="Kakiyo Integrations Page" />
+</Frame>
+
+You'll see HubSpot listed as an available integration. Click on the card to view details.
+
+---
+
+## Step 2: Open HubSpot Integration
+
+Click on the HubSpot card to open the integration detail page.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-29%20at%205.43.01%E2%80%AFPM.png" alt="HubSpot Integration Detail" />
+</Frame>
+
+Here you can see integration details and connect your HubSpot account.
+
+---
+
+## Step 3: Start Connection
+
+Click the **Connect HubSpot** button to begin the OAuth flow.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-29%20at%205.43.23%E2%80%AFPM.png" alt="Connect HubSpot Dialog" />
+</Frame>
+
+Enter a name for your connection (optional) and click **Connect HubSpot** to proceed.
+
+---
+
+## Step 4: Select HubSpot Account
+
+You'll be redirected to HubSpot's authorization page. Select the HubSpot account you want to connect.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-29%20at%205.44.19%E2%80%AFPM.png" alt="HubSpot Account Selection" />
+</Frame>
+
+<Note>
+  If you have multiple HubSpot accounts, make sure to select the correct one for your outreach data.
+</Note>
+
+---
+
+## Step 5: Authorize Kakiyo
+
+Review the permissions Kakiyo is requesting and click **Connect app** to authorize.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-29%20at%205.46.47%E2%80%AFPM.png" alt="HubSpot Authorization" />
+</Frame>
+
+Kakiyo requests the following permissions:
+- **Contacts**: Read and write contacts
+- **Companies**: Read companies (for association)
+- **Deals**: Read and write deals
+- **Timeline**: Create timeline events
+
+---
+
+## Step 6: Connection Complete
+
+After authorization, you'll be redirected back to Kakiyo. Your HubSpot integration is now active.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-29%20at%205.47.22%E2%80%AFPM.png" alt="HubSpot Connected" />
+</Frame>
+
+<Check>
+  **You're all set!** Your prospects will now automatically sync to HubSpot when their status changes.
+</Check>
+
+---
+
+## Step 7: Configure Settings (Optional)
+
+Click the **Settings** button to customize how Kakiyo syncs with HubSpot.
+
+<Frame>
+  <img src="https://public-kakiyo.b-cdn.net/Integrations/Tutorials/Screenshot%202026-01-29%20at%205.49.25%E2%80%AFPM.png" alt="HubSpot Settings" />
+</Frame>
+
+### Available Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Sync Prospects** | Sync prospect data to HubSpot contacts | On |
+| **Sync Timeline** | Create timeline events for status changes | On |
+| **Auto-Create Deals** | Automatically create deals when prospects are qualified | Off |
+| **Associate Company** | Link contacts to existing HubSpot companies | On |
+
+<Tip>
+  Enable **Auto-Create Deals** if you want qualified prospects to automatically appear in your sales pipeline.
+</Tip>
+
+---
+
+## How Syncing Works
+
+### Automatic Sync (Status Changes)
+
+When a prospect's status changes in Kakiyo (qualified, unqualified, etc.), the integration automatically:
+
+1. Creates or updates the contact in HubSpot
+2. Updates the `kakiyo_status` property
+3. Creates a timeline event (if enabled)
+4. Creates a deal (if qualified and enabled)
+
+### Manual Bulk Sync
+
+Click the **Sync** button on the integration page to sync all existing prospects to HubSpot at once.
+
+<Warning>
+  Bulk sync processes all prospects across all campaigns. For large teams, this may take a few minutes.
+</Warning>
+
+---
+
+## Custom Properties in HubSpot
+
+Kakiyo automatically creates these custom contact properties in HubSpot:
+
+| Property | Description |
+|----------|-------------|
+| `linkedin_profile_url` | The prospect's LinkedIn profile URL |
+| `kakiyo_prospect_id` | Internal Kakiyo ID for reference |
+| `kakiyo_campaign` | The campaign name in Kakiyo |
+| `kakiyo_status` | Current status (Active, Qualified, Unqualified, etc.) |
+
+You can use these properties to:
+- Create HubSpot lists and segments
+- Build workflows and automations
+- Filter contacts by campaign or status
+- Track outreach performance
+
+---
+
+## Integration Stats
+
+The integration page shows real-time statistics:
+
+- **Contacts Synced** - Total new contacts created in HubSpot
+- **Timeline Events** - Status change events logged
+- **Deals Created** - Deals created for qualified prospects
+- **Last Sync** - When the last sync occurred
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Prospects not syncing to HubSpot">
+    1. Check that your connection shows as **Connected** (green badge)
+    2. Verify sync is enabled in settings
+    3. Try clicking the **Sync** button for manual sync
+    4. Check if the prospect's status has changed (sync triggers on status change)
+  </Accordion>
+  <Accordion title="Token expired error">
+    HubSpot tokens expire periodically. Kakiyo automatically refreshes them, but if you see this error:
+    1. Disconnect the integration
+    2. Reconnect using the same steps above
+  </Accordion>
+  <Accordion title="Duplicate contacts in HubSpot">
+    Kakiyo identifies contacts by LinkedIn URL. If duplicates exist:
+    1. The prospect may have been added to HubSpot before the integration
+    2. Merge duplicates in HubSpot using their merge tool
+  </Accordion>
+  <Accordion title="Deals not being created">
+    1. Ensure **Auto-Create Deals** is enabled in settings
+    2. Deals are only created when prospects are marked as **Qualified**
+    3. Check your HubSpot deal pipeline permissions
+  </Accordion>
+  <Accordion title="Custom properties not appearing">
+    Kakiyo creates custom properties automatically on first sync. If they don't appear:
+    1. Run a manual sync
+    2. Check HubSpot Settings > Properties > Contact Properties
+    3. Properties may be in the "Contact Information" group
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Managing the Integration
+
+From the integration detail page, you can:
+
+- **View Stats** - See sync statistics and last sync time
+- **Edit Settings** - Change sync preferences
+- **Manual Sync** - Trigger a bulk sync of all prospects
+- **Disconnect** - Remove the HubSpot connection
+
+<Warning>
+  Disconnecting the integration will stop syncing, but won't delete any data already in HubSpot.
+</Warning>
+
+---
+
+## Need Help?
+
+If you're having issues with the HubSpot integration, contact us at [help.kakiyo.com](https://help.kakiyo.com) or check [HubSpot's documentation](https://knowledge.hubspot.com) for CRM-specific questions.
