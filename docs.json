@@ -25,7 +25,7 @@
           "quickstart",
           "authentication",
           "webhooks",
-          "mcp"
+          "mcp-server"
         ]
       },
       {
