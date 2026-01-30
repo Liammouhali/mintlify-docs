@@ -24,7 +24,8 @@
           "introduction",
           "quickstart",
           "authentication",
-          "webhooks"
+          "webhooks",
+          "mcp"
         ]
       },
       {

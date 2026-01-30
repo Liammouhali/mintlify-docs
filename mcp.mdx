@@ -1,0 +1,407 @@
+---
+title: MCP Server
+description: 'Control Kakiyo via AI assistants like Claude, Cursor, and other MCP clients'
+---
+
+<Warning>
+  **Experimental Feature** - The MCP Server is currently in beta. APIs and functionality may change.
+</Warning>
+
+## What is MCP?
+
+The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open standard that allows AI assistants to interact with external tools and services. Kakiyo's MCP server enables you to control your LinkedIn automation using natural language through AI assistants like Claude, Cursor, Windsurf, and other MCP-compatible clients.
+
+## Quick Start
+
+### 1. Get Your API Key
+
+Generate an API key from your [Kakiyo Dashboard](https://app.kakiyo.com):
+
+1. Go to **Settings** → **API Keys**
+2. Click **Create API Key**
+3. Copy your 40-character API key
+
+### 2. Configure Your MCP Client
+
+Choose your MCP client and add the configuration:
+
+<Tabs>
+  <Tab title="Claude Code (CLI)">
+    Use the CLI command to add Kakiyo MCP:
+
+    ```bash
+    claude mcp add kakiyo --scope user --transport http https://api.kakiyo.com/mcp --header "Authorization:Bearer YOUR_API_KEY"
+    ```
+
+    Replace `YOUR_API_KEY` with your 40-character API key from the dashboard.
+  </Tab>
+  <Tab title="Claude Desktop">
+    Edit your Claude Desktop config file:
+    - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+    - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+    ```json
+    {
+      "mcpServers": {
+        "kakiyo": {
+          "transport": "http",
+          "url": "https://api.kakiyo.com/mcp",
+          "headers": {
+            "Authorization": "Bearer YOUR_API_KEY"
+          }
+        }
+      }
+    }
+    ```
+
+    After saving, restart Claude Desktop completely.
+  </Tab>
+  <Tab title="Claude.ai (Web)">
+    Use Custom Connectors in the Claude web interface:
+
+    1. Go to [claude.ai](https://claude.ai) → **Settings** → **Connectors**
+    2. Click **Add custom connector**
+    3. Enter the URL: `https://api.kakiyo.com/mcp`
+    4. When prompted, enter your API key for authentication
+
+    <Note>
+      Custom Connectors require a Claude Pro or Team subscription.
+    </Note>
+  </Tab>
+  <Tab title="OpenCode">
+    Edit your OpenCode config file at `~/.config/opencode/opencode.json`:
+
+    ```json
+    {
+      "mcp": {
+        "kakiyo": {
+          "type": "remote",
+          "url": "https://api.kakiyo.com/mcp",
+          "headers": {
+            "Authorization": "Bearer YOUR_API_KEY"
+          },
+          "enabled": true
+        }
+      }
+    }
+    ```
+
+    After saving, restart OpenCode to load the MCP server.
+  </Tab>
+  <Tab title="Cursor">
+    Add to your Cursor MCP settings (`.cursor/mcp.json` or via Settings → MCP):
+
+    ```json
+    {
+      "mcpServers": {
+        "kakiyo": {
+          "url": "https://api.kakiyo.com/mcp",
+          "headers": {
+            "Authorization": "Bearer YOUR_API_KEY"
+          }
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Other Clients">
+    For other MCP-compatible clients, use these connection details:
+
+    | Setting | Value |
+    |---------|-------|
+    | **URL** | `https://api.kakiyo.com/mcp` |
+    | **Transport** | Streamable HTTP |
+    | **Auth Header** | `Authorization: Bearer YOUR_API_KEY` |
+    | **Method** | POST |
+
+    Refer to your client's documentation for the exact configuration format.
+  </Tab>
+</Tabs>
+
+### 3. Start Using Natural Language
+
+Once connected, you can control Kakiyo using natural language:
+
+- *"Show me all my running agents"*
+- *"How is my Tech Founders campaign performing?"*
+- *"Pause the outreach to john@example.com"*
+- *"List all prospects who replied this week"*
+- *"Create a new workspace for Acme Corp"*
+
+---
+
+## Available Tools (42)
+
+The MCP server provides 42 tools organized by category:
+
+### Agents (5 tools)
+
+Manage your LinkedIn automation agents.
+
+| Tool | Description |
+|------|-------------|
+| `list_agents` | List all agents with status, working hours, and configuration |
+| `get_agent` | Get detailed info about a specific agent |
+| `update_agent` | Modify working hours, daily limits, or behavior settings |
+| `pause_agent` | Temporarily stop an agent from working |
+| `resume_agent` | Restart a paused agent |
+
+<Note>
+  Agent creation and setup require the dashboard for security (credentials handling).
+</Note>
+
+### Campaigns (6 tools)
+
+Create and manage outreach campaigns.
+
+| Tool | Description |
+|------|-------------|
+| `list_campaigns` | List all campaigns with status and prospect counts |
+| `get_campaign_stats` | Get performance metrics (responses, qualified leads, etc.) |
+| `create_campaign` | Create a new campaign with product, prompt, and agent |
+| `update_campaign` | Modify campaign name or variables |
+| `pause_campaign` | Stop a campaign from sending messages |
+| `resume_campaign` | Restart a paused campaign |
+
+### Prospects (9 tools)
+
+Manage leads and conversations.
+
+| Tool | Description |
+|------|-------------|
+| `list_prospects` | List prospects with basic filtering |
+| `get_prospect` | Get full prospect details and conversation history |
+| `add_prospect` | Add a single LinkedIn profile to a campaign |
+| `add_prospects_batch` | Add multiple prospects at once |
+| `search_prospects` | Advanced search with status, date, and campaign filters |
+| `list_campaign_prospects` | List all prospects in a specific campaign |
+| `pause_prospect` | Pause outreach to a specific person |
+| `resume_prospect` | Resume a paused conversation |
+| `qualify_prospect` | Mark a prospect as qualified |
+
+### Products (1 tool)
+
+View products/services for campaigns.
+
+| Tool | Description |
+|------|-------------|
+| `list_products` | List all products available for outreach |
+
+### Prompts (1 tool)
+
+View AI message templates.
+
+| Tool | Description |
+|------|-------------|
+| `list_prompts` | List all prompt templates |
+
+### Analytics (2 tools)
+
+Monitor performance and metrics.
+
+| Tool | Description |
+|------|-------------|
+| `get_analytics_overview` | Team-wide metrics across all campaigns |
+| `get_campaign_analytics` | Detailed metrics for a specific campaign |
+
+### Models (1 tool)
+
+View available AI models.
+
+| Tool | Description |
+|------|-------------|
+| `list_models` | List AI models available for message generation |
+
+### Webhooks (5 tools)
+
+Configure event notifications.
+
+| Tool | Description |
+|------|-------------|
+| `list_webhooks` | List configured webhooks |
+| `create_webhook` | Set up a new webhook for event notifications |
+| `update_webhook` | Modify webhook URL, events, or status |
+| `delete_webhook` | Remove a webhook |
+| `list_webhook_events` | List available event types |
+
+### Do Not Contact (4 tools)
+
+Manage your blocklist.
+
+| Tool | Description |
+|------|-------------|
+| `list_dnc` | List all blocked LinkedIn URLs |
+| `add_dnc` | Block a profile from all campaigns |
+| `remove_dnc` | Unblock a profile |
+| `check_dnc` | Check if a URL is blocked |
+
+### Workspaces - Agency (7 tools)
+
+<Info>
+  **Agency Plan Required** - Workspace tools are only available on Agency plans.
+</Info>
+
+Manage client workspaces for agencies.
+
+| Tool | Description |
+|------|-------------|
+| `list_workspaces` | List all client workspaces |
+| `create_workspace` | Create a new client workspace |
+| `delete_workspace` | Delete a workspace (cascading cleanup) |
+| `invite_client` | Invite a client user via email |
+| `remove_client` | Remove a client from workspace |
+| `assign_agent_to_workspace` | Assign an agent to a client workspace |
+| `unassign_agent_from_workspace` | Remove agent from workspace |
+
+### Authentication (1 tool)
+
+Verify your connection.
+
+| Tool | Description |
+|------|-------------|
+| `verify_api_key` | Check if API key is valid |
+
+---
+
+## Example Conversations
+
+### Monitoring Performance
+
+```
+You: How are my campaigns doing?
+
+Claude: I'll check your campaign performance.
+
+[Calls get_analytics_overview]
+
+Here's your outreach performance summary:
+- Total Prospects: 1,247
+- Messages Sent: 3,891
+- Response Rate: 23.4%
+- Qualified Leads: 89
+- Active Campaigns: 4
+```
+
+### Managing Prospects
+
+```
+You: Find all prospects who replied but aren't qualified yet
+
+Claude: I'll search for replied prospects.
+
+[Calls search_prospects with status="replied"]
+
+Found 34 prospects who replied:
+1. Sarah Chen (VP Marketing, TechCorp) - replied 2 days ago
+2. Mike Johnson (CEO, StartupXYZ) - replied yesterday
+...
+
+Would you like me to qualify any of these?
+```
+
+### Agency Workflow
+
+```
+You: Set up a new client workspace for Acme Corp and assign Agent-1 to it
+
+Claude: I'll create the workspace and assign the agent.
+
+[Calls create_workspace with name="Acme Corp"]
+[Calls assign_agent_to_workspace]
+
+Done! Created workspace "Acme Corp" and assigned Agent-1.
+The agent's campaigns will now be visible to Acme Corp clients.
+
+Would you like me to invite a client user?
+```
+
+---
+
+## Technical Details
+
+### Endpoint
+
+```
+POST https://api.kakiyo.com/mcp
+```
+
+### Authentication
+
+All requests require your API key in the Authorization header:
+
+```
+Authorization: Bearer {your_40_char_api_key}
+```
+
+### Transport
+
+The MCP server uses **Streamable HTTP** transport, which is stateless and compatible with most MCP clients.
+
+### Rate Limits
+
+MCP requests follow the same rate limits as the REST API:
+- Each tool call consumes 1 API credit
+- Rate limits are per-team, not per-key
+
+### Error Handling
+
+Tool errors are returned in MCP format:
+
+```json
+{
+  "content": [{
+    "type": "text",
+    "text": "{\"error\": \"campaign_not_found\", \"message\": \"Campaign does not exist\"}"
+  }],
+  "isError": true
+}
+```
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Connection refused or timeout">
+    - Verify your API key is correct (40 characters)
+    - Check that you're using `https://api.kakiyo.com/mcp`
+    - Ensure your MCP client supports Streamable HTTP transport
+  </Accordion>
+  
+  <Accordion title="Authentication failed">
+    - API keys are team-specific - ensure you're using the right key
+    - Keys must be prefixed with `Bearer ` in the Authorization header
+    - Generate a new key from the dashboard if issues persist
+  </Accordion>
+  
+  <Accordion title="Tool not found">
+    - The MCP server has 42 tools - some operations (like agent creation) require the dashboard
+    - Use `verify_api_key` to confirm your connection is working
+  </Accordion>
+  
+  <Accordion title="Agency tools not working">
+    - Workspace tools require an Agency plan
+    - Verify your team is on the correct plan in the dashboard
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Need Help?
+
+<CardGroup cols={2}>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/introduction"
+  >
+    Full REST API documentation
+  </Card>
+  <Card
+    title="Dashboard"
+    icon="gauge"
+    href="https://app.kakiyo.com"
+  >
+    Manage your account and API keys
+  </Card>
+</CardGroup>
