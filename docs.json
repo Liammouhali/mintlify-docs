@@ -178,6 +178,9 @@
     "light": "/logo/light.png",
     "dark": "/logo/dark.png"
   },
+  "thumbnails": {
+    "appearance": "dark"
+  },
   "navbar": {
     "links": [
       {
