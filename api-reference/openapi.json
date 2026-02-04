@@ -1008,9 +1008,41 @@
             }
           },
           {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by conversation status (numeric status code)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "description": "Filter prospects by city location",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Filter prospects by country location",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "hasResponded",
             "in": "query",
             "description": "Filter prospects who have responded",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isPaused",
+            "in": "query",
+            "description": "Filter prospects with paused conversations",
             "schema": {
               "type": "boolean"
             }
