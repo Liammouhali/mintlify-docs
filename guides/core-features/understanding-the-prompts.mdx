@@ -1,0 +1,135 @@
+---
+title: "Understanding the Prompts"
+description: "Master Kakiyo's two-layer prompt system: Context and First Message prompts with variables for AI behavior and conversation control."
+---
+
+> Prompts define how your AI agent behaves and communicates. Kakiyo uses a two-layer prompt system that gives you complete control over conversation style and strategy.
+
+## Two-Layer Prompt System
+
+### Context Prompt
+
+Defines your AI agent's behavior, personality, and conversation strategy.
+
+**Includes:**
+
+- Agent's role and personality
+- Conversation goals and objectives
+- Tone and communication style
+- Limits and boundaries
+- Fallback behaviors and responses
+
+### First Message Prompt
+
+Defines how conversations are opened after connection acceptance.
+
+**Includes:**
+
+- Opening message structure
+- Value proposition delivery
+- Personalization approach
+- Call-to-action strategy
+
+---
+
+## Variable System
+
+Variables allow you to reuse prompts across multiple campaigns and agents with different parameters.
+
+### Required Variables
+
+Must be configured for every campaign:
+
+- **Prospect Description**: All prospect information for personalization
+- **Offering Description**: Knowledge about what you're selling
+
+> Important: you don't need to enter a value for those variables, just place them somewhere in one of your 2 prompts and let the AI Agent fill them for you.
+
+### Optional Variables
+
+Pre-defined variables for common use cases:
+
+- **Agent Name**: Name the AI should use in conversations
+- **Company**: Your company name for the campaign
+- **Prospect Name**: How to address prospects
+
+### Custom Variables
+
+Create your own variables for specific needs:
+
+- **Goal**: Different objectives for different campaigns
+- **Industry**: Specific messaging for different sectors
+- **Custom messaging**: Any other variable content you need
+
+> **Example usage:** You want to use the same prompt in 2 different campaigns.
+>
+> Instead of writing "Your objective is to book a meeting" in the prompt, use "Your objective is to {{goal}}" and set Goal = "book a meeting" in Campaign 1 and Goal = "visit my website" in Campaign 2.
+
+---
+
+## AI Model Selection
+
+Kakiyo offers access to all major AI models from leading providers:
+
+**Available Models:**
+
+- **Anthropic Models**: All Claude models (Sonnet and Opus)
+- **OpenAI Models**: All GPT models (ChatGPT series)
+- **Grok Models**: All X AI models
+- **Google Models**: All Gemini models
+
+**Recommendation:** As of February 2026, **Claude Sonnet 4.5 (Anthropic)** offers an excellent balance of conversation quality and credit efficiency for outreach use cases. Start there, then optimize based on Sandbox and live campaign metrics.
+
+<Warning>
+The best-performing model changes over time. Re-test your default model regularly and adjust based on actual outcomes rather than assumptions.
+</Warning>
+
+---
+
+## Credit System
+
+Credits are consumed only when the AI agent sends messages during conversations. No credits are used for setup, testing, or other platform activities.
+
+**Credit consumption is per message and depends on:**
+
+- **AI model selected**: Different models have different costs
+- **Prompt size**: Length and complexity of your prompts
+- **Message length**: Length of the AI-generated response
+
+> **Variable consumption:** Credit usage varies significantly per message depending on these factors. There's no fixed rate as it depends entirely on your specific configuration and conversation context.
+
+---
+
+## Writing Effective Prompts
+
+### Best Practices
+
+- **Define clear goals**: Specify exactly what you want the AI to achieve
+- **Set boundaries**: Define what the AI should and shouldn't do
+- **Match your tone**: Write in the style you want the AI to use
+- **Include fallback instructions**: Tell the AI how to handle unexpected situations
+- **Use proper formatting**: Structure prompts clearly with sections
+
+### Testing and Optimization
+
+- **Use the Sandbox**: Test prompt effectiveness before launching campaigns
+- **Iterate based on results**: Refine prompts based on conversation performance
+- **Monitor conversations**: Review actual AI responses and adjust accordingly
+
+---
+
+### Starting Point
+
+Kakiyo provides a default prompt template to help you launch quickly. Use it as a baseline, then iterate based on your own audience and campaign results.
+
+> **Important**: Reply performance depends on targeting quality, profile quality, and prompt quality. Validate improvements with controlled tests instead of assumptions.
+
+---
+
+Well-crafted prompts are essential for successful AI conversations. Start with the default template and refine based on your specific audience and goals.
+
+---
+
+## Related Guides
+
+- [AI Builder - Quick Setup](/guides/getting-started/ai-builder-quick-setup)

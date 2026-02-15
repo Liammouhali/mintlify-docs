@@ -1,0 +1,100 @@
+---
+title: "API Keys & Public API"
+description: "Access Kakiyo programmatically with API keys. Manage agents, campaigns, prospects, and analytics through the REST API."
+---
+
+> The Kakiyo Public API gives you full programmatic access to manage agents, campaigns, prospects, products, prompts, analytics, webhooks, and more. Authenticate with API keys and integrate Kakiyo into your existing workflows.
+
+## Creating an API Key
+
+1. Navigate to **API Keys** in the sidebar.
+2. Click **Create API Key**.
+3. Enter a name (e.g., "Production CRM Sync").
+4. Copy the generated 40-character key immediately. It is shown only once.
+
+> **Security**: Store your API key securely. Never expose it in client-side code or public repositories.
+
+---
+
+## Authentication
+
+All API requests require a Bearer token in the `Authorization` header:
+
+```
+
+Authorization: Bearer YOUR_40_CHARACTER_API_KEY
+
+```
+
+The API validates your key, checks your subscription status, and verifies you have available credits before processing the request.
+
+---
+
+## Available Endpoints
+
+Base URL: `https://api.kakiyo.com/v1`
+
+### Agents
+
+- `GET /agents` - List all agents
+- `POST /agents` - Create an agent
+- `PUT /agents/:id` - Update agent settings
+- `POST /agents/:id/pause` / `resume` - Control agent state
+
+### Campaigns
+
+- `GET /campaigns` - List all campaigns
+- `POST /campaigns` - Create a campaign
+- `GET /campaigns/:id/stats` - Get campaign statistics
+- `POST /campaigns/:id/pause` / `resume`
+
+### Prospects
+
+- `POST /prospects` - Add a single prospect
+- `POST /prospects/batch` - Batch add prospects
+- `POST /prospects/batch/round-robin` - Distribute across campaigns
+- `GET /prospects/search` - Advanced search with filters
+- `GET /prospects/:chatId` - Get prospect details and messages
+- `POST /prospects/:chatId/qualify` - Mark as qualified
+
+### Products & Prompts
+
+- `GET /products` / `POST /products`
+- `GET /prompts` / `POST /prompts`
+
+### Analytics
+
+- `GET /analytics/overview` - Full analytics overview
+- `GET /analytics/campaigns/:id` - Detailed campaign analytics
+
+### Other Endpoints
+
+- `/webhooks` - Manage webhooks programmatically
+- `/dnc` - Manage Do Not Contact lists
+- `/models` - List available AI models
+- `/workspaces` - Manage agency client workspaces
+- `GET /verify` - Verify API key validity
+
+---
+
+## Rate Limits & Credits
+
+- **Rate limit**: 60 requests per minute per endpoint.
+- **Credit cost**: Every API call consumes **1 credit**, regardless of endpoint.
+- **Pagination**: Search results are capped at 100 per page. Use `limit` and `offset` parameters.
+- **Bulk operations**: Max 100 prospects per batch request.
+
+When credits reach zero, API calls return HTTP 402 and agents are automatically paused.
+
+---
+
+## Full Documentation
+
+For detailed endpoint documentation with request/response examples, visit [docs.kakiyo.com](https://docs.kakiyo.com).
+
+---
+
+## Related Guides
+
+- [Understanding the Campaigns](/guides/core-features/understanding-the-campaigns)
+- [Webhooks](/guides/integrations-api/webhooks)

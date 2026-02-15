@@ -8,6 +8,22 @@
     "dark": "#3e70cc"
   },
   "favicon": "/favicon.svg",
+  "description": "Kakiyo documentation — guides, integrations, and API reference for AI-powered LinkedIn outreach.",
+  "seo": {
+    "indexing": "all",
+    "metatags": {
+      "og:site_name": "Kakiyo Docs",
+      "og:type": "website",
+      "og:locale": "en_US",
+      "og:description": "Kakiyo documentation — guides, integrations, and API reference for AI-powered LinkedIn outreach.",
+      "twitter:card": "summary_large_image",
+      "robots": "index, follow",
+      "canonical": "https://docs.kakiyo.com"
+    }
+  },
+  "metadata": {
+    "timestamp": true
+  },
   "background": {
     "color": {
       "dark": "#151820"
@@ -15,29 +31,116 @@
   },
   "navigation": {
     "tabs": [
-{
-    "tab": "Getting Started",
-    "groups": [
       {
-        "group": "Introduction",
-        "pages": [
-          "introduction",
-          "quickstart",
-          "authentication",
-          "webhooks",
-          "mcp-server"
+        "tab": "Kakiyo",
+        "groups": [
+          {
+            "group": "Start Here",
+            "pages": [
+              "introduction",
+              "guides/overview"
+            ]
+          },
+          {
+            "group": "Getting Started",
+            "pages": [
+              "guides/getting-started/overview",
+              "guides/getting-started/what-is-kakiyo",
+              "guides/getting-started/kakiyo-key-capabilities",
+              "guides/getting-started/ai-builder-quick-setup",
+              "guides/getting-started/account-setup-linkedin-connection",
+              "guides/getting-started/first-campaign-setup",
+              "guides/getting-started/how-kakiyo-works-behind-the-scenes"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "guides/core-features/overview",
+              "guides/core-features/follow-up-messages",
+              "guides/core-features/understanding-the-offerings",
+              "guides/core-features/understanding-the-prompts",
+              "guides/core-features/understanding-the-sandbox",
+              "guides/core-features/understanding-the-campaigns",
+              "guides/core-features/prospects-and-lead-management"
+            ]
+          },
+          {
+            "group": "LinkedIn Account & Safety",
+            "pages": [
+              "guides/linkedin-account-safety/overview",
+              "guides/linkedin-account-safety/profiles-and-linkedin-management",
+              "guides/linkedin-account-safety/linkedin-connection-troubleshooting",
+              "guides/linkedin-account-safety/linkedin-account-safety-guide"
+            ]
+          },
+          {
+            "group": "Team & Billing",
+            "pages": [
+              "guides/team-billing/overview",
+              "guides/team-billing/team-management",
+              "guides/team-billing/billing-and-credits",
+              "guides/team-billing/troubleshooting-support"
+            ]
+          },
+          {
+            "group": "Inbox & Conversations",
+            "pages": [
+              "guides/inbox-conversations/overview",
+              "guides/inbox-conversations/inbox-and-conversation-management",
+              "guides/inbox-conversations/how-to-choose-your-ai-model"
+            ]
+          },
+          {
+            "group": "Optimize Your Results",
+            "pages": [
+              "guides/optimize-your-results/overview",
+              "guides/optimize-your-results/acceptance-rate-optimisation",
+              "guides/optimize-your-results/reply-rate-optimization",
+              "guides/optimize-your-results/analytics"
+            ]
+          },
+          {
+            "group": "Lead Finder",
+            "pages": [
+              "guides/lead-finder/overview",
+              "guides/lead-finder/getting-started-with-lead-finder"
+            ]
+          },
+          {
+            "group": "Integrations & API (Guides)",
+            "pages": [
+              "guides/integrations-api/overview",
+              "guides/integrations-api/webhooks",
+              "guides/integrations-api/api-keys-public-api",
+              "guides/integrations-api/hubspot-integration",
+              "guides/integrations-api/do-not-contact-dnc-lists"
+            ]
+          },
+          {
+            "group": "Developer Setup",
+            "pages": [
+              "quickstart",
+              "authentication",
+              "webhooks",
+              "mcp-server"
+            ]
+          }
         ]
       },
       {
-        "group": "Integrations",
-        "pages": [
-          "integrations/overview",
-          "integrations/leadshark",
-          "integrations/hubspot"
+        "tab": "Integrations",
+        "groups": [
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/overview",
+              "integrations/leadshark",
+              "integrations/hubspot"
+            ]
+          }
         ]
-      }
-    ]
-  },
+      },
       {
         "tab": "API Reference",
         "groups": [
@@ -184,8 +287,8 @@
   "navbar": {
     "links": [
       {
-        "label": "Help",
-        "href": "https://help.kakiyo.com"
+        "label": "Website",
+        "href": "https://kakiyo.com"
       }
     ],
     "primary": {
