@@ -1,0 +1,69 @@
+---
+title: "Do Not Contact (DNC) Lists"
+description: "Exclude LinkedIn profiles from outreach with Do Not Contact lists. Add manually or import CSV. Enforced automatically across all campaigns."
+---
+
+> Do Not Contact (DNC) lists let you exclude specific LinkedIn profiles from all outreach. Entries are automatically enforced at every stage: prospect import, task scheduling, and message generation.
+
+## Accessing the DNC List
+
+Navigate to **Prospects** in the sidebar, then click the **Do Not Contact** tab.
+
+---
+
+## Adding Entries
+
+### Manual Entry
+
+1. Click **Add to Do Not Contact**.
+2. Enter the LinkedIn profile URL (full URL or just the profile path).
+3. For agency teams, optionally select a **Client** to scope the entry.
+4. Click **Add**.
+
+URLs are automatically normalized (protocol stripped, lowercased, trailing slashes removed).
+
+### CSV Bulk Import
+
+1. Click the **upload button** to open the bulk import dialog.
+2. Drag and drop or select a `.csv` file.
+3. The parser automatically detects delimiters and extracts LinkedIn URLs from any column.
+4. Results are displayed: entries added, duplicates skipped, and errors.
+
+> **Maximum 1,000 URLs per CSV upload.**
+
+---
+
+## How DNC Is Enforced
+
+Your DNC list is checked at four critical points in the pipeline:
+
+1. **Prospect import**: Prospects on the DNC list are marked as skipped and not imported.
+2. **Task scheduling**: Before assigning invitation or message tasks, the scheduler checks DNC.
+3. **Initial message generation**: Before the AI writes a first message.
+4. **Reply generation**: Before the AI writes a reply.
+
+Results are cached for 5 minutes per team for performance.
+
+---
+
+## Agency Subteam Scoping
+
+Agency teams can scope DNC entries to specific clients (subteams). When checking, the system applies both global and client-specific entries. Only teams on the Agency plan can use subteam-scoped DNC.
+
+---
+
+## API Access
+
+The DNC list is also available via the Public API:
+
+- `GET /v1/dnc` - List entries
+- `GET /v1/dnc/check?url=...` - Check a URL
+- `POST /v1/dnc` - Add an entry
+- `POST /v1/dnc/batch` - Bulk add entries
+- `DELETE /v1/dnc/:id` - Remove an entry
+
+---
+
+## Related Guides
+
+- [First Campaign Setup](/guides/getting-started/first-campaign-setup)

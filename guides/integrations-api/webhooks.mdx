@@ -1,0 +1,82 @@
+---
+title: "Webhooks"
+description: "Receive real-time notifications when events happen in Kakiyo. Configure webhook endpoints for message, invitation, and qualification events."
+---
+
+> Webhooks let you receive real-time HTTP notifications when events occur in your Kakiyo campaigns. Use them to sync data with your CRM, trigger automations, or build custom integrations.
+
+## Available Events
+
+| **Event** | **Description** |
+| --- | --- |
+| `linkedin.message.sent` | Agent sends a message to a prospect |
+| `linkedin.message.received` | Prospect responds to an agent |
+| `linkedin.invitation.sent` | Agent sends a connection invitation |
+| `linkedin.invitation.accepted` | Prospect accepts a connection invitation |
+| `*` | Wildcard: receive all events |
+
+---
+
+## Setting Up a Webhook
+
+1. Navigate to **Webhooks** in the sidebar.
+2. Click **Create Webhook**.
+3. Fill in the configuration:
+
+- **Name**: A label for your webhook (e.g., "CRM Sync")
+- **URL**: The HTTPS endpoint that will receive the POST requests
+- **Secret** (optional): A shared secret for HMAC signature verification
+- **Events**: Select which events to listen for
+
+---
+
+## Payload Format
+
+Every webhook delivery sends a `POST` request with `Content-Type: application/json`:
+
+```
+
+{
+  "event": "linkedin.message.received",
+  "teamId": "<TEAM_ID>",
+  "timestamp": "2025-07-15T10:30:00.000Z",
+  "data": {
+    "agentId": "...",
+    "campaignId": "...",
+    "chatId": "...",
+    "prospectId": "...",
+    "message": "...",
+    "timestamp": "..."
+  }
+}
+
+```
+
+---
+
+## Security: HMAC Signature Verification
+
+If you configure a **secret**, every delivery includes an `X-Kakiyo-Signature` header containing an HMAC-SHA256 signature of the JSON payload. Verify it server-side by computing the same HMAC using your secret over the raw request body.
+
+---
+
+## Retry Logic and Auto-Disable
+
+- Failed deliveries are retried automatically.
+- Webhooks can be disabled after repeated failures to protect your integration quality.
+- Re-enabling a webhook resets its failure tracking.
+
+---
+
+## Credit Cost
+
+Each successful webhook delivery consumes **2 credits**. Failed deliveries do not consume credits.
+
+---
+
+## Testing
+
+Use the API to test your webhooks before going live:
+
+- `POST /v1/webhooks/test` sends a test payload to all active webhooks for a given event.
+- `GET /v1/webhooks/test/example/:event` returns an example payload without triggering anything.

@@ -1,0 +1,66 @@
+---
+title: "HubSpot Integration"
+description: "Connect HubSpot to sync prospects as contacts, log timeline events, associate companies, and auto-create deals when prospects qualify."
+---
+
+> The HubSpot integration syncs your Kakiyo outreach activity directly into your CRM. Prospects become contacts, conversations become timeline events, and qualified leads can auto-create deals.
+
+## Connecting HubSpot
+
+1. Navigate to **Integrations** in the sidebar.
+2. Click **Connect** on the HubSpot card.
+3. You will be redirected to HubSpot to authorize Kakiyo with the required permissions (contacts, companies, deals, and timeline access).
+4. After authorization, you are redirected back to Kakiyo with the integration active.
+
+Kakiyo automatically creates four custom contact properties in your HubSpot account: `linkedin_profile_url`, `kakiyo_prospect_id`, `kakiyo_campaign`, and `kakiyo_status`.
+
+---
+
+## What Gets Synced
+
+### Contacts
+
+When a prospect's status changes in Kakiyo, the system finds or creates a matching HubSpot contact by LinkedIn URL. Synced fields include: first name, last name, job title, company, city, country, and LinkedIn URL.
+
+If a contact already exists with the same LinkedIn URL, it is **updated** rather than duplicated.
+
+### Timeline Events
+
+Each status change (invitation sent, accepted, message sent, replied, qualified) creates a **HubSpot Note** on the contact, showing the event type, status transition, and campaign name.
+
+### Company Associations
+
+When enabled, Kakiyo searches for an existing HubSpot company by name and links the contact to it.
+
+### Auto-Create Deals
+
+When enabled and a prospect reaches **Qualified** status, a deal is automatically created in your specified pipeline and stage, associated with the contact.
+
+---
+
+## Configuration Options
+
+From the HubSpot integration settings page, you can toggle:
+
+- **Sync Prospects** (default: on) - Auto-create HubSpot contacts from Kakiyo prospects
+- **Sync Timeline Events** (default: on) - Log LinkedIn activities as HubSpot notes
+- **Associate Companies** (default: on) - Link contacts to existing HubSpot companies
+- **Auto-Create Deals** (default: off) - Create deals when prospects are qualified
+
+---
+
+## Bulk Sync
+
+You can trigger a manual bulk sync from the integration settings page. This iterates through all campaigns and syncs every prospect to HubSpot. Useful after first connecting or if you need to refresh data.
+
+---
+
+## Token Management
+
+The integration uses OAuth with automatic token refresh. You should not need to re-authenticate unless the refresh token expires or you revoke access from HubSpot. The integration status page shows whether your token is valid and when it expires.
+
+---
+
+## Related Guides
+
+- [API Keys & Public API](/guides/integrations-api/api-keys-public-api)

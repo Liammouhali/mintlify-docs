@@ -1,0 +1,68 @@
+---
+title: "Follow-up Messages"
+description: "Configure up to 3 automated follow-up messages per prompt. Set custom delays, use pre-built templates, and test in the Sandbox before going live."
+---
+
+> Automated follow-ups re-engage prospects who have not responded to your initial message. Configure up to 3 follow-up steps per prompt with customizable delays and AI-powered personalization.
+
+## How Follow-ups Work
+
+After your agent sends an initial message, if the prospect does not reply within the specified delay, the AI automatically sends a follow-up. Each follow-up uses your prompt instructions combined with the full conversation context to create a natural, personalized message.
+
+**Key behaviors:**
+
+- Follow-ups are **automatically cancelled** when a prospect replies.
+- Each follow-up has its own **configurable delay** (1 to 30 days).
+- **Maximum 3 follow-ups** per prompt to maintain a balanced outreach strategy.
+- Follow-ups support the same **##{{variable}}** system as your main prompt.
+
+---
+
+## Configuring Follow-ups
+
+1. Open a prompt and click the **Follow-up** tab.
+2. Click **Add Step**.
+3. Choose a **pre-built template** or write a **custom** follow-up prompt.
+4. Set the delay: **"Send if no reply after X days"** (1-30 days, default: 3).
+5. Repeat for additional follow-ups (up to 3 total).
+
+### Master Toggle
+
+Use the **Active/Paused** switch at the top of the follow-up tab to enable or disable all follow-ups without deleting your configuration. When paused, no follow-up tasks are created for new conversations.
+
+### Reordering
+
+Use the **Move Up** and **Move Down** buttons on each step to change the sequence order.
+
+---
+
+## Execution Flow
+
+1. Agent sends the initial message to a prospect.
+2. If no reply after the Step 1 delay, the AI generates and sends Follow-up 1.
+3. If still no reply after the Step 2 delay, Follow-up 2 is sent.
+4. Same for Follow-up 3.
+5. **If the prospect replies at any point, all remaining follow-ups are cancelled.**
+
+> **The AI sees the full conversation history** when generating each follow-up, including all previous messages and follow-ups. This ensures each follow-up feels like a natural continuation, not a disconnected template.
+
+---
+
+## Testing Follow-ups
+
+Use the **Sandbox** to test your follow-up sequence before going live. After testing the initial message, click the **"test follow-up"** links that appear to simulate each follow-up step in order. This lets you verify the tone, content, and flow of the entire sequence.
+
+---
+
+## Best Practices
+
+- **Keep delays reasonable**: 3-7 days between follow-ups is typical. Too short feels pushy, too long loses momentum.
+- **Vary your approach**: Each follow-up should take a slightly different angle, not just repeat the same message.
+- **Add value**: Share an insight, case study, or relevant observation rather than just "checking in."
+- **Keep it short**: Follow-ups should be even shorter than your initial message.
+
+---
+
+## Related Guides
+
+- [How Kakiyo Works Behind the Scenes](/guides/getting-started/how-kakiyo-works-behind-the-scenes)
