@@ -2,3 +2,7 @@
 title: 'Resume campaign'
 openapi: 'POST /campaigns/{id}/resume'
 ---
+
+## Overview
+
+Resumes a paused campaign. If the campaign was created with `preventAutoStart: true`, resuming will also clear this flag so future lead uploads auto-activate the campaign normally.
