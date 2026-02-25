@@ -13,6 +13,7 @@ Create a new LinkedIn outreach campaign with AI-powered automation. This endpoin
 - **Market Expansion**: Set up campaigns for new geographic markets
 - **Seasonal Campaigns**: Launch time-sensitive promotional campaigns
 - **A/B Testing**: Create multiple campaigns to test different approaches
+- **Delayed Launch**: Create campaigns early (with `preventAutoStart: true`), upload leads, and launch later when ready
 
 ## Key Features
 
@@ -20,6 +21,7 @@ Create a new LinkedIn outreach campaign with AI-powered automation. This endpoin
 - **Smart Qualification**: Automatic prospect qualification based on responses
 - **Agent Assignment**: Dedicated LinkedIn agents for authentic outreach
 - **Performance Tracking**: Built-in analytics and conversion tracking
+- **Prevent Auto-Start**: Optionally keep campaigns paused through lead uploads until you manually resume
 
 ## Testing Example
 
@@ -32,12 +34,23 @@ curl -X POST "https://api.kakiyo.com/v1/campaigns" \
     "productId": "prod_123456789",
     "promptId": "prompt_987654321",
     "agentId": "agent_abcdef123456",
-    "qualificationAutomatic": 75,
-    "qualificationVerification": 50,
     "variables": {
       "company_name": "Your Company",
       "value_proposition": "20% increase in sales efficiency"
     }
+  }'
+
+# Create a campaign that stays paused until manually resumed
+curl -X POST "https://api.kakiyo.com/v1/campaigns" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Delayed Launch Campaign",
+    "productId": "prod_123456789",
+    "promptId": "prompt_987654321",
+    "agentId": "agent_abcdef123456",
+    "variables": {},
+    "preventAutoStart": true
   }'
 ```
 
@@ -57,17 +70,26 @@ const createCampaign = async (campaignData) => {
 };
 
 // Usage example
+// Create campaign (starts active immediately)
 const newCampaign = await createCampaign({
   name: 'Q4 Enterprise Outreach',
   productId: 'prod_123456789',
   promptId: 'prompt_987654321',
   agentId: 'agent_abcdef123456',
-  qualificationAutomatic: 75,
-  qualificationVerification: 50,
   variables: {
     company_name: 'Your Company',
     value_proposition: '20% increase in sales efficiency'
   }
+});
+
+// Create campaign that stays paused until manually resumed
+const delayedCampaign = await createCampaign({
+  name: 'Delayed Launch Campaign',
+  productId: 'prod_123456789',
+  promptId: 'prompt_987654321',
+  agentId: 'agent_abcdef123456',
+  variables: {},
+  preventAutoStart: true
 });
 
 console.log('Campaign Created:', newCampaign);
@@ -96,8 +118,6 @@ campaign_data = {
     'productId': 'prod_123456789',
     'promptId': 'prompt_987654321',
     'agentId': 'agent_abcdef123456',
-    'qualificationAutomatic': 75,
-    'qualificationVerification': 50,
     'variables': {
         'company_name': 'Your Company',
         'value_proposition': '20% increase in sales efficiency'
@@ -106,15 +126,36 @@ campaign_data = {
 
 result = create_campaign(campaign_data)
 print('Campaign Created:', result)
+
+# Create campaign that stays paused until manually resumed
+delayed_campaign = create_campaign({
+    'name': 'Delayed Launch Campaign',
+    'productId': 'prod_123456789',
+    'promptId': 'prompt_987654321',
+    'agentId': 'agent_abcdef123456',
+    'variables': {},
+    'preventAutoStart': True
+})
+print('Delayed Campaign:', delayed_campaign)
 ```
+
+## Prevent Auto-Start
+
+By default, campaigns become active immediately and start outreach as soon as leads are uploaded. If you need to build campaigns ahead of time and launch later:
+
+1. Set `preventAutoStart: true` when creating the campaign
+2. Upload your leads — the campaign stays paused
+3. When ready, call `POST /campaigns/{id}/resume` to activate
+
+Resuming also clears the `preventAutoStart` flag, so subsequent uploads behave normally.
 
 ## Best Practices
 
 1. **Descriptive Names**: Use clear, descriptive campaign names
-2. **Qualification Thresholds**: Start with conservative qualification settings
-3. **Variable Planning**: Define all necessary variables before campaign creation
-4. **Agent Capacity**: Ensure assigned agents have available capacity
-5. **Testing**: Create test campaigns before launching to large prospect lists
+2. **Variable Planning**: Define all necessary variables before campaign creation
+3. **Agent Capacity**: Ensure assigned agents have available capacity
+4. **Testing**: Create test campaigns before launching to large prospect lists
+5. **Delayed Launch**: Use `preventAutoStart: true` for campaigns you want to prepare in advance
 
 ## Next Steps
 

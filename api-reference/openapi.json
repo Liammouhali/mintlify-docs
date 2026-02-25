@@ -148,6 +148,10 @@
                     "status": {
                       "type": "string",
                       "example": "active"
+                    },
+                    "preventAutoStart": {
+                      "type": "boolean",
+                      "example": false
                     }
                   }
                 }
@@ -407,7 +411,7 @@
     "/campaigns/{id}/resume": {
       "post": {
         "summary": "Resume Campaign",
-        "description": "Resumes a paused campaign",
+        "description": "Resumes a paused campaign. If the campaign was created with `preventAutoStart: true`, resuming will also clear this flag so future uploads behave normally.",
         "operationId": "resumeCampaign",
         "parameters": [
           {
@@ -3986,6 +3990,12 @@
               "painPoint": "low response rates on cold outreach",
               "benefit": "3x more qualified meetings"
             }
+          },
+          "preventAutoStart": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, campaign starts paused and stays paused after lead uploads until manually resumed. Defaults to false (immediate auto-activation).",
+            "example": false
           }
         }
       },
