@@ -4367,8 +4367,9 @@
           },
           "type": {
             "type": "string",
-            "enum": ["message", "invitation"],
-            "example": "message"
+            "enum": ["Messages", "Comment"],
+            "description": "The prompt type. `Messages` is used for direct LinkedIn message outreach. `Comment` is reserved for an upcoming feature that will enable AI-powered engagement on prospects' LinkedIn posts.",
+            "example": "Messages"
           },
           "model": {
             "type": "string",
@@ -4392,13 +4393,14 @@
           },
           "model": {
             "type": "string",
-            "enum": ["model_gpt4", "model_claude3", "model_gpt35"],
+            "description": "The ID of the AI model to use for this prompt. You can retrieve available model IDs from your dashboard.",
             "example": "model_claude3"
           },
           "type": {
             "type": "string",
-            "enum": ["message", "invitation"],
-            "example": "message"
+            "enum": ["Messages", "Comment"],
+            "description": "The prompt type. `Messages` is used for direct LinkedIn message outreach. `Comment` is reserved for an upcoming feature that will enable AI-powered engagement on prospects' LinkedIn posts.",
+            "example": "Messages"
           }
         }
       },
