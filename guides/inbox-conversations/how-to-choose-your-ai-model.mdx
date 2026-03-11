@@ -1,74 +1,117 @@
 ---
 title: "How to Choose Your AI Model"
-description: "Choose the right AI model for optimal conversation quality and credit efficiency."
+description: "Select the right AI model for your campaigns from the Kakiyo dashboard. Compare model families, understand the quality vs. cost trade-off, and learn how to test and switch models."
 ---
 
-> Selecting the right AI model impacts both conversation quality and credit costs. While it's tempting to choose the cheapest option, the wrong model can hurt your results and waste money through poor performance.
+<Info>
+  **This guide is for dashboard users.** Model selection is done inside the [Kakiyo dashboard](https://app.kakiyo.com) when configuring prompts. No code required.
+</Info>
 
-## Why Model Choice Matters
+> The AI model you choose directly affects how intelligent and natural your conversations sound. A cheaper model saves credits per message, but poor-quality responses that prospects ignore waste more money than a better model that generates real replies.
 
-The AI model you select directly affects how intelligent and natural your conversations sound. A cheaper model might save credits per message, but if it generates poor responses that prospects ignore, you're actually wasting money.
+## Where to Change the AI Model
 
-Quality conversations lead to better response rates, which means more meetings booked per credit spent. Think of it like hiring an SDR - you could hire the cheapest person available, but if they can't hold good conversations, you'll get terrible results.
+1. In the sidebar, click **Prompts**.
+2. Click the prompt you want to edit.
+3. In the prompt editor, look for the **AI Model** dropdown.
+4. Select the model you want to use.
+5. Click **Save**.
+
+The model applies to all campaigns that use this prompt. Changing the model does not affect ongoing conversations — only new messages generated after the change.
+
+---
+
+## Available Model Families
+
+| Family | Provider | Strengths |
+|---|---|---|
+| **Claude** (Sonnet, Haiku, Opus) | Anthropic | Excellent conversational AI, strong reasoning, natural tone, good at handling objections |
+| **GPT** (GPT-4o, GPT-4o-mini, etc.) | OpenAI | Well-rounded performance, good general knowledge, reliable across conversation types |
+| **Gemini** (Pro, Flash) | Google | Strong analytical capabilities, good conversation flow |
+| **Grok** | xAI | Varied performance, worth testing for specific use cases |
+
+<Note>
+  Available models may change as new versions are released. Check the **AI Model** dropdown in your prompt editor for the current list. You can also see all available models via [API](/api-reference/models/list).
+</Note>
 
 ---
 
 ## Recommended Starting Point
 
-As of February 2026, **Claude Sonnet 4.5 (Anthropic)** is our recommended default model. It delivers an excellent balance of conversation quality, natural tone, and credit efficiency for LinkedIn outreach.
+**Claude Sonnet 4.5 (Anthropic)** is the recommended default model as of February 2026. It delivers an excellent balance of:
 
-**Why Claude Sonnet 4.5 works well:**
-
-- Handles complex prospect questions and objections effectively
-- Maintains natural, human-sounding conversation flow
-- Strong reasoning for personalized responses
-- Excellent value relative to credits consumed
+- Conversation quality and natural tone
+- Objection handling capability
+- Personalization based on prospect profiles
+- Credit efficiency relative to output quality
 
 <Warning>
-Model performance evolves. What's best today may not be best in six months. Treat this as a starting point — re-test periodically and compare against newer models as they become available.
+  Model performance evolves. What's best today may not be best in six months. Re-test periodically and compare against newer models as they become available.
 </Warning>
 
 ---
 
-## Available Model Categories
+## How to Test and Compare Models
 
-- **Anthropic Models (Claude family)**: Generally excellent for conversational AI with strong reasoning capabilities and natural language understanding.
-- **OpenAI Models (GPT family)**: Well-rounded performance across different conversation types with good general knowledge.
-- **Google Models (Gemini family)**: Strong analytical capabilities and good conversation flow.
-- **X AI Models (Grok family)**: Varied performance characteristics for different use cases.
+### Step 1: Pick Two Models to Compare
 
----
+Choose your current model and one alternative you want to test.
 
-## Model Selection Strategy
+### Step 2: Test in the Sandbox
 
-**Start with a baseline**: Pick one primary model, launch controlled tests, and compare quality and conversion outcomes before switching.
+1. Go to **Prompts** in the sidebar.
+2. Open the prompt you want to test.
+3. Set the model to **Model A** and save.
+4. Open the **Sandbox** for a campaign using this prompt.
+5. Run 3-5 conversations simulating different prospect types (interested, skeptical, busy).
+6. Note the quality of responses.
+7. Change the model to **Model B** and save.
+8. Run the same 3-5 conversations.
+9. Compare: which model produced more natural, relevant, and persuasive responses?
 
-**Test thoroughly**: Use the Sandbox to ensure AI responses meet your quality standards before launching campaigns.
+### Step 3: Run a Live Comparison (Optional)
 
-**Monitor and adjust**: Track these key metrics when switching models:
+For more reliable data:
 
-- Response rates from prospects
-- Conversation quality and flow
-- Meeting booking success rates
-- Overall ROI per campaign
-
-> **Tip**: Sometimes paying more per credit results in better overall ROI through improved conversion rates.
-
----
-
-## Optimization Tips
-
-- **Always test new models** in the Sandbox before going live. Pay attention to how the AI handles objections, answers prospect questions, and maintains conversation flow.
-- **Track results over time** and be prepared to adjust your model choice as new options become available or as your targeting evolves.
-- **Focus on ROI, not just credit costs**. The cheapest model per credit isn't necessarily the cheapest model per booked meeting.
+1. Create two identical campaigns (same offering, same prompt text, same prospect profile).
+2. Set Campaign A to use Model A.
+3. Set Campaign B to use Model B.
+4. Import similar prospects into each (50-100 per campaign minimum).
+5. After 2 weeks, compare reply rates and conversation quality in **Analytics**.
 
 ---
 
-Remember: optimize for overall campaign success rather than just minimizing credit costs. The right model choice can significantly impact your outreach ROI.
+## Quality vs. Cost: How to Think About It
+
+| Approach | When to use |
+|---|---|
+| **Optimize for quality** (use the best model) | High-value prospects, enterprise sales, complex products. Better conversations = more meetings = higher ROI even if credit cost is higher. |
+| **Optimize for cost** (use a cheaper model) | High-volume, simpler outreach (event invites, content sharing). Messages are short and straightforward. |
+| **Balanced approach** | Start with the recommended model, then test cheaper alternatives. Switch only if quality is comparable. |
+
+<Tip>
+  Focus on **cost per meeting booked**, not cost per message. A model that costs 2x more per message but books 3x more meetings is the better choice.
+</Tip>
+
+---
+
+## Key Metrics to Track When Switching Models
+
+After changing your AI model, monitor these metrics for 1-2 weeks:
+
+| Metric | Where to find it | What to look for |
+|---|---|---|
+| **Reply rate** | Analytics > Campaign Stats | Did it go up or down? |
+| **Conversation quality** | Inbox > Read conversations | Do responses sound natural? |
+| **Qualification rate** | Analytics > Qualified Leads | Is the AI correctly qualifying? |
+| **Meeting booking rate** | Analytics > Campaign Stats | More or fewer meetings? |
+| **Credit consumption** | Billing > Credits | How much are you spending? |
 
 ---
 
 ## Related Guides
 
 - [Understanding the Prompts](/guides/core-features/understanding-the-prompts)
+- [Understanding the Sandbox](/guides/core-features/understanding-the-sandbox)
 - [Billing and Credits](/guides/team-billing/billing-and-credits)
+- [Analytics](/guides/optimize-your-results/analytics)

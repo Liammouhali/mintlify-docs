@@ -1,69 +1,119 @@
 ---
 title: "Team Management"
-description: "Invite team members to collaborate on campaigns and LinkedIn profiles. Available in Hunter and Conqueror plans with Admin roles."
+description: "Invite team members to collaborate on campaigns and LinkedIn profiles from the Kakiyo dashboard. Understand roles, permissions, and plan requirements."
 ---
 
-> Invite team members to collaborate on your Kakiyo account, manage multiple LinkedIn profiles together, and coordinate outreach efforts across your organization.
+<Info>
+  **This guide is for dashboard users.** Everything below happens inside the [Kakiyo dashboard](https://app.kakiyo.com). No code or API calls required.
+</Info>
+
+> Team management lets you invite colleagues to your Kakiyo workspace so you can collaborate on campaigns, manage multiple LinkedIn profiles, and coordinate outreach across your organization.
 
 ## Plan Requirements
 
-### Pioneer Plan
+Team members are not available on all plans:
 
-**No team members allowed**: Single-user accounts only due to single LinkedIn profile limitation.
+| Plan | Team members | LinkedIn accounts |
+|---|---|---|
+| **Pioneer** | 1 (owner only) | 1 |
+| **Hunter** | Unlimited | Up to 3 |
+| **Conqueror** | Unlimited | Up to 5 |
 
-### Hunter Plan
-
-**Team members available**: Invite colleagues to manage up to 3 LinkedIn accounts collectively.
-
-### Conqueror Plan
-
-**Team members available**: Collaborate on managing up to 5 LinkedIn accounts with your team.
+<Note>
+  Pioneer is a single-user plan. To invite team members, upgrade to Hunter or Conqueror. See [Billing and Credits](/guides/team-billing/billing-and-credits) for plan details and pricing.
+</Note>
 
 ---
 
 ## User Roles
 
+Kakiyo has two roles: **Owner** and **Admin**.
+
 ### Owner
 
-- **Full control**: Complete access to all account features
-- **Billing management**: Handle payments and plan changes
-- **Team administration**: Add, remove, and manage team member permissions
-- **Account settings**: Configure all account-level settings
+The account creator. There is one Owner per workspace.
+
+| Permission | Access |
+|---|---|
+| Campaign management | Full — create, edit, pause, resume, delete |
+| Profile management | Full — connect, configure, disconnect LinkedIn accounts |
+| Prospect management | Full — import, manage, delete prospects |
+| Analytics | Full — view all team and campaign analytics |
+| Billing management | Full — change plan, manage subscription, purchase credits |
+| Team administration | Full — invite, remove, and manage team members |
+| Account settings | Full — all workspace-level settings |
 
 ### Admin
 
-- **Campaign management**: Create and manage campaigns
-- **Profile management**: Configure LinkedIn accounts and settings
-- **Prospect management**: Import lists and manage outreach
-- **Performance monitoring**: Access analytics and reporting
-- **Limited access**: Cannot manage billing or team members
+Invited team members join as Admin.
+
+| Permission | Access |
+|---|---|
+| Campaign management | Full — create, edit, pause, resume, delete |
+| Profile management | Full — configure LinkedIn accounts and settings |
+| Prospect management | Full — import, manage, delete prospects |
+| Analytics | Full — view all team and campaign analytics |
+| Billing management | **No access** |
+| Team administration | **No access** — cannot invite or remove members |
+| Account settings | Limited |
 
 ---
 
-## Adding Team Members
+## Inviting a Team Member
 
-### Invitation Process
+1. In the sidebar, go to **Settings**.
+2. Navigate to the **Team** section.
+3. Click **Invite Member** (or similar invitation button).
+4. Enter the team member's email address.
+5. The team member receives an invitation email.
+6. Once they accept the invitation, they gain access to the workspace as an Admin.
 
-1. **Navigate to Team Settings**: Access team management section
-2. **Send invitation**: Enter team member's email address
-3. **Assign role**: Choose Admin role for new member
-4. **Email confirmation**: Invitee receives invitation email
-5. **Account access**: Team member gains access upon acceptance
-
-### Management Controls
-
-- **Remove members**: Owner can remove team members anytime
-- **Role management**: Adjust permissions as needed
-- **Activity monitoring**: Track team member actions and contributions
+<Tip>
+  Invited members get access to all campaigns, profiles, and analytics in the workspace. There is no per-campaign access control — all Admins can see and manage everything except billing and team settings.
+</Tip>
 
 ---
 
-Effective team management enables collaborative outreach while maintaining security and coordination across multiple LinkedIn profiles and campaigns.
+## Removing a Team Member
+
+1. In the sidebar, go to **Settings**.
+2. Navigate to the **Team** section.
+3. Find the team member you want to remove.
+4. Click **Remove** (or the removal action next to their name).
+5. The member immediately loses access to the workspace.
+
+<Warning>
+  Only the Owner can remove team members. Removing a member does not affect campaigns or data they created — everything stays in the workspace.
+</Warning>
+
+---
+
+## How Team Members Collaborate
+
+With multiple team members, your team can:
+
+| Activity | How it works |
+|---|---|
+| Manage different campaigns | Each team member can create and manage their own campaigns |
+| Share LinkedIn profiles | All connected profiles are visible to all team members |
+| Monitor conversations | Everyone can view and manage conversations in the Inbox |
+| Review analytics | All team members have access to the full analytics dashboard |
+| Import prospects | Any team member can import prospects via CSV or Lead Finder |
+
+---
+
+## Best Practices for Team Collaboration
+
+1. **Assign clear ownership** — decide which team member manages which campaigns to avoid overlapping efforts.
+2. **Coordinate LinkedIn account usage** — make sure two team members aren't accidentally assigning the same LinkedIn profile to conflicting campaigns.
+3. **Use naming conventions** — consistent campaign names (e.g., `[Owner Initials] - [Audience] - [Month]`) help everyone identify who owns what.
+4. **Review analytics together** — weekly team reviews of campaign performance help identify what's working across all campaigns.
 
 ---
 
 ## Related Guides
 
+- [Billing and Credits](/guides/team-billing/billing-and-credits)
 - [Account Setup & LinkedIn Connection](/guides/getting-started/account-setup-linkedin-connection)
-- [Understanding the Campaigns](/guides/core-features/understanding-the-campaigns)
 - [Profiles and LinkedIn Management](/guides/linkedin-account-safety/profiles-and-linkedin-management)
+- [Understanding the Campaigns](/guides/core-features/understanding-the-campaigns)

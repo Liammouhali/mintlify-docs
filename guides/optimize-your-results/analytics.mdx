@@ -1,80 +1,136 @@
 ---
 title: "Analytics"
-description: "Track campaign performance with connection rates, reply rates, and prospect metrics."
+description: "Track and analyze your campaign performance from the Kakiyo dashboard. Understand connection rates, reply rates, qualification metrics, and how to use analytics to improve your outreach."
 ---
 
-> Track campaign performance, monitor key metrics, and analyze outreach results to optimize your LinkedIn prospecting strategy.
+<Info>
+  **This guide is for dashboard users.** Everything below is accessible from the [Kakiyo dashboard](https://app.kakiyo.com). For programmatic access to analytics data, see the [Analytics API Reference](/api-reference/analytics/overview).
+</Info>
 
-## Current Analytics Dashboard
+> The Analytics section gives you a real-time view of how your outreach campaigns are performing. Use it to identify what's working, what needs improvement, and where to focus your optimization efforts.
 
-### Key Performance Indicators
+## Accessing Analytics
 
-**Connection Metrics:**
-
-- **Average Connection Rate**: Percentage of invitations accepted across campaigns
-- **Total Prospects**: Number of prospects in each campaign
-- **Connected Prospects**: Number of accepted connections per campaign
-
-**Conversation Metrics:**
-
-- **Average Reply Rate**: Percentage of prospects who respond to messages
-- **Messages Sent**: Total outbound messages per campaign and profile
-- **Messages Received**: Total responses and engagement per campaign
-
-### Reporting Levels
-
-**Campaign-Specific Analytics:**
-
-- Individual campaign performance tracking
-- Campaign-specific connection and reply rates
-
-**Overall Performance:**
-
-- Aggregated metrics across all campaigns
-- Account-wide averages and totals
-- Cross-campaign performance comparison
-
-**Profile-Level Analytics:**
-
-- LinkedIn account-specific performance
-- Invitations sent per profile
-- Message volume per connected account
-- Individual account health monitoring
+1. In the sidebar, click **Analytics**.
+2. The analytics dashboard shows an overview of your entire team's outreach performance.
+3. To view analytics for a specific campaign, go to **Campaigns** in the sidebar, click a campaign, and look for the **Stats** section.
 
 ---
 
-## Using Analytics for Optimization
+## Key Metrics Explained
 
-### Performance Identification
+### Team-Wide Metrics (Analytics Page)
 
-- **Top performers**: Identify best campaigns, prompts, and audiences
-- **Weak points**: Discover underperforming elements
-- **Optimization opportunities**: Find areas for improvement
-- **Scaling insights**: Determine what to expand and replicate
+| Metric | What it measures | How it's calculated |
+|---|---|---|
+| **Total Prospects** | Total number of prospects across all campaigns | Count of all prospect records |
+| **Invitations Sent** | Connection invitations sent by all agents | Total invitation tasks completed |
+| **Connections Made** | Invitations that were accepted | Prospects who accepted the connection request |
+| **Connection Rate** | Percentage of invitations accepted | Connections Made / Invitations Sent |
+| **Messages Sent** | Total messages sent by all agents | Includes first messages + follow-ups + replies |
+| **Messages Received** | Total replies from prospects | Count of incoming messages |
+| **Reply Rate** | Percentage of prospects who replied | Prospects who replied / Prospects who received a message |
+| **Qualified Leads** | Prospects marked as qualified by the AI or manually | Count of prospects in Qualified status |
 
-### Strategic Decisions
+### Campaign-Specific Metrics
 
-- **Campaign refinement**: Adjust targeting based on performance data
-- **Resource allocation**: Focus efforts on highest-performing strategies
-- **Prompt optimization**: Refine messaging based on response rates
-- **Audience targeting**: Double down on converting prospect segments
+When you view stats for a single campaign, you see the same metrics scoped to that campaign only, plus:
 
-### Continuous Improvement
+| Metric | What it measures |
+|---|---|
+| **Active Prospects** | Prospects currently in the outreach pipeline |
+| **Paused Prospects** | Prospects whose outreach is temporarily stopped |
+| **Completed Conversations** | Conversations that reached a terminal state (qualified, unqualified, or no reply) |
 
-- **Regular reviews**: Weekly and monthly performance analysis
-- **A/B testing**: Compare different approaches using analytics
-- **Iterative optimization**: Ongoing refinement based on data insights
-- **Goal tracking**: Monitor progress toward business objectives
+### Profile-Level Metrics
+
+Each LinkedIn profile on the **Profiles** page shows individual performance:
+
+| Metric | What it measures |
+|---|---|
+| **Invitations Sent** | Total invitations sent from this LinkedIn account |
+| **Acceptance Rate** | Percentage of invitations accepted for this account |
+| **Messages Sent** | Total messages sent from this profile |
+| **Message Volume** | Activity level of this specific agent |
 
 ---
 
-Analytics provide the insights needed to transform outreach from guesswork into data-driven strategy. Use current metrics for immediate optimization while preparing for advanced intelligence capabilities.
+## Reading the Analytics Dashboard
+
+The analytics page is organized in sections:
+
+### Overview Cards
+
+At the top of the page, summary cards show your main KPIs at a glance: total prospects, connection rate, reply rate, and qualified leads. These update in real time.
+
+### Campaign Breakdown
+
+A table showing each campaign with its own set of metrics. Use this to compare campaigns side by side and identify your best-performing outreach strategies.
+
+---
+
+## How to Use Analytics to Optimize
+
+### Low Connection Rate (below 30%)
+
+A low connection rate means prospects are not accepting your invitations. Potential fixes:
+
+1. **Optimize your LinkedIn profile** — see [Acceptance Rate Optimisation](/guides/optimize-your-results/acceptance-rate-optimisation)
+2. **Improve targeting** — make sure your prospects are actually your ICP
+3. **Check your first message** — the connection request note (if any) should be relevant and personal
+4. **Reduce daily limits** — sending too many invitations too fast can decrease quality
+
+### Low Reply Rate (below 15%)
+
+A low reply rate means connected prospects are not engaging. Potential fixes:
+
+1. **Improve your prompts** — make the first message more personalized and value-driven (see [Understanding the Prompts](/guides/core-features/understanding-the-prompts))
+2. **Improve your offering** — the AI needs good product knowledge to write relevant messages (see [Understanding the Offerings](/guides/core-features/understanding-the-offerings))
+3. **Enable follow-ups** — prospects often reply after the 2nd or 3rd touch (see [Follow-up Messages](/guides/core-features/follow-up-messages))
+4. **Check your data quality** — prospects with complete, enriched profiles get better personalization
+
+### Low Qualification Rate (below 5%)
+
+A low qualification rate means the AI is getting replies but not converting them to qualified leads. Potential fixes:
+
+1. **Review your prompt's qualification criteria** — are the criteria too strict?
+2. **Check conversation quality in the Inbox** — read through conversations to identify where the AI loses prospects
+3. **Test in the Sandbox** — simulate qualifying conversations and adjust the prompt
+
+---
+
+## Comparing Campaign Performance
+
+To run an effective comparison:
+
+1. Go to **Analytics** in the sidebar.
+2. Look at the campaign breakdown table.
+3. Sort by the metric you care about (connection rate, reply rate, qualified leads).
+4. Identify your top and bottom campaigns.
+5. Open the best-performing campaign and study its offering, prompt, and prospect profile.
+6. Apply the same patterns to underperforming campaigns.
+
+<Tip>
+  For meaningful comparisons, each campaign should have at least 50-100 prospects. Smaller sample sizes produce unreliable metrics.
+</Tip>
+
+---
+
+## Analytics Best Practices
+
+| Practice | Why |
+|---|---|
+| Check analytics weekly | Catch performance issues early before they waste credits |
+| Compare campaigns with similar audiences | Isolate what's working (prompt vs. offering vs. audience) |
+| Track changes over time | After editing a prompt or offering, wait 1-2 weeks to measure impact |
+| Use Sandbox before making changes | Test prompt/offering edits before rolling them out to live campaigns |
+| Monitor credit consumption | Track how many credits each campaign consumes relative to results |
 
 ---
 
 ## Related Guides
 
-- [Understanding the Prompts](/guides/core-features/understanding-the-prompts)
-- [Understanding the Campaigns](/guides/core-features/understanding-the-campaigns)
-- [Profiles and LinkedIn Management](/guides/linkedin-account-safety/profiles-and-linkedin-management)
+- [Acceptance Rate Optimisation](/guides/optimize-your-results/acceptance-rate-optimisation)
 - [Reply Rate Optimization](/guides/optimize-your-results/reply-rate-optimization)
+- [Understanding the Campaigns](/guides/core-features/understanding-the-campaigns)
+- [Billing and Credits](/guides/team-billing/billing-and-credits)

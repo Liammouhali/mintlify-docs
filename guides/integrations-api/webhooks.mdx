@@ -1,7 +1,11 @@
 ---
 title: "Webhooks"
-description: "Receive real-time notifications when events happen in Kakiyo. Configure webhook endpoints for message, invitation, and qualification events."
+description: "Set up webhook notifications from the Kakiyo dashboard. Receive real-time HTTP notifications when events occur in your campaigns — no code needed to configure."
 ---
+
+<Info>
+  **This guide is for dashboard users.** The steps below explain how to create and manage webhooks from the [Kakiyo dashboard](https://app.kakiyo.com). For the full webhook developer documentation (payload format, signature verification, testing via API), see the [Webhooks Developer Guide](/webhooks).
+</Info>
 
 > Webhooks let you receive real-time HTTP notifications when events occur in your Kakiyo campaigns. Use them to sync data with your CRM, trigger automations, or build custom integrations.
 
@@ -17,7 +21,7 @@ description: "Receive real-time notifications when events happen in Kakiyo. Conf
 
 ---
 
-## Setting Up a Webhook
+## Setting Up a Webhook from the Dashboard
 
 1. Navigate to **Webhooks** in the sidebar.
 2. Click **Create Webhook**.
@@ -28,35 +32,18 @@ description: "Receive real-time notifications when events happen in Kakiyo. Conf
 - **Secret** (optional): A shared secret for HMAC signature verification
 - **Events**: Select which events to listen for
 
----
-
-## Payload Format
-
-Every webhook delivery sends a `POST` request with `Content-Type: application/json`:
-
-```
-
-{
-  "event": "linkedin.message.received",
-  "teamId": "<TEAM_ID>",
-  "timestamp": "2025-07-15T10:30:00.000Z",
-  "data": {
-    "agentId": "...",
-    "campaignId": "...",
-    "chatId": "...",
-    "prospectId": "...",
-    "message": "...",
-    "timestamp": "..."
-  }
-}
-
-```
+4. Click **Save** to activate the webhook.
 
 ---
 
-## Security: HMAC Signature Verification
+## Managing Webhooks
 
-If you configure a **secret**, every delivery includes an `X-Kakiyo-Signature` header containing an HMAC-SHA256 signature of the JSON payload. Verify it server-side by computing the same HMAC using your secret over the raw request body.
+From the **Webhooks** page in the dashboard you can:
+
+- **View** all configured webhooks and their status
+- **Edit** the URL, events, or secret of any webhook
+- **Enable/Disable** webhooks without deleting them
+- **Delete** webhooks you no longer need
 
 ---
 
@@ -74,9 +61,6 @@ Each successful webhook delivery consumes **2 credits**. Failed deliveries do no
 
 ---
 
-## Testing
+## Need the Developer Details?
 
-Use the API to test your webhooks before going live:
-
-- `POST /v1/webhooks/test` sends a test payload to all active webhooks for a given event.
-- `GET /v1/webhooks/test/example/:event` returns an example payload without triggering anything.
+For payload format, HMAC signature verification code examples, and API-based webhook testing, see the [Webhooks Developer Guide](/webhooks) and the [Webhooks API Reference](/api-reference/webhooks/list).

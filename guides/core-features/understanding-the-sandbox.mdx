@@ -1,115 +1,130 @@
 ---
 title: "Understanding the Sandbox"
-description: "Test your AI agent before launch. Simulate conversations, play different prospect types, and optimize prompts and offerings safely."
+description: "Test your AI agent before launching real campaigns. Learn how to access the Sandbox from the dashboard, simulate conversations with different prospect types, and optimize your prompts and offerings safely."
 ---
 
-> The Sandbox allows you to test your AI agent's conversation skills before launching real campaigns. You act as a prospect while your AI agent tries to sell your offering, helping you identify and fix issues with your setup.
+<Info>
+  **This guide is for dashboard users.** Everything below happens inside the [Kakiyo dashboard](https://app.kakiyo.com). No code or API calls required.
+</Info>
 
-## How Sandbox Works
+> The Sandbox is a safe testing environment where you can simulate conversations with your AI agent before it talks to real prospects. Use it to validate your prompts, offerings, and follow-up sequences without risking your reputation or wasting credits on poorly configured campaigns.
 
-**Conversation Simulation:**
+## How to Access the Sandbox
 
-- Your AI agent attempts to sell your offering
-- You role-play as different types of prospects
-- Test various scenarios and responses
-- Evaluate AI behavior and conversation quality
+The Sandbox is campaign-specific. You need a campaign before you can use it.
 
-**What Gets Tested:**
+1. In the sidebar, click **Campaigns**.
+2. Click on the campaign you want to test.
+3. Click the **Sandbox** tab (or the **Test in Sandbox** button).
+4. The Sandbox chat interface opens.
 
-- **Prompt quality**: How well your Context and First Message prompts work
-- **Offering effectiveness**: How well the AI understands and presents your solution
-- **Conversation flow**: Natural dialogue progression and responses
-- **Objection handling**: AI's ability to address prospect concerns
-
----
-
-## Testing Strategies
-
-### Good Prospect vs Bad Prospect
-
-**Good Prospect Testing:**
-
-- Act interested and engaged
-- Ask relevant questions about your solution
-- Show buying intent signals
-- Test if AI can close effectively
-
-**Bad Prospect Testing:**
-
-- Be skeptical and challenging
-- Raise objections (timing, relevance...)
-- Act disinterested or distracted
-- Test AI's persistence and objection handling
-
-### Challenge Your AI
-
-- **Push boundaries**: Test edge cases and difficult scenarios
-- **Ask tough questions**: See if AI can handle complex inquiries
-- **Be uncooperative**: Test how AI handles difficult prospects
-- **Change topics**: See if AI can redirect conversations effectively
+<Note>
+  If the Sandbox tab is not visible, make sure your campaign has an offering and prompt assigned. Both are required for the Sandbox to work. Your LinkedIn account does **not** need to be connected to use the Sandbox.
+</Note>
 
 ---
 
-## Requirements
+## How the Sandbox Works
 
-**Campaign Dependency:** You must create a campaign before using the Sandbox. The Sandbox tests specific campaign configurations, so you need:
+The Sandbox simulates a real LinkedIn conversation between your AI agent and a fictional prospect. Here's how it differs from real conversations:
 
-- A configured campaign
-- Selected offering
-- Selected prompts
+| | Sandbox | Real Campaign |
+|---|---|---|
+| Messages sent to LinkedIn | No | Yes |
+| Credits consumed | Minimal (testing credits) | Full credits |
+| Prospect is real | No — you play the prospect | Yes |
+| AI uses your offering + prompt | Yes | Yes |
+| Follow-up messages work | Yes | Yes |
 
-> **Important**: Your LinkedIn doesn't need to be connected to use the Sandbox.
+---
+
+## Running a Sandbox Test
+
+### Step 1: Start a New Conversation
+
+1. In the Sandbox, click **New Conversation** (or start typing).
+2. The AI agent sends its first message based on your First Message Prompt.
+3. Review the message: is it personalized? Does it match the tone you configured? Is the CTA clear?
+
+### Step 2: Play the Prospect
+
+Now you role-play as the prospect to test how the AI handles different scenarios:
+
+1. Type a reply as if you were a real prospect.
+2. The AI responds based on your Context Prompt and Offering.
+3. Continue the conversation to test specific scenarios.
+
+### Step 3: Test Different Prospect Types
+
+Run multiple conversations to cover these common scenarios:
+
+| Prospect type | What to test | Example message |
+|---|---|---|
+| **Interested** | Does the AI qualify correctly and book a meeting? | "That sounds interesting, tell me more about pricing." |
+| **Skeptical** | Does the AI handle objections without being pushy? | "I'm not sure this is right for us. We already use a competitor." |
+| **Busy** | Does the AI respect the prospect's time? | "Not a good time, maybe later." |
+| **Not interested** | Does the AI accept rejection gracefully? | "No thanks, not interested." |
+| **Off-topic** | Does the AI stay on track? | "Do you know any good restaurants nearby?" |
+| **Aggressive** | Does the AI remain professional? | "Stop messaging me, this is spam!" |
+
+### Step 4: Test Follow-Up Messages
+
+If you have follow-up messages configured (see [Follow-up Messages](/guides/core-features/follow-up-messages)):
+
+1. In the Sandbox conversation, do not reply to the AI's first message.
+2. Click the **Trigger Follow-up** button (or wait for the simulated delay).
+3. The AI sends the first follow-up message.
+4. Repeat to test the second and third follow-ups.
+5. Verify that each follow-up adds new value and doesn't repeat the same content.
 
 ---
 
 ## What to Look For
 
-### Red Flags
+When reviewing Sandbox conversations, check:
 
-- **Unnatural tone**: AI sounds robotic or scripted
-- **Generic responses**: Lack of personalization or context
-- **Poor objection handling**: Can't address prospect concerns
-- **Weak closing**: Fails to secure meetings or next steps
-
-### Quality Indicators
-
-- **Natural conversation flow**: Responses feel human and contextual
-- **Strong personalization**: AI uses prospect information effectively
-- **Confident objection handling**: Addresses concerns professionally
-- **Clear value communication**: Effectively explains your solution's benefits
-
-### Optimization Process
-
-1. **Test thoroughly**: Run multiple scenarios and prospect types
-2. **Identify weaknesses**: Note where conversations break down
-3. **Refine components**: Update prompts or offering based on findings
-4. **Retest**: Validate improvements in new Sandbox sessions
-5. **Repeat**: Continue until conversation quality meets standards
+| Aspect | What to verify |
+|---|---|
+| **Tone** | Does the AI match the personality you configured? Professional, casual, friendly? |
+| **Product knowledge** | Does the AI accurately describe your product based on the offering? |
+| **Qualification** | Does the AI correctly identify qualified vs. unqualified prospects? |
+| **Boundaries** | Does the AI respect the rules in your Context Prompt? (e.g., "never discuss pricing") |
+| **Call to action** | Does the AI propose a clear next step (book a call, share a link)? |
+| **Handling objections** | Does the AI address concerns without being defensive or pushy? |
+| **Message length** | Are messages concise and readable, or too long and wall-of-text? |
 
 ---
 
-## Best Practices
+## Adjusting Based on Sandbox Results
 
-### Testing Approach
+If the AI doesn't behave as expected, here's what to adjust:
 
-- **Be thorough**: Don't rush the testing process
-- **Vary scenarios**: Test different prospect personalities and situations
-- **Document issues**: Keep notes on what needs improvement
-- **Test after changes**: Always retest after modifying prompts or offerings
+| Problem | Where to fix it |
+|---|---|
+| AI doesn't know enough about your product | Edit your **Offering** — go to **Offerings** in the sidebar, click the offering, edit |
+| AI tone is wrong | Edit the **Context Prompt** — go to **Prompts** in the sidebar, click the prompt, edit context |
+| First message is off | Edit the **First Message Prompt** — go to **Prompts**, click the prompt, edit first message |
+| AI qualifies too easily or too strictly | Adjust qualification criteria in the **Context Prompt** |
+| Follow-up messages are repetitive | Edit follow-up templates in the campaign's **Follow-ups** tab |
+| AI gives incorrect information | Add or correct facts in the **Offering** |
 
-### Before Launch
-
-- **Complete testing**: Ensure AI handles all common scenarios
-- **Validate improvements**: Confirm all identified issues are resolved
-- **Team review**: Have others test if working in a team environment
+After making changes, run the Sandbox again to verify the improvement. Repeat until you're satisfied with the AI's behavior.
 
 ---
 
-> The Sandbox is your safety net. Invest time in thorough testing to ensure your AI agent performs excellently before engaging real prospects.
+## Sandbox Best Practices
+
+1. **Test before every campaign launch** — always run at least 3-5 Sandbox conversations before going live.
+2. **Test after every prompt or offering change** — even small edits can change behavior.
+3. **Test with different models** — if you're considering switching AI models, compare Sandbox outputs (see [How to Choose Your AI Model](/guides/inbox-conversations/how-to-choose-your-ai-model)).
+4. **Save examples** — note down particularly good or bad Sandbox conversations to reference when optimizing.
+5. **Involve your team** — have team members play the prospect for more realistic testing.
 
 ---
 
 ## Related Guides
 
-- [AI Builder - Quick Setup](/guides/getting-started/ai-builder-quick-setup)
 - [Understanding the Prompts](/guides/core-features/understanding-the-prompts)
+- [Understanding the Offerings](/guides/core-features/understanding-the-offerings)
+- [Follow-up Messages](/guides/core-features/follow-up-messages)
+- [How to Choose Your AI Model](/guides/inbox-conversations/how-to-choose-your-ai-model)

@@ -32,7 +32,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Kakiyo",
+        "tab": "Dashboard",
         "groups": [
           {
             "group": "Start Here",
@@ -108,22 +108,12 @@
             ]
           },
           {
-            "group": "Integrations & API (Guides)",
+            "group": "Integrations (Dashboard)",
             "pages": [
               "guides/integrations-api/overview",
-              "guides/integrations-api/webhooks",
-              "guides/integrations-api/api-keys-public-api",
               "guides/integrations-api/hubspot-integration",
-              "guides/integrations-api/do-not-contact-dnc-lists"
-            ]
-          },
-          {
-            "group": "Developer Setup",
-            "pages": [
-              "quickstart",
-              "authentication",
-              "webhooks",
-              "mcp-server"
+              "guides/integrations-api/do-not-contact-dnc-lists",
+              "guides/integrations-api/webhooks"
             ]
           }
         ]
@@ -142,8 +132,19 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "Developers",
         "groups": [
+          {
+            "group": "Developer Hub",
+            "pages": [
+              "developers/overview",
+              "quickstart",
+              "authentication",
+              "webhooks",
+              "mcp-server",
+              "guides/integrations-api/api-keys-public-api"
+            ]
+          },
           {
             "group": "API Documentation",
             "pages": [

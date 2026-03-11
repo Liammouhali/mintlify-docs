@@ -1,6 +1,6 @@
 ---
 title: Welcome to Kakiyo
-description: "Kakiyo documentation — guides for LinkedIn outreach, campaign setup, AI configuration, and the full REST API reference."
+description: "Kakiyo documentation — dashboard guides for LinkedIn outreach, campaign setup, AI configuration, and a full developer section with REST API, webhooks, and MCP server."
 ---
 
 <img
@@ -20,97 +20,87 @@ Kakiyo helps teams automate LinkedIn outreach with AI conversations, lead qualif
 
 <CardGroup cols={2}>
   <Card
-    title="Product Guides"
-    icon="book-open"
+    title="Dashboard Guides"
+    icon="gauge"
     href="/guides/overview"
   >
-    End-to-end tutorials and help-center content for operators, growth teams, and admins
+    Step-by-step tutorials for using Kakiyo from the dashboard. Learn where to click, how to configure campaigns, manage prospects, and optimize results.
   </Card>
+  <Card
+    title="Developers"
+    icon="code"
+    href="/developers/overview"
+  >
+    API reference, webhooks, MCP server, and authentication for programmatic access. For engineers building integrations with Kakiyo.
+  </Card>
+</CardGroup>
+
+## Dashboard — For Teams & Operators
+
+These guides walk you through everything you can do from the Kakiyo dashboard, with step-by-step instructions and screenshots.
+
+<CardGroup cols={2}>
   <Card
     title="Getting Started"
     icon="rocket"
     href="/guides/getting-started/overview"
   >
-    Learn Kakiyo fundamentals, complete setup, and launch your first campaign
+    Create your account, connect LinkedIn, and launch your first campaign from the dashboard.
   </Card>
   <Card
-    title="Integrations"
-    icon="link"
-    href="/integrations/overview"
-  >
-    Connect Kakiyo with HubSpot, LeadShark, webhooks, and external systems
-  </Card>
-  <Card
-    title="API Reference"
-    icon="code"
-    href="/api-reference/introduction"
-  >
-    Full endpoint reference for agents, campaigns, prospects, analytics, and more
-  </Card>
-</CardGroup>
-
-## Popular Workflows
-
-<CardGroup cols={2}>
-  <Card
-    title="Set Up Your First Campaign"
-    icon="bullhorn"
-    href="/guides/getting-started/first-campaign-setup"
-  >
-    Configure account, prompts, offerings, and launch outreach quickly
-  </Card>
-  <Card
-    title="Master Core Features"
+    title="Core Features"
     icon="sparkles"
     href="/guides/core-features/overview"
   >
-    Learn prompts, sandbox testing, follow-up flows, and lead management
+    Configure prompts, offerings, sandbox testing, campaigns, and prospect management.
   </Card>
   <Card
     title="LinkedIn Safety"
     icon="shield"
     href="/guides/linkedin-account-safety/overview"
   >
-    Apply account limits, troubleshooting, and best practices for safe scale
+    Set up safe outreach limits, troubleshoot connection issues, and protect your account.
   </Card>
   <Card
     title="Optimize Results"
     icon="chart-line"
     href="/guides/optimize-your-results/overview"
   >
-    Improve acceptance and reply rates with proven optimization playbooks
+    Improve acceptance and reply rates with proven optimization playbooks.
   </Card>
 </CardGroup>
 
-## For Developers
+## Developers — For Engineers & Integrations
+
+Build on Kakiyo programmatically with the REST API, real-time webhooks, and the MCP server.
 
 <CardGroup cols={2}>
   <Card
-    title="Authentication"
-    icon="lock"
-    href="/authentication"
+    title="Quickstart"
+    icon="rocket"
+    href="/quickstart"
   >
-    Set up API keys and secure request authentication
+    Get your first API call running in minutes
+  </Card>
+  <Card
+    title="API Reference"
+    icon="braces"
+    href="/api-reference/introduction"
+  >
+    Full endpoint documentation for all resources
   </Card>
   <Card
     title="Webhooks"
     icon="webhook"
     href="/webhooks"
   >
-    Receive real-time events from Kakiyo in your systems
+    Receive real-time events from Kakiyo
   </Card>
   <Card
     title="MCP Server"
     icon="bot"
     href="/mcp-server"
   >
-    Control Kakiyo through Claude, Cursor, and MCP clients
-  </Card>
-  <Card
-    title="REST Endpoints"
-    icon="braces"
-    href="/api-reference/introduction"
-  >
-    Explore all API resources and endpoint details
+    Control Kakiyo through Claude, Cursor, and AI assistants
   </Card>
 </CardGroup>

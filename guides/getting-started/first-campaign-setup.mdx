@@ -1,71 +1,177 @@
 ---
 title: "First Campaign Setup"
-description: "Learn manual campaign creation: set up offerings, prompts, LinkedIn accounts, and import prospects via CSV or AI Lead Finder."
+description: "Step-by-step guide to creating your first outreach campaign from the Kakiyo dashboard. Covers offering selection, prompt configuration, LinkedIn agent assignment, prospect import, and campaign launch."
 ---
 
-> Setting up your first campaign manually gives you complete control over every aspect of your outreach. This process is essential if you're not using the AI Builder, which automatically creates campaigns for you.
+<Info>
+  **This guide is for dashboard users.** Every step below happens inside the [Kakiyo dashboard](https://app.kakiyo.com). No code or API calls required.
+</Info>
 
-## Campaign Requirements
+> A campaign is the container that ties everything together: your **offering** (what you sell), your **prompt** (how the AI talks), your **LinkedIn agent** (which account sends messages), and your **prospects** (who receives them). This guide walks you through creating one from scratch.
 
-To create a campaign, you need four essential components:
+## Prerequisites
 
-1. **Offering**: Defines what you're selling and gives the AI knowledge about your solution
-2. **Prompt**: Both Context Prompt and First Message Prompt must be created
-3. **LinkedIn Account**: At least one connected LinkedIn profile for sending messages
-4. **Prospect List**: Either CSV import or AI Lead Finder
+Before creating a campaign, make sure you have:
 
----
-
-## Campaign Creation
-
-### Basic Setup
-
-1. Go to Campaigns -> Create New Campaign
-2. **Select Offering**: Choose which offering to promote
-3. **Select Prompts**: Choose your Context and First Message prompts
-4. **Assign LinkedIn Profile**: Select which account will send messages
-5. **Configure Variables**: Set up the variables (if you have some in your prompt)
+- A connected LinkedIn account (see [Account Setup & LinkedIn Connection](/guides/getting-started/account-setup-linkedin-connection))
+- At least one offering created (see [Understanding the Offerings](/guides/core-features/understanding-the-offerings))
+- At least one prompt configured (see [Understanding the Prompts](/guides/core-features/understanding-the-prompts))
+- Prospects ready (CSV file or Lead Finder access)
 
 ---
 
-## Adding Prospects
+## Step 1: Open the Campaign Creation Form
 
-### CSV Import
-
-**Required fields:**
-
-- First Name
-- Last Name
-- LinkedIn URL
-
-> **Optional fields:** Add any additional data (company, job title, buying intent, etc.) for better personalization.
-
-### AI Lead Finder
-
-Real-time prospect discovery that searches LinkedIn for fresh, qualified leads.
-
-**How it works:**
-
-- Define your target criteria (job titles, industries, company size)
-- AI searches LinkedIn in real-time
-- Builds fresh prospect lists with current data
-- No outdated information from static databases
-
-**Lead credit packs:**
-
-- 100 leads: 10 EUR
-- 250 leads: 25 EUR
-- 500 leads: 50 EUR
-- 1,000 leads: 100 EUR
-
-> Lead credits are separate from conversation credits and only charged for successfully found qualified prospects.
+1. In the sidebar, click **Campaigns**.
+2. Click the **Create New Campaign** button in the top-right corner.
+3. The campaign creation form opens with several sections to fill in.
 
 ---
 
-Manual campaign setup provides complete control when the AI Builder doesn't meet your specific needs.
+## Step 2: Name Your Campaign
+
+1. Enter a descriptive campaign name in the **Campaign Name** field.
+2. Use a naming convention that helps you identify the campaign later, for example: `[Target Audience] - [Offering] - [Month/Year]` (e.g., "SaaS CTOs - Enterprise Plan - March 2026").
+
+<Tip>
+  Good campaign names make it easier to compare performance in analytics and identify what works.
+</Tip>
+
+---
+
+## Step 3: Select Your Offering
+
+1. In the **Offering** dropdown, select the offering that describes your product or service.
+2. If you don't have an offering yet, you can create one from **Offerings** in the sidebar (see [Understanding the Offerings](/guides/core-features/understanding-the-offerings)).
+
+The offering provides the AI with knowledge about what you sell. The better your offering, the more relevant and personalized the AI's messages will be.
+
+---
+
+## Step 4: Select Your Prompt
+
+1. In the **Prompt** dropdown, select the prompt that defines how the AI should behave and what the first message should say.
+2. If you need to create a new prompt first, go to **Prompts** in the sidebar (see [Understanding the Prompts](/guides/core-features/understanding-the-prompts)).
+
+<Note>
+  The prompt has two layers: a **Context Prompt** (personality, rules, boundaries) and a **First Message Prompt** (the opening message template with variables). Both are selected together as a single prompt.
+</Note>
+
+---
+
+## Step 5: Assign a LinkedIn Agent
+
+1. In the **LinkedIn Account** dropdown, select the LinkedIn profile that will send the outreach messages.
+2. Only connected and active LinkedIn accounts appear in this dropdown.
+3. If no accounts are available, go to **Profiles** in the sidebar to connect one first.
+
+<Warning>
+  Each LinkedIn account can only be assigned to campaigns that respect its daily invitation and message limits. Monitor these in **Profiles** to avoid exceeding safe thresholds.
+</Warning>
+
+---
+
+## Step 6: Configure Campaign Variables (Optional)
+
+If your prompt uses variables (like `{{goal}}`, `{{tone}}`, or `{{cta}}`), the campaign creation form will display fields for each variable.
+
+1. Fill in the values for each variable. These values will be injected into the prompt for every conversation in this campaign.
+2. Variables let you reuse the same prompt across different campaigns with different goals, tones, or CTAs.
+
+---
+
+## Step 7: Import Prospects
+
+You need to add prospects to your campaign. There are two methods:
+
+### Method A: CSV Import
+
+1. Click the **Import CSV** button (or navigate to the campaign's prospect section after creation).
+2. Prepare a CSV file with a column containing LinkedIn profile URLs.
+   - Accepted URL formats: `https://www.linkedin.com/in/john-doe` or just `linkedin.com/in/john-doe`
+   - Other columns (name, company, title) are optional but help with enrichment.
+3. Upload the file by dragging it into the upload area or clicking to browse.
+4. Kakiyo automatically detects the LinkedIn URL column and parses the file.
+5. Review the import summary: prospects added, duplicates skipped, errors.
+
+<Note>
+  Maximum 1,000 prospects per CSV upload. For larger imports, split into multiple files or use the [API batch endpoint](/api-reference/prospects/add-batch).
+</Note>
+
+### Method B: Lead Finder
+
+1. Go to **Lead Finder** in the sidebar.
+2. Describe your ideal customer profile (ICP) in natural language, or use manual filters (title, region, seniority, company size, industry).
+3. Preview matching leads, remove any that don't fit.
+4. Click **Import to Campaign** and select the target campaign.
+5. See [Getting Started with Lead Finder](/guides/lead-finder/getting-started-with-lead-finder) for the full walkthrough.
+
+---
+
+## Step 8: Review and Launch
+
+1. Review all settings: campaign name, offering, prompt, LinkedIn agent, variables, and prospect count.
+2. Click **Create Campaign** to save.
+3. The campaign starts in **Active** mode by default, meaning the AI agent will begin sending invitations and messages according to the LinkedIn account's schedule and daily limits.
+
+<Tip>
+  Before launching with real prospects, test your prompt and offering combination in the [Sandbox](/guides/core-features/understanding-the-sandbox) to make sure the AI behaves as expected.
+</Tip>
+
+---
+
+## After Launch: What Happens Next
+
+Once your campaign is active:
+
+1. **Invitations are sent** to prospects who are not yet connected, according to the LinkedIn agent's daily limits and schedule.
+2. **First messages are sent** to connected prospects (or after invitation acceptance).
+3. **The AI handles replies** in Autopilot mode — qualifying leads, answering objections, and booking meetings.
+4. **You can monitor conversations** in the **Inbox** (see [Inbox and Conversation Management](/guides/inbox-conversations/inbox-and-conversation-management)).
+
+---
+
+## Managing Your Campaign After Creation
+
+From the **Campaigns** page, you can:
+
+| Action | How |
+|---|---|
+| Pause the campaign | Click the **Pause** button on the campaign card |
+| Resume a paused campaign | Click **Resume** |
+| Edit campaign name or variables | Click the campaign name to open settings |
+| View campaign statistics | Click **Stats** or go to **Analytics** |
+| Add more prospects | Open the campaign and use CSV import or Lead Finder |
+
+<Warning>
+  Changing the offering or prompt mid-campaign affects all future conversations but does not retroactively change ongoing ones. Test changes in the Sandbox first.
+</Warning>
+
+---
+
+## Common Issues
+
+<AccordionGroup>
+  <Accordion title="No LinkedIn accounts available in the dropdown">
+    Go to **Profiles** in the sidebar and connect a LinkedIn account first. The account must be in **Connected** status to appear in the campaign creation form.
+  </Accordion>
+  <Accordion title="CSV import shows errors">
+    Check that your CSV contains valid LinkedIn profile URLs. The URL column must contain links in the format `linkedin.com/in/username`. Rows without a valid URL are skipped.
+  </Accordion>
+  <Accordion title="Campaign is active but no messages are being sent">
+    Check three things: (1) the LinkedIn agent is not paused, (2) the daily invitation limit has not been reached, (3) there are prospects in the campaign with status **Pending** or **Active**.
+  </Accordion>
+  <Accordion title="Prospects were skipped during import">
+    Prospects are skipped if: they are already in the campaign, they are on your [Do Not Contact list](/guides/integrations-api/do-not-contact-dnc-lists), or the LinkedIn URL is invalid.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
 ## Related Guides
 
-- [AI Builder - Quick Setup](/guides/getting-started/ai-builder-quick-setup)
+- [Understanding the Offerings](/guides/core-features/understanding-the-offerings)
+- [Understanding the Prompts](/guides/core-features/understanding-the-prompts)
+- [Understanding the Sandbox](/guides/core-features/understanding-the-sandbox)
+- [Prospects and Lead Management](/guides/core-features/prospects-and-lead-management)
+- [Inbox and Conversation Management](/guides/inbox-conversations/inbox-and-conversation-management)

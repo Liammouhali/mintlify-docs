@@ -1,0 +1,103 @@
+---
+title: "Developers"
+description: "Technical documentation for developers integrating with the Kakiyo API, webhooks, and MCP server. This section is for programmatic access — if you want to use Kakiyo from the dashboard, see the Product Guides instead."
+---
+
+<Info>
+  **This section is for developers and technical integrations.** If you're looking for how to use Kakiyo from the dashboard (creating campaigns, managing prospects, configuring settings), go to [Product Guides](/guides/overview) instead.
+</Info>
+
+Build on top of Kakiyo with the REST API, real-time webhooks, and MCP server for AI assistants.
+
+## Getting Started
+
+<CardGroup cols={2}>
+  <Card
+    title="Quickstart"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Get your first API call working in minutes with code examples in JavaScript, Python, and cURL.
+  </Card>
+  <Card
+    title="Authentication"
+    icon="lock"
+    href="/authentication"
+  >
+    Generate API keys from your dashboard and authenticate all API requests.
+  </Card>
+  <Card
+    title="Webhooks"
+    icon="webhook"
+    href="/webhooks"
+  >
+    Receive real-time event notifications when messages are sent, invitations accepted, and more.
+  </Card>
+  <Card
+    title="MCP Server"
+    icon="bot"
+    href="/mcp-server"
+  >
+    Control Kakiyo through Claude, Cursor, and other MCP-compatible AI assistants.
+  </Card>
+</CardGroup>
+
+## API Reference
+
+Full endpoint documentation with request/response examples for every resource.
+
+<CardGroup cols={2}>
+  <Card
+    title="Campaigns"
+    icon="bullhorn"
+    href="/api-reference/campaigns/list"
+  >
+    Create, update, pause, resume, and delete outreach campaigns.
+  </Card>
+  <Card
+    title="Prospects"
+    icon="user-group"
+    href="/api-reference/prospects/list"
+  >
+    Add, search, qualify, pause, and manage prospects programmatically.
+  </Card>
+  <Card
+    title="Agents"
+    icon="robot"
+    href="/api-reference/agents/list"
+  >
+    Manage LinkedIn automation agents, update settings, and control state.
+  </Card>
+  <Card
+    title="Analytics"
+    icon="chart-line"
+    href="/api-reference/analytics/overview"
+  >
+    Retrieve team-wide and campaign-specific performance metrics.
+  </Card>
+  <Card
+    title="Webhooks API"
+    icon="bell"
+    href="/api-reference/webhooks/list"
+  >
+    Programmatically create, update, test, and delete webhook endpoints.
+  </Card>
+  <Card
+    title="All Endpoints"
+    icon="code"
+    href="/api-reference/introduction"
+  >
+    Browse the complete REST API reference with authentication, pagination, and error handling.
+  </Card>
+</CardGroup>
+
+## Dashboard or API?
+
+| I want to... | Use |
+|---|---|
+| Create a campaign, add prospects, configure prompts | [Dashboard](https://app.kakiyo.com) or [Product Guides](/guides/overview) |
+| Automate prospect imports from my CRM | [API - Prospects](/api-reference/prospects/add-batch) |
+| Get real-time notifications when a prospect replies | [Webhooks](/webhooks) |
+| Build a custom analytics dashboard | [API - Analytics](/api-reference/analytics/overview) |
+| Manage Kakiyo from Claude or Cursor | [MCP Server](/mcp-server) |
+| Connect HubSpot or LeadShark | [Dashboard - Integrations](/integrations/overview) |

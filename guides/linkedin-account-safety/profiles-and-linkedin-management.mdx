@@ -1,57 +1,122 @@
 ---
 title: "Profiles and LinkedIn Management"
-description: "Configure LinkedIn accounts, set outreach schedules and limits, track performance, and manage multiple profiles safely."
+description: "Configure LinkedIn accounts from the Kakiyo dashboard: set outreach schedules and daily limits, track performance metrics, and manage multiple profiles safely across your team."
 ---
 
-> Manage your connected LinkedIn accounts, configure outreach settings, and monitor account performance. Each profile operates independently with dedicated security infrastructure.
+<Info>
+  **This guide is for dashboard users.** Everything below happens inside the [Kakiyo dashboard](https://app.kakiyo.com). No code or API calls required.
+</Info>
+
+> The **Profiles** page is where you manage all your connected LinkedIn accounts. From here you can configure outreach schedules, set daily invitation limits, monitor performance, and ensure your accounts stay safe.
+
+## Accessing Profiles
+
+1. In the sidebar, click **Profiles**.
+2. You see a list of all connected LinkedIn accounts with their current status.
+3. Click any account to open its settings and performance details.
+
+---
 
 ## Profile Limits by Plan
 
-- **Pioneer Plan**: 1 LinkedIn account
-- **Hunter Plan**: Up to 3 LinkedIn accounts
-- **Conqueror Plan**: Up to 5 LinkedIn accounts
+| Plan | LinkedIn accounts allowed |
+|---|---|
+| **Pioneer** | 1 |
+| **Hunter** | Up to 3 |
+| **Conqueror** | Up to 5 |
+
+To see your current plan and limits, go to **Settings** > **Billing**. See [Billing and Credits](/guides/team-billing/billing-and-credits) for full plan details.
 
 ---
 
-## Outreach Configuration
+## Configuring Outreach Settings
 
-### Scheduling Settings
+Click a connected account on the **Profiles** page to access its settings.
 
-- **Operating hours**: Set specific times for AI agent activity
-- **Timezone configuration**: Match your geographical location
-- **Daily schedules**: Define when outreach should occur
-- **Weekly patterns**: Customize activity for different days
+### Setting Daily Invitation Limits
 
-### Invitation Limits
+1. Click the connected account to open its settings.
+2. Find the **Daily Limits** section.
+3. Set your daily invitation limit based on account age:
 
-- **Daily limits**: Adjustable between 15-60 invitations per day
-- **Recommended range**: 30-40 invitations daily for account safety
-- **Risk management**: Higher limits increase account restriction risk
-- **Monthly limits**: Maximum 800 invitations per month (LinkedIn's guideline)
+| Account age | Recommended daily invitations |
+|---|---|
+| New accounts (first 3 days) | 15-20 |
+| After 3-7 days | 25-30 |
+| After 7 days / Established accounts | 30-40 |
 
-### Safety Guidelines
+<Warning>
+  **Never set daily invitation limits above 40**, even for mature accounts. LinkedIn actively monitors outreach volume and may restrict accounts that exceed safe thresholds. See [LinkedIn Account Safety Guide](/guides/linkedin-account-safety/linkedin-account-safety-guide) for detailed scaling strategies.
+</Warning>
 
-- **Stay within limits**: Don't exceed 40 invitations daily
-- **Monitor account health**: Watch for any LinkedIn warnings
-- **Gradual scaling**: Increase volume slowly over time
-- **Account age consideration**: Newer accounts should start lower
+4. Click **Save**.
+
+### Monthly Compliance
+
+LinkedIn enforces a maximum of approximately **800 invitations per month**. Kakiyo includes automatic safeguards to prevent exceeding this limit.
+
+### Configuring Working Hours
+
+1. Click the connected account to open its settings.
+2. Find the **Schedule** section.
+3. Set the time window during which the agent sends messages (e.g., 9:00 AM - 6:00 PM).
+4. Configure the timezone to match your geographical location.
+5. Click **Save**.
+
+<Tip>
+  Set working hours that match your prospect's business hours for better engagement. If you target prospects in a different timezone, configure the schedule accordingly.
+</Tip>
+
+### Configuring Location
+
+1. Click the connected account to open its settings.
+2. In the **Location** section, select the city and country where you normally use LinkedIn.
+3. Click **Save**.
+
+<Warning>
+  **Always use your real location.** Selecting a location that doesn't match where you normally log in to LinkedIn can trigger security checks. If your location isn't available, contact Kakiyo support — do not select a random location.
+</Warning>
+
+See [Account Setup & LinkedIn Connection](/guides/getting-started/account-setup-linkedin-connection) for full location setup guidance.
 
 ---
 
-## Profile Performance Tracking
+## Monitoring Profile Performance
 
-### Key Metrics
+Each connected LinkedIn account shows individual performance metrics:
 
-- **Invitations sent**: Daily and total invitation counts
-- **Messages sent**: Outbound message volume
-- **Messages received**: Response and engagement tracking
-- **Connection acceptance**: Rate of invitation approvals
+| Metric | What it measures |
+|---|---|
+| **Invitations Sent** | Total invitations sent from this LinkedIn account |
+| **Acceptance Rate** | Percentage of invitations accepted for this account |
+| **Messages Sent** | Total messages sent from this profile |
+| **Messages Received** | Response and engagement tracking |
 
-### Performance Monitoring
+Use these metrics to:
 
-- **Individual profiles**: Track each LinkedIn account separately
-- **Comparative analysis**: Compare performance across profiles
-- **Limit compliance**: Ensure staying within safe parameters
+- Compare performance across profiles to identify your best-performing accounts
+- Spot accounts that may need attention (low acceptance rate could indicate profile optimization is needed)
+- Ensure you're staying within safe activity parameters
+
+---
+
+## Managing Multiple Profiles
+
+If your plan supports multiple LinkedIn accounts, you can distribute outreach across them:
+
+### Assigning Profiles to Campaigns
+
+- When creating a campaign, select which LinkedIn account should send messages from the **LinkedIn Account** dropdown.
+- Each campaign uses one LinkedIn profile at a time.
+- You can assign different profiles to different campaigns to segment by audience, geography, or product line.
+
+### Workload Distribution
+
+| Strategy | When to use |
+|---|---|
+| One profile per audience segment | Different profiles for different industries or regions |
+| Rotate profiles across campaigns | Spread volume across accounts to stay within per-account limits |
+| Use best-performing profiles for high-value campaigns | Assign accounts with higher acceptance rates to your most important prospects |
 
 ---
 
@@ -59,53 +124,48 @@ description: "Configure LinkedIn accounts, set outreach schedules and limits, tr
 
 ### Operational Protection
 
-- **Managed runtime**: Each account runs in a secure, isolated environment
-- **Location alignment**: Operations match your configured geographical region
-- **Natural behavior patterns**: Activity pacing simulates authentic human usage
-
-### Account Independence
-
-- **Separate operation**: Each profile runs independently
-- **No interference**: Personal LinkedIn usage unaffected
-- **Secure credentials**: Encrypted storage of login information
-- **Isolated activity**: Each account operates in its own environment
+- **Managed runtime**: Each account runs in a secure, isolated environment. You don't need to keep your computer running.
+- **Location alignment**: Operations match your configured geographical region.
+- **Human behavior simulation**: Realistic typing patterns, natural browsing behavior, and authentic interaction pacing (responses sent 1-8 minutes after a prospect replies).
+- **Account independence**: Each profile runs independently. Personal LinkedIn usage is unaffected.
+- **Secure credentials**: All credentials are encrypted during transmission and storage. Kakiyo staff has zero access to your login information.
 
 ---
 
-## Multi-Profile Management
+## Profile Maintenance
 
-### Profile Assignment
+### Regular Monitoring
 
-- **Campaign allocation**: Assign specific profiles to campaigns
-- **Workload distribution**: Spread outreach across multiple accounts
-- **Audience segmentation**: Different profiles for different target markets
-- **Performance optimization**: Use best-performing profiles strategically
+| Task | Frequency | What to check |
+|---|---|---|
+| Review performance metrics | Weekly | Acceptance rate, message volume, response rates |
+| Check account status | Weekly | Ensure all accounts show **Connected** (green) status |
+| Verify limit compliance | Weekly | Confirm daily limits are within safe ranges (30-40 max) |
+| Update credentials if needed | As needed | If you changed your LinkedIn password, reconnect on the Profiles page |
 
----
+### Troubleshooting Common Issues
 
-### Profile Maintenance
-
-#### Regular Monitoring
-
-- **Performance review**: Check metrics and account health regularly
-- **Limit adjustments**: Modify settings based on performance
-- **Security updates**: Ensure credentials remain current
-- **Activity optimization**: Adjust schedules and limits as needed
-
-### Troubleshooting
-
-- **Connection issues**: Address any connectivity problems
-- **Performance drops**: Investigate and resolve declining metrics
-- **Limit violations**: Adjust settings if approaching restrictions
-- **Account warnings**: Respond promptly to any LinkedIn notifications
-
----
-
-> Effective profile management balances aggressive outreach with account safety, maximizing results while maintaining LinkedIn compliance.
+<AccordionGroup>
+  <Accordion title="Account shows as disconnected">
+    LinkedIn may have invalidated the session. This can happen if you changed your LinkedIn password, enabled two-factor authentication, or if LinkedIn detected unusual activity. Re-enter your credentials on the **Profiles** page to reconnect.
+  </Accordion>
+  <Accordion title="Low acceptance rate on a specific profile">
+    Review the LinkedIn profile itself — photo, tagline, banner, and activity all affect acceptance rates. See [Acceptance Rate Optimisation](/guides/optimize-your-results/acceptance-rate-optimisation) for profile optimization tips.
+  </Accordion>
+  <Accordion title="Account was restricted by LinkedIn">
+    Immediately pause all campaigns using this profile. Contact Kakiyo support with details. Do not attempt to reconnect or increase activity — wait for guidance. See [LinkedIn Account Safety Guide](/guides/linkedin-account-safety/linkedin-account-safety-guide) for emergency protocols.
+  </Accordion>
+  <Accordion title="Connection issues or verification problems">
+    See [LinkedIn Connection Troubleshooting](/guides/linkedin-account-safety/linkedin-connection-troubleshooting) for step-by-step resolution.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
 ## Related Guides
 
 - [Account Setup & LinkedIn Connection](/guides/getting-started/account-setup-linkedin-connection)
+- [LinkedIn Account Safety Guide](/guides/linkedin-account-safety/linkedin-account-safety-guide)
+- [LinkedIn Connection Troubleshooting](/guides/linkedin-account-safety/linkedin-connection-troubleshooting)
+- [Acceptance Rate Optimisation](/guides/optimize-your-results/acceptance-rate-optimisation)
 - [Understanding the Campaigns](/guides/core-features/understanding-the-campaigns)

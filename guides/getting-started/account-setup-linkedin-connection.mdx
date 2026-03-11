@@ -1,134 +1,183 @@
 ---
 title: "Account Setup & LinkedIn Connection"
-description: "Create your Kakiyo account, connect your LinkedIn profile securely, and configure your agent settings."
+description: "Create your Kakiyo account, connect your LinkedIn profile securely from the dashboard, configure location settings, and understand account limits per plan."
 ---
 
-> Setting up your Kakiyo account involves connecting your LinkedIn profile and configuring essential security settings. This process ensures your LinkedIn account operates safely while the AI agent manages your outreach.
+<Info>
+  **This guide is for dashboard users.** Every step below happens inside the [Kakiyo dashboard](https://app.kakiyo.com). No code or API calls required.
+</Info>
 
-## LinkedIn Account Connection
+> Connecting your LinkedIn account is the first step to running outreach campaigns. Kakiyo uses your LinkedIn credentials to send invitations and messages on your behalf, simulating natural human behavior to keep your account safe.
 
-### Required Credentials
+## Step 1: Create Your Kakiyo Account
 
-To connect your LinkedIn account, you'll need to provide:
-
-- **Email address**: The email associated with your LinkedIn account
-- **Password**: Your current LinkedIn password
-
-> **Important**: These credentials are encrypted end-to-end and stored securely. Kakiyo support cannot access your login information.
-
-### Connection Process
-
-1. **Navigate to Profiles**: Go to the Profiles section in your Kakiyo dashboard
-2. **Add LinkedIn Account**: Click "Connect LinkedIn Account"
-3. **Enter Credentials**: Provide your LinkedIn email and password
-4. **Select Location**: Choose your geographical location (if your location doesn't appear, contact the support and do not select a random location instead).
-5. **Verify Connection**: Enter the code received on your email from LinkedIn to verify the connection or approve the connection on your LinkedIn mobile app.
+1. Go to [app.kakiyo.com](https://app.kakiyo.com) and click **Sign Up**.
+2. Enter your email address and create a password (or sign up with Google SSO).
+3. Confirm your email if prompted.
+4. You are redirected to the Kakiyo dashboard.
 
 ---
 
-## Location Settings - Critical Configuration
+## Step 2: Navigate to Profiles
 
-### Why Location Matters?
+1. In the sidebar, click **Profiles**.
+2. This page shows all your connected LinkedIn accounts and their status.
+3. If this is your first time, the page will be empty.
 
-Your location setting determines the region used for account operations. This is crucial for:
+---
 
-- **Account security**: Matching your actual geographical location
-- **LinkedIn compliance**: Avoiding suspicious login patterns
-- **Operational consistency**: Reducing unusual access patterns
+## Step 3: Connect Your LinkedIn Account
 
-### Location Selection Rules
+1. Click the **Connect LinkedIn Account** button.
+2. Enter your LinkedIn credentials:
+   - **Email**: The email address associated with your LinkedIn account
+   - **Password**: Your LinkedIn password
+3. Click **Connect**.
 
-**Choose the closest available location to where you're physically located:**
+<Warning>
+  **Security**: Your LinkedIn credentials are encrypted end-to-end and stored securely. Kakiyo staff cannot access your login information. The connection uses your credentials to simulate browser-based activity from a dedicated, isolated runtime environment.
+</Warning>
 
-- **Same country**: Always select your actual country if available
-- **Never random**: Never select a random location for convenience, if your country doesn't appear in the list, please contact the support team
+### Handling Verification Codes
+
+LinkedIn may require a verification step during connection:
+
+1. If a verification code is requested, check the email or phone number associated with your LinkedIn account.
+2. Enter the verification code in the Kakiyo dialog.
+3. Click **Verify** to complete the connection.
+
+<Warning>
+  **Important**: You have a maximum of **2 attempts** to enter the verification code correctly. If both attempts fail, LinkedIn may temporarily lock the verification flow. Wait at least 24 hours before trying again, or contact Kakiyo support.
+</Warning>
+
+---
+
+## Step 4: Configure Location Settings
+
+After connecting, configure the location from which Kakiyo will operate your LinkedIn account:
+
+1. On the **Profiles** page, click your connected account to open its settings.
+2. In the **Location** section, select the city and country.
+3. Click **Save**.
+
+### Why Location Matters
+
+Kakiyo simulates browser activity from the configured location. If you set a location that is very different from where you normally log in to LinkedIn, it may trigger LinkedIn's security checks. Best practice:
+
+| Scenario | Recommended location |
+|---|---|
+| You normally use LinkedIn from Paris | Set Paris as the location |
+| You travel frequently | Set your most common location |
+| You're using a team member's account | Set the location where that team member usually works |
 
 ### If Your Location Isn't Available
 
-**Contact Kakiyo Support** if your location isn't in the dropdown menu:
+**Do not select a random location.** Contact Kakiyo support instead:
 
-1. **Don't guess**: Avoid selecting any random location
-2. **Reach out first**: Contact support before making any selection
-3. **Explain your situation**: Provide your actual location
-4. **Wait for guidance**: Support will either add your location or suggest the best alternative
+1. Reach out to support and explain your actual location.
+2. Wait for the team to add your location or suggest the best alternative.
+3. Only proceed once you have confirmation.
 
-> **Why this matters**: Correct location setup improves account consistency and helps avoid avoidable connection issues.
+<Tip>
+  If you change your location later, wait at least 24 hours before running intensive outreach. Sudden location changes can trigger LinkedIn's fraud detection.
+</Tip>
 
 ---
 
-## Security and Runtime Protections
+## Step 5: Verify Connection Status
+
+After connecting, your LinkedIn account should show one of these statuses on the **Profiles** page:
+
+| Status | Meaning | Action needed |
+|---|---|---|
+| **Connected** (green) | Account is connected and ready to use | None — you can assign it to campaigns |
+| **Pending Verification** | LinkedIn requested a verification code | Enter the code in the dialog |
+| **Disconnected** (red) | Connection failed or expired | Re-enter credentials and reconnect |
+| **Rate Limited** | LinkedIn temporarily restricted the account | Wait 24-48 hours, then reconnect |
+
+---
+
+## Account Limits by Plan
+
+Each plan allows a different number of connected LinkedIn accounts:
+
+| Plan | LinkedIn accounts | Team members | Campaigns | Offerings |
+|---|---|---|---|---|
+| **Pioneer** | 1 | 1 | 3 | 3 |
+| **Hunter** | Up to 3 | Unlimited | 12 | 9 |
+| **Conqueror** | Up to 5 | Unlimited | Unlimited | Unlimited |
+
+To see your current plan limits, go to **Settings** > **Billing** in the sidebar. See [Billing and Credits](/guides/team-billing/billing-and-credits) for full plan details.
+
+---
+
+## Managing Connected Accounts
+
+From the **Profiles** page, you can:
+
+| Action | How |
+|---|---|
+| View account status | Check the status badge (green = connected, red = disconnected) |
+| Edit location settings | Click the account > edit Location > Save |
+| Set daily invitation limits | Click the account > edit Daily Limits > Save |
+| Configure working hours | Click the account > edit Schedule > Save |
+| Disconnect an account | Click the account > click **Disconnect** |
+| View account performance | Click the account to see invitations sent, acceptance rate, messages sent |
+
+---
+
+## Daily Limits and Safety
+
+After connecting, configure safe daily limits:
+
+1. Click your connected account on the **Profiles** page.
+2. Set **Daily Invitation Limit** — recommended starting point:
+   - **New accounts (< 6 months old)**: 15-20 invitations per day
+   - **Established accounts (6-12 months)**: 25-30 per day
+   - **Mature accounts (> 1 year, active)**: 30-40 per day
+3. Set **Working Hours** — the time window during which the agent sends messages (e.g., 9:00 AM - 6:00 PM).
+4. Click **Save**.
+
+<Warning>
+  Never set daily invitation limits above 40, even for mature accounts. LinkedIn actively monitors outreach volume and may restrict accounts that exceed safe thresholds. See [LinkedIn Account Safety Guide](/guides/linkedin-account-safety/linkedin-account-safety-guide) for detailed scaling strategies.
+</Warning>
+
+---
+
+## Security and Runtime Details
 
 ### How Kakiyo Protects Your Account
 
-**Dedicated Runtime Isolation:**
-
-- Your account runs in an isolated runtime environment
-- Kakiyo manages operational tasks without requiring your machine to stay online
-- Eliminates the need to keep your computer running
-
-**Human Behavior Simulation:**
-
-- Realistic typing patterns and timing
-- Natural browsing behavior
-- Authentic interaction sequences
-
-### Key Security Benefits
-
-**Account Independence:**
-
-- Your LinkedIn account operates independently of your device
-- No need to keep your computer running 24/7
-- No interference with your personal LinkedIn usage
-
-**Behavior Authenticity:**
-
-- AI agent follows natural interaction pacing
-- Maintains realistic conversation timing and flow
-
-**Data Protection:**
-
-- All credentials encrypted during transmission and storage
-- Zero access to your login information by Kakiyo staff
-- Secure connections for LinkedIn interactions
+- **Dedicated runtime isolation**: Your account runs in its own isolated environment. You don't need to keep your computer running.
+- **Human behavior simulation**: Realistic typing patterns, natural browsing behavior, and authentic interaction pacing.
+- **No interference with personal usage**: The AI agent operates independently of your personal LinkedIn activity.
+- **Data protection**: All credentials are encrypted during transmission and storage. Kakiyo staff has zero access to your login information.
 
 ---
 
-## Account Management
+## Troubleshooting Connection Issues
 
-### Multiple LinkedIn Accounts
-
-Depending on your plan, you can connect multiple LinkedIn profiles:
-
-- **Pioneer Plan**: 1 LinkedIn account
-- **Hunter Plan**: Up to 3 LinkedIn accounts
-- **Conqueror Plan**: Up to 5 LinkedIn accounts
-
-### Account Settings Configuration
-
-Once connected, you can configure:
-
-**Outreach Timing:**
-
-- Set specific hours for AI agent activity
-- Define timezone for scheduling
-- Customize daily and weekly schedules
-
-**Safety Limits:**
-
-- Configure daily invitation limits (recommended: 30-40 per day)
-- Adjust parameters based on account age and activity
-
-**Profile Management:**
-
-- Monitor account status and performance
-- View connection and message statistics
+<AccordionGroup>
+  <Accordion title="Invalid credentials error">
+    Double-check your LinkedIn email and password. Try logging in to LinkedIn directly at [linkedin.com](https://www.linkedin.com) to confirm your credentials are correct. If you use Google SSO for LinkedIn, you may need to set a LinkedIn-specific password first.
+  </Accordion>
+  <Accordion title="Verification code not received">
+    Check your spam/junk folder. LinkedIn may also send the code to your phone via SMS. If you still don't receive it, wait 15 minutes and try again. LinkedIn rate-limits verification code requests.
+  </Accordion>
+  <Accordion title="Account shows as disconnected after being connected">
+    LinkedIn may have invalidated the session. This can happen if you changed your LinkedIn password, enabled two-factor authentication, or if LinkedIn detected unusual activity. Re-enter your credentials on the Profiles page to reconnect.
+  </Accordion>
+  <Accordion title="Connection stuck on 'Pending'">
+    This usually means LinkedIn is requesting verification but the dialog didn't appear. Refresh the Profiles page. If the issue persists, disconnect the account and reconnect from scratch.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
-> Proper account setup and LinkedIn connection form the foundation of successful Kakiyo operations. Take time to configure these settings correctly to ensure optimal performance and account security.
+## Next Steps
 
----
+Once your LinkedIn account is connected and configured:
 
-## Related Guides
-
-- [Kakiyo Key Capabilities](/guides/getting-started/kakiyo-key-capabilities)
+1. [Create an offering](/guides/core-features/understanding-the-offerings) to describe your product
+2. [Write a prompt](/guides/core-features/understanding-the-prompts) to define AI behavior
+3. [Set up your first campaign](/guides/getting-started/first-campaign-setup) to start outreach

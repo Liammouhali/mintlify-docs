@@ -1,112 +1,173 @@
 ---
 title: "Understanding the Offerings"
-description: "Create AI knowledge bases for your products. Learn the 3 methods: website scraping, Smart Builder, and manual creation with AI optimization"
+description: "Create and manage AI knowledge bases for your products from the Kakiyo dashboard. Learn the three creation methods (website scraping, Smart Builder, manual), best practices, and how offerings affect message quality."
 ---
 
-> An offering is your AI agent's knowledge base about what you're selling. It provides the context and information the AI needs to have intelligent conversations with prospects.
+<Info>
+  **This guide is for dashboard users.** Everything below happens inside the [Kakiyo dashboard](https://app.kakiyo.com). No code or API calls required.
+</Info>
 
-## What's in an Offering
+> An offering is the AI's knowledge base about your product or service. The more detailed and accurate your offering, the better the AI agent writes personalized, relevant messages. Think of it as training material — you're teaching the AI what you sell, who it's for, and why it matters.
 
-Your offering includes:
+## What an Offering Contains
 
-- **Core value proposition**: What problem you solve and how
-- **Unique selling points**: Key features, benefits, and proof points
-- **Competitive advantages**: What makes you different
-- **Case studies and metrics**: Real results and social proof
-- **Target audience context**: Specific messaging for your ideal customers
+An offering typically includes:
 
----
-
-## Why Offerings Matter
-
-> **Separate different offerings:** Never combine multiple products or services in one offering.
-
-Create separate offerings for different:
-
-- Target audiences
-- Products or services
-- Campaigns or use cases
-
-**Better results:** Focused offerings give the AI exclusive knowledge about what it's selling, leading to much better conversation quality and results.
+| Section | Purpose | Example |
+|---|---|---|
+| **Product description** | What your product does | "Kakiyo is an AI-powered LinkedIn outreach tool that automates personalized conversations" |
+| **Key features** | What differentiates your product | "End-to-end conversation automation, real-time lead qualification, CRM sync" |
+| **Target audience** | Who your ideal customer is | "B2B SaaS companies with 50-500 employees, targeting VP Sales and CROs" |
+| **Value propositions** | Why someone should care | "Save 15 hours/week on manual LinkedIn outreach while increasing reply rates by 3x" |
+| **Objection handling** | Common pushbacks and how to address them | "If they mention a competitor, highlight our AI conversation quality vs. simple sequence tools" |
+| **Pricing (optional)** | How to handle pricing questions | "For pricing, direct prospects to a call or visit our pricing page" |
 
 ---
 
-## Three Ways to Create Offerings
+## How to Access Offerings
 
-### 1. Website Scraping
-
-**Best for:** Companies with comprehensive websites that clearly explain their solution.
-
-**Process:**
-
-- Provide your website URL
-- AI automatically extracts value proposition, features, and benefits
-- Quick setup with minimal manual input
-
-> **Limitation:** Not ideal if you have multiple offerings or if your website content isn't comprehensive.
-
-### 2. Smart Builder (5 Questions)
-
-**Best for:** Most businesses wanting detailed, customized offerings.
-
-**Process:**
-
-- Answer 5 strategic questions about your business
-- Provide detailed responses (don't be brief - the AI needs substance)
-- AI creates comprehensive offering based on your answers
-
-> **Important:** Give detailed answers to each question. Brief responses result in poor offering quality.
-
-### 3. Manual Creation
-
-**Best for:** Businesses with complex offerings or specific messaging requirements.
-
-**Process:**
-
-- Write your offering content manually
-- Include all key elements (value prop, USPs, proof points)
-- Use "Improve with AI" to optimize formatting and structure
-
-> **Improve with AI:** This feature formats your manual offering so the AI understands it perfectly. Always use this after manual creation.
+1. In the sidebar, click **Offerings**.
+2. The offerings page lists all your existing offerings.
+3. Click **Create Offering** to create a new one.
 
 ---
 
-## Best Practices
+## Method 1: Website Scraping (Recommended for Most Users)
 
-### Content Quality
+Let Kakiyo automatically extract product information from your website.
 
-- **Be specific**: Avoid generic language and vague benefits
-- **Include proof**: Add metrics, case studies, and concrete results
-- **Target relevance**: Tailor messaging to your specific audience
-- **Clear value**: Make it obvious why prospects should care
+1. Click **Create Offering**.
+2. Select the website scraping option.
+3. Enter your main product page URL (e.g., `https://yourcompany.com` or `https://yourcompany.com/product`).
+4. Click **Scrape**.
+5. Kakiyo analyzes the page and generates a complete offering.
+6. Review each section in the editor.
+7. Edit or add information as needed — the AI extraction is a starting point, not a final product.
+8. Click **Save**.
 
-### Testing Your Offering
+<Tip>
+  Scraping works best with pages that have clear product descriptions, feature lists, and value propositions. Landing pages and pricing pages tend to produce the best results.
+</Tip>
 
-- **Use the Sandbox**: Test how well your offering performs in conversations
-- **Quality check**: Ensure the AI can answer prospect questions accurately
-- **Refinement**: Update offerings based on conversation performance
+<Note>
+  **Limitation**: Website scraping is not ideal if your site requires login, has content behind a paywall, or has multiple distinct products on the same page. In those cases, use Smart Builder or Manual creation.
+</Note>
 
-### Multiple Offerings Strategy
+---
 
-- **Audience-specific**: Create different offerings for different target markets
-- **Product-specific**: Separate offerings for different products or services
-- **Campaign-specific**: Tailor offerings for specific outreach goals
+## Method 2: Smart Builder (Guided AI Generation)
+
+Answer questions and let the AI generate your offering.
+
+1. Click **Create Offering**.
+2. Select **Smart Builder**.
+3. Answer the prompted questions about your product, audience, and value proposition.
+4. Click **Generate**.
+5. Review the generated offering.
+6. Edit sections as needed.
+7. Click **Save**.
+
+<Warning>
+  **Give detailed answers.** Brief, one-sentence answers result in poor offering quality. The AI needs substance to create useful content. Write at least 2-3 sentences per question.
+</Warning>
+
+This method is ideal when:
+- Your website doesn't have enough product content
+- You want to describe a specific offering that's different from your website's general messaging
+- You're targeting a niche audience and need tailored positioning
+
+---
+
+## Method 3: Manual Creation
+
+Write every section yourself for full control.
+
+1. Click **Create Offering**.
+2. Select **Manual**.
+3. Fill in each section of the offering form:
+   - Product/service name
+   - Description
+   - Key features and benefits
+   - Target audience
+   - Value propositions
+   - Objection handling notes
+4. Click **Save**.
+5. After saving, click the **Improve with AI** button to have Kakiyo suggest improvements. The AI analyzes your text and recommends edits for clarity, completeness, and structure.
+
+<Tip>
+  Always use **Improve with AI** after manual creation. It formats your content so the AI agent can parse it optimally, which directly improves message quality.
+</Tip>
+
+---
+
+## Editing an Existing Offering
+
+1. Go to **Offerings** in the sidebar.
+2. Click the offering you want to edit.
+3. Make your changes in the editor.
+4. Click **Save**.
+
+<Warning>
+  If you edit an offering that is currently used by an active campaign, the changes apply to all **future** conversations in that campaign. Ongoing conversations continue with the previous version.
+</Warning>
+
+---
+
+## One Offering vs. Multiple Offerings
+
+| Scenario | Approach |
+|---|---|
+| One product, one audience | One offering is enough |
+| One product, multiple audiences (e.g., enterprise vs. SMB) | Create separate offerings with audience-specific messaging |
+| Multiple products | Create one offering per product |
+| Testing different positioning | Create multiple offerings and compare performance across campaigns |
+
+<Warning>
+  **Never combine multiple products in a single offering.** The AI performs significantly better when each offering is focused on one product or service. Mixing creates confusion and reduces message relevance.
+</Warning>
+
+---
+
+## How Offerings Affect Message Quality
+
+The offering is the AI's primary knowledge source when writing messages:
+
+| Conversation stage | How the offering is used |
+|---|---|
+| **First message** | The AI uses product features and value propositions to personalize the opening message to the prospect's profile |
+| **Handling replies** | When a prospect asks about your product, the AI draws from the offering to answer accurately |
+| **Handling objections** | If a prospect pushes back, the AI uses objection handling notes to respond |
+| **Qualification** | The AI uses target audience info to assess whether the prospect is a good fit |
+
+A thin or vague offering results in generic, template-sounding messages. A detailed offering results in relevant, personalized conversations.
+
+---
+
+## Offering Best Practices
+
+1. **Be specific, not generic** — "We help B2B SaaS companies with 50-500 employees reduce churn by 30%" beats "We help companies grow."
+2. **Include real numbers** — conversion rates, time saved, cost savings. The AI uses these to make messages more compelling.
+3. **Add objection handling** — list the top 3-5 objections you hear and how to address them. This significantly improves conversation quality.
+4. **Update regularly** — as your product evolves, update the offering. Outdated information leads to inaccurate messages.
+5. **Test with the Sandbox** — after creating or editing an offering, test it in the [Sandbox](/guides/core-features/understanding-the-sandbox) to see how it affects the AI's messages.
 
 ---
 
 ## Common Mistakes
 
-- **Combining offerings**: Mixing multiple products in one offering
-- **Brief responses**: Not providing enough detail in Smart Builder questions
-- **Generic content**: Using vague, non-specific language
-- **Skipping optimization**: Not using "Improve with AI" for manual offerings
-
----
-
-> Your offering is the foundation of effective AI conversations. Invest time in creating detailed, focused offerings for each target audience and product.
+| Mistake | Why it's bad | Fix |
+|---|---|---|
+| Combining multiple products in one offering | AI gets confused about what to pitch | Create one offering per product |
+| Brief, one-line descriptions | AI produces generic messages | Write 2-3 detailed paragraphs minimum |
+| No objection handling | AI can't address pushback | Add your top 3-5 objections and responses |
+| Using marketing jargon | AI copies the jargon, sounds unnatural | Use plain language the prospect would use |
+| Skipping "Improve with AI" on manual offerings | Formatting issues reduce AI comprehension | Always click Improve with AI after saving |
 
 ---
 
 ## Related Guides
 
 - [AI Builder - Quick Setup](/guides/getting-started/ai-builder-quick-setup)
+- [Understanding the Prompts](/guides/core-features/understanding-the-prompts)
+- [Understanding the Sandbox](/guides/core-features/understanding-the-sandbox)
+- [First Campaign Setup](/guides/getting-started/first-campaign-setup)

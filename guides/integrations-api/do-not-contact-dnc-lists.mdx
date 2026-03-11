@@ -1,7 +1,11 @@
 ---
 title: "Do Not Contact (DNC) Lists"
-description: "Exclude LinkedIn profiles from outreach with Do Not Contact lists. Add manually or import CSV. Enforced automatically across all campaigns."
+description: "Exclude LinkedIn profiles from outreach using the Kakiyo dashboard. Add entries manually or import CSV files. DNC lists are enforced automatically across all campaigns."
 ---
+
+<Info>
+  **This guide is for dashboard users.** All steps below are performed inside the [Kakiyo dashboard](https://app.kakiyo.com). For programmatic DNC management via API, see the [DNC API Reference](/api-reference/dnc/list).
+</Info>
 
 > Do Not Contact (DNC) lists let you exclude specific LinkedIn profiles from all outreach. Entries are automatically enforced at every stage: prospect import, task scheduling, and message generation.
 
@@ -52,15 +56,9 @@ Agency teams can scope DNC entries to specific clients (subteams). When checking
 
 ---
 
-## API Access
+## Need Programmatic Access?
 
-The DNC list is also available via the Public API:
-
-- `GET /v1/dnc` - List entries
-- `GET /v1/dnc/check?url=...` - Check a URL
-- `POST /v1/dnc` - Add an entry
-- `POST /v1/dnc/batch` - Bulk add entries
-- `DELETE /v1/dnc/:id` - Remove an entry
+Developers can also manage DNC lists via the API. See the [DNC API Reference](/api-reference/dnc/list) for endpoints to list, add, check, and delete entries programmatically.
 
 ---
 

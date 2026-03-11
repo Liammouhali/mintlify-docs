@@ -1,160 +1,155 @@
 ---
 title: "Inbox and Conversation Management"
-description: "Monitor AI conversations, switch between Autopilot/Copilot modes, take manual control, and optimize conversation performance."
+description: "Monitor and manage AI-powered conversations from the Kakiyo dashboard. Switch between Autopilot and Copilot modes, pause or resume conversations, take manual control of high-value prospects, and optimize conversation quality."
 ---
 
-> Monitor, manage, and control AI-driven conversations with prospects. Switch between full automation and manual control as needed for optimal results.
+<Info>
+  **This guide is for dashboard users.** Everything below happens inside the [Kakiyo dashboard](https://app.kakiyo.com). No code or API calls required.
+</Info>
+
+> The Inbox is where you monitor every conversation your AI agent is having with prospects. You can watch conversations in real time, take manual control when needed, and switch between full automation and human oversight.
+
+## Accessing the Inbox
+
+1. In the sidebar, click **Inbox**.
+2. The Inbox shows all conversations across all campaigns.
+3. Each conversation shows the prospect name, status, last message, and timestamp.
+
+---
 
 ## Operation Modes
 
+Kakiyo offers two modes for managing conversations. You set the mode per campaign, but can override it per conversation.
+
 ### Autopilot Mode
 
-**Fully automated operation:**
+The AI handles everything — from first message to meeting booking — without human intervention.
 
-- AI handles all conversations independently
-- No human intervention required
-- End-to-end management from connection to meeting booking
-- 24/7 operation without monitoring needed
-- Scales to multiple conversations simultaneously
+| What happens | Details |
+|---|---|
+| AI sends first message | 20 minutes to several hours after connection acceptance |
+| AI handles replies | Responds to prospect messages within 1-8 minutes |
+| AI qualifies prospects | Asks questions based on your prompt's qualification criteria |
+| AI books meetings | Proposes next steps when the prospect shows interest |
+| AI handles objections | Uses your offering knowledge to address pushback |
+
+**Best for**: Standard outreach at scale, when your prompts and offerings are well-tested.
 
 ### Copilot Mode
 
-**AI assistance with human oversight:**
+The AI handles conversations, but you can step in at any time to take manual control.
 
-- AI handles conversations with option for manual intervention
-- Take control of specific conversations when needed
+| What happens | Details |
+|---|---|
+| AI manages conversation normally | Same behavior as Autopilot |
+| You can pause any conversation | Click Pause to stop AI responses |
+| You reply manually | Write messages yourself for that specific conversation |
+| You resume AI control | Click Resume to hand the conversation back to the AI |
 
----
-
-## Conversation Monitoring
-
-### Inbox Overview
-
-**Real-time tracking:**
-
-- View all active conversations
-- Monitor conversation status and progress
-- Track prospect engagement levels
-- See AI responses and prospect replies
-
-**Conversation Status:**
-
-- **Active**: Ongoing AI-managed conversations
-- **Paused**: Conversations under manual control
-- **Completed**: Successful meeting bookings or closures
-- **Inactive**: Prospects who stopped responding
+**Best for**: High-value prospects, complex sales cycles, or when you're still refining your prompts.
 
 ---
 
-## Manual Control Options
+## Managing Individual Conversations
 
-### Taking Control
+### Viewing a Conversation
 
-**Pause specific conversations:**
+1. In the **Inbox**, click on any conversation to open it.
+2. You see the full message history: AI messages, prospect replies, and any manual messages.
+3. The conversation status is displayed at the top.
 
-1. Navigate to Inbox
-2. Select the conversation with target prospect
-3. Click "Pause" in top-left corner
-4. AI stops responding, manual control activated
+### Conversation Statuses
+
+| Status | Meaning |
+|---|---|
+| **Active** | AI is managing the conversation normally |
+| **Paused** | AI is stopped — you have manual control |
+| **Completed** | Conversation reached a terminal state (qualified, meeting booked) |
+| **Inactive** | Prospect stopped responding after all follow-ups |
+
+### Taking Manual Control of a Conversation
+
+1. In the **Inbox**, click on the conversation you want to control.
+2. Click the **Pause** button in the conversation view.
+3. The AI immediately stops responding to this conversation.
+4. You can now type and send messages manually.
 
 **When to take manual control:**
 
-- Complex prospect questions requiring human expertise
-- High-value prospects needing personalized attention
-- Sensitive negotiations or objection handling
-- Strategic conversations requiring custom approach
+- The prospect asks a highly technical or specific question the AI can't handle well
+- A high-value prospect needs personalized attention
+- The conversation requires strategic decision-making (pricing negotiations, custom deals)
+- The AI's response seems off-track and you want to correct course
 
-### Resuming Automation
+### Resuming AI Control
 
-**Return to AI control:**
-
-- Select paused conversation
-- Choose "Resume" to reactivate AI agent
-- AI continues conversation from current point
-- Maintains conversation context and history
+1. Open the paused conversation in the **Inbox**.
+2. Click the **Resume** button.
+3. The AI picks up the conversation from where it left off, with full context of the conversation history (including your manual messages).
 
 ---
 
-### AI Response Behavior
+## AI Response Behavior
 
-#### Natural Timing
+Understanding how the AI times and structures its responses:
 
-- **Response time**: 1-8 minutes after prospect replies
-- **Human simulation**: Random timing to appear authentic
-- **Immediate availability**: AI always ready to respond
-- **Context maintenance**: Remembers full conversation history
-
-#### Conversation Flow
-
-- **First message**: Sent 20 minutes to several hours after connection acceptance
-- **Follow-up responses**: Contextual replies based on prospect responses
-- **Question handling**: Addresses prospect questions using offering knowledge
-- **Objection management**: Handles common objections professionally
-- **Closing**: Secures meetings when genuine interest detected
+| Behavior | Details |
+|---|---|
+| **Response time** | 1-8 minutes after a prospect replies (randomized to appear human) |
+| **First message timing** | 20 minutes to several hours after connection acceptance |
+| **Context memory** | The AI remembers the full conversation history |
+| **Follow-ups** | Sent automatically if the prospect doesn't reply (see [Follow-up Messages](/guides/core-features/follow-up-messages)) |
+| **Qualification** | The AI assesses prospect fit based on the Context Prompt's criteria |
+| **Meeting booking** | The AI proposes a call/meeting when genuine interest is detected |
 
 ---
 
 ## Monitoring Best Practices
 
-### Regular Reviews
+| Practice | Frequency | What to look for |
+|---|---|---|
+| Review new conversations | Daily | Are first messages personalized and relevant? |
+| Check qualified leads | Daily | Are prospects being correctly qualified? |
+| Read flagged conversations | As needed | Conversations where the AI might need help |
+| Review completed conversations | Weekly | What worked well? What could improve? |
+| Compare across campaigns | Weekly | Which campaigns have the best conversation quality? |
 
-**Recommended monitoring:**
+### When to Intervene vs. When to Let the AI Work
 
-- Check conversation quality and AI performance
-- Review successful meeting bookings
-- Identify areas for prompt or offering improvement
-- Monitor prospect engagement patterns
+**Intervene when:**
+- Prospect asks about something not in your offering
+- Conversation involves pricing negotiation beyond your rules
+- Prospect is a key account or known contact
+- AI response seems incorrect or tone-deaf
 
-**Quality indicators:**
-
-- Natural conversation flow
-- Appropriate AI responses
-- Successful objection handling
-- Meeting booking success rate
-
-### Intervention Guidelines
-
-**Take manual control when:**
-
-- Prospect asks highly technical or specific questions
-- Conversation requires strategic decision-making
-- High-priority prospect needs special attention
-- AI responses seem off-track or inappropriate
-
-**Stay in autopilot when:**
-
+**Let the AI work when:**
 - Standard qualification conversations
-- Common objection handling
+- Common objection handling (competitor mentions, timing, budget)
 - Routine follow-up sequences
-- AI performing well independently
+- Conversations where the AI is performing well
 
 ---
 
-## Conversation Optimization
+## Optimizing Conversation Quality
 
-### Performance Analysis
+If you notice recurring issues in conversations:
 
-- **Response rates**: Track prospect engagement levels
-- **Conversation length**: Monitor dialogue progression
-- **Booking success**: Measure meeting conversion rates
-- **Common patterns**: Identify successful conversation flows
+| Issue | Fix |
+|---|---|
+| AI gives wrong product information | Update your **Offering** (sidebar > Offerings) |
+| AI tone doesn't match your brand | Edit the **Context Prompt** (sidebar > Prompts) |
+| AI qualifies too aggressively or too loosely | Adjust qualification criteria in the **Context Prompt** |
+| First messages are too generic | Edit the **First Message Prompt** and add more personalization variables |
+| AI can't handle a common objection | Add objection handling notes to your **Offering** |
+| Follow-ups are too frequent or too slow | Adjust delays in the campaign's **Follow-ups** tab |
 
-### Improvement Actions
-
-- **Prompt refinement**: Adjust based on conversation performance
-- **Offering updates**: Enhance AI knowledge base
-- **Targeting adjustment**: Modify prospect criteria
-- **Response optimization**: Fine-tune AI behavior
-
----
-
-Effective conversation management balances AI automation with strategic human intervention, ensuring optimal results while maintaining conversation quality.
+After making changes, always test in the [Sandbox](/guides/core-features/understanding-the-sandbox) before applying to live campaigns.
 
 ---
 
 ## Related Guides
 
-- [What is Kakiyo?](/guides/getting-started/what-is-kakiyo)
-- [Kakiyo Key Capabilities](/guides/getting-started/kakiyo-key-capabilities)
-- [Understanding the Sandbox](/guides/core-features/understanding-the-sandbox)
 - [Understanding the Campaigns](/guides/core-features/understanding-the-campaigns)
+- [Understanding the Sandbox](/guides/core-features/understanding-the-sandbox)
+- [How to Choose Your AI Model](/guides/inbox-conversations/how-to-choose-your-ai-model)
+- [Follow-up Messages](/guides/core-features/follow-up-messages)
