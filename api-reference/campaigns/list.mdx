@@ -2,3 +2,59 @@
 title: 'List campaigns'
 openapi: 'GET /campaigns'
 ---
+
+## Overview
+
+List campaigns for the authenticated team.
+
+This endpoint returns a plain array of campaigns.
+
+## Backward Compatibility
+
+- Default behavior remains unchanged: `GET /v1/campaigns` returns a plain array of campaigns.
+- Existing integrations do not need to change anything.
+
+## Optional Limit
+
+- `limit` is optional.
+- Default: `25`
+- Maximum: `100`
+- Response shape does not change.
+
+## Examples
+
+Legacy full-list request:
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/campaigns" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+With an explicit limit:
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/campaigns?limit=50" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Legacy response:
+
+```json
+[
+  {
+    "id": "campaign_123",
+    "name": "Q4 Enterprise Outreach",
+    "status": "active",
+    "agent": "agent_123",
+    "product": "product_123",
+    "createdAt": "2026-03-01T12:00:00.000Z",
+    "stats": {
+      "prospects": 120,
+      "prospectsAnswers": 14,
+      "messages": 38,
+      "qualified": 3,
+      "closed": 0
+    }
+  }
+]
+```
