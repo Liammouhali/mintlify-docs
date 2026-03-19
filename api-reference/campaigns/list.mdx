@@ -14,10 +14,12 @@ This endpoint returns a plain array of campaigns.
 - Default behavior remains unchanged: `GET /v1/campaigns` returns a plain array of campaigns.
 - Existing integrations do not need to change anything.
 
-## Optional Limit
+## Optional Pagination Params
 
 - `limit` is optional.
-- Default: `25`
+- If both pagination params are omitted, the endpoint returns the full list.
+- If either pagination param is provided, pagination mode is used.
+- Default `offset`: `0`
 - Maximum: `100`
 - Response shape does not change.
 
@@ -34,6 +36,13 @@ With an explicit limit:
 
 ```bash
 curl -X GET "https://api.kakiyo.com/v1/campaigns?limit=50" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+With limit and offset:
+
+```bash
+curl -X GET "https://api.kakiyo.com/v1/campaigns?limit=25&offset=25" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
