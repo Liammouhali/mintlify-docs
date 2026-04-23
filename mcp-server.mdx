@@ -1,11 +1,7 @@
 ---
 title: MCP Server
-description: 'Developer guide: control Kakiyo via AI assistants like Claude, Cursor, and other MCP clients. This page is for programmatic access.'
+description: 'Use Kakiyo with Claude, Cursor, and other MCP-compatible AI agents. Covers OAuth custom connectors, API-key setups, and available MCP tools.'
 ---
-
-<Info>
-  **This page is for developers.** It covers the MCP server for AI assistant integrations. If you're looking for how to use Kakiyo from the dashboard (no code), see the [Dashboard Guides](/guides/overview) instead.
-</Info>
 
 <Warning>
   **Experimental Feature** - The MCP Server is currently in beta. APIs and functionality may change.
@@ -47,15 +43,6 @@ Generate an API key from your [Kakiyo Dashboard](https://app.kakiyo.com):
 Choose your MCP client and add the configuration:
 
 <Tabs>
-  <Tab title="Claude Code (CLI)">
-    Use the CLI command to add Kakiyo MCP:
-
-    ```bash
-    claude mcp add kakiyo --scope user --transport http https://api.kakiyo.com/mcp --header "Authorization:Bearer YOUR_API_KEY"
-    ```
-
-    Replace `YOUR_API_KEY` with your 40-character API key from the dashboard.
-  </Tab>
   <Tab title="Claude.ai (Web & Desktop)">
     Use Custom Connectors in the Claude web or desktop interface. No API key is required — Kakiyo uses OAuth.
 
@@ -80,6 +67,15 @@ Choose your MCP client and add the configuration:
     <Warning>
       Claude custom connectors do not support pasting a raw API key in the connector dialog. Use the OAuth flow above for `claude.ai`/Claude Desktop, or use the **Claude Code**, **Cursor**, or **OpenCode** tabs for header-based API-key setups.
     </Warning>
+  </Tab>
+  <Tab title="Claude Code (CLI)">
+    Use the CLI command to add Kakiyo MCP:
+
+    ```bash
+    claude mcp add kakiyo --scope user --transport http https://api.kakiyo.com/mcp --header "Authorization:Bearer YOUR_API_KEY"
+    ```
+
+    Replace `YOUR_API_KEY` with your 40-character API key from the dashboard.
   </Tab>
   <Tab title="OpenCode">
     Edit your OpenCode config file at `~/.config/opencode/opencode.json`:
