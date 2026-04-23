@@ -24,7 +24,7 @@ Kakiyo's MCP server supports two authentication paths:
     Best for `claude.ai`, Claude Desktop, and Claude mobile. Users log in on Kakiyo, select a team, and approve the connector. No API key is pasted anywhere.
   </Card>
   <Card title="API key header (Bearer)" icon="key">
-    Best for Claude Code CLI, Claude Desktop via config file, Cursor, OpenCode, and any MCP client that supports HTTP headers. Uses a 40-character team-scoped API key.
+    Best for Claude Code CLI, Cursor, OpenCode, and any other MCP client that supports custom HTTP headers. Uses a 40-character team-scoped API key.
   </Card>
 </CardGroup>
 
@@ -56,27 +56,6 @@ Choose your MCP client and add the configuration:
 
     Replace `YOUR_API_KEY` with your 40-character API key from the dashboard.
   </Tab>
-  <Tab title="Claude Desktop">
-    Edit your Claude Desktop config file:
-    - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-    - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-    ```json
-    {
-      "mcpServers": {
-        "kakiyo": {
-          "transport": "http",
-          "url": "https://api.kakiyo.com/mcp",
-          "headers": {
-            "Authorization": "Bearer YOUR_API_KEY"
-          }
-        }
-      }
-    }
-    ```
-
-    After saving, restart Claude Desktop completely.
-  </Tab>
   <Tab title="Claude.ai (Web & Desktop)">
     Use Custom Connectors in the Claude web or desktop interface. No API key is required — Kakiyo uses OAuth.
 
@@ -99,7 +78,7 @@ Choose your MCP client and add the configuration:
     </Note>
 
     <Warning>
-      Claude custom connectors do not support pasting a raw API key in the connector dialog. Use the OAuth flow above for `claude.ai`/Claude Desktop, or use the **Claude Code**, **Claude Desktop config file**, **Cursor**, or **OpenCode** tabs below for header-based API-key setups.
+      Claude custom connectors do not support pasting a raw API key in the connector dialog. Use the OAuth flow above for `claude.ai`/Claude Desktop, or use the **Claude Code**, **Cursor**, or **OpenCode** tabs for header-based API-key setups.
     </Warning>
   </Tab>
   <Tab title="OpenCode">
@@ -398,7 +377,7 @@ Kakiyo's MCP server accepts two authentication methods on the same `/mcp` endpoi
     Authorization: Bearer {your_40_char_api_key}
     ```
 
-    API keys continue to work for Claude Code CLI, Claude Desktop config files, Cursor, OpenCode, and any other MCP client that allows custom HTTP headers.
+    API keys continue to work for Claude Code CLI, Cursor, OpenCode, and any other MCP client that allows custom HTTP headers.
   </Tab>
 </Tabs>
 
