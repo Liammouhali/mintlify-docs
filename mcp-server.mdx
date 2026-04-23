@@ -15,9 +15,26 @@ description: 'Developer guide: control Kakiyo via AI assistants like Claude, Cur
 
 The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open standard that allows AI assistants to interact with external tools and services. Kakiyo's MCP server enables you to control your LinkedIn automation using natural language through AI assistants like Claude, Cursor, Windsurf, and other MCP-compatible clients.
 
+## Authentication options
+
+Kakiyo's MCP server supports two authentication paths:
+
+<CardGroup cols={2}>
+  <Card title="OAuth (Claude custom connectors)" icon="shield-check">
+    Best for `claude.ai`, Claude Desktop, and Claude mobile. Users log in on Kakiyo, select a team, and approve the connector. No API key is pasted anywhere.
+  </Card>
+  <Card title="API key header (Bearer)" icon="key">
+    Best for Claude Code CLI, Claude Desktop via config file, Cursor, OpenCode, and any MCP client that supports HTTP headers. Uses a 40-character team-scoped API key.
+  </Card>
+</CardGroup>
+
 ## Quick Start
 
-### 1. Get Your API Key
+### 1. Get Your API Key (for header-based clients)
+
+<Info>
+  Skip this step if you only plan to use the Claude custom connector OAuth flow.
+</Info>
 
 Generate an API key from your [Kakiyo Dashboard](https://app.kakiyo.com):
 
@@ -60,17 +77,30 @@ Choose your MCP client and add the configuration:
 
     After saving, restart Claude Desktop completely.
   </Tab>
-  <Tab title="Claude.ai (Web)">
-    Use Custom Connectors in the Claude web interface:
+  <Tab title="Claude.ai (Web & Desktop)">
+    Use Custom Connectors in the Claude web or desktop interface. No API key is required — Kakiyo uses OAuth.
 
     1. Go to [claude.ai](https://claude.ai) → **Settings** → **Connectors**
     2. Click **Add custom connector**
     3. Enter the URL: `https://api.kakiyo.com/mcp`
-    4. When prompted, enter your API key for authentication
+    4. Click **Add**, then **Connect**
+
+    Claude will open a secure OAuth flow on `app.kakiyo.com`. You'll log in (if needed), choose the team Claude should access, and approve the connection.
+
+    <Frame caption="Kakiyo OAuth consent screen for Claude MCP connector">
+      <img
+        src="https://public-kakiyo.b-cdn.net/Integrations/Screenshot%202026-04-23%20at%2010.27.31%E2%80%AFPM.png"
+        alt="Kakiyo x Claude MCP connector consent screen"
+      />
+    </Frame>
 
     <Note>
-      Custom Connectors require a Claude Pro or Team subscription.
+      Custom Connectors require a Claude Pro, Max, Team, or Enterprise subscription.
     </Note>
+
+    <Warning>
+      Claude custom connectors do not support pasting a raw API key in the connector dialog. Use the OAuth flow above for `claude.ai`/Claude Desktop, or use the **Claude Code**, **Claude Desktop config file**, **Cursor**, or **OpenCode** tabs below for header-based API-key setups.
+    </Warning>
   </Tab>
   <Tab title="OpenCode">
     Edit your OpenCode config file at `~/.config/opencode/opencode.json`:
@@ -331,11 +361,46 @@ POST https://api.kakiyo.com/mcp
 
 ### Authentication
 
-All requests require your API key in the Authorization header:
+Kakiyo's MCP server accepts two authentication methods on the same `/mcp` endpoint:
 
-```
-Authorization: Bearer {your_40_char_api_key}
-```
+<Tabs>
+  <Tab title="OAuth 2.1 (recommended for Claude)">
+    Claude custom connectors use the standard MCP OAuth flow. When Claude calls `/mcp` without a valid token, Kakiyo responds with:
+
+    ```
+    HTTP/1.1 401 Unauthorized
+    WWW-Authenticate: Bearer error="invalid_token",
+                             resource_metadata="https://api.kakiyo.com/.well-known/oauth-protected-resource/mcp",
+                             scope="mcp:read mcp:write"
+    ```
+
+    Kakiyo exposes the standard MCP/OAuth metadata endpoints:
+
+    | Endpoint | Purpose |
+    |----------|---------|
+    | `GET /.well-known/oauth-protected-resource/mcp` | Protected resource metadata ([RFC 9728](https://datatracker.ietf.org/doc/html/rfc9728)) |
+    | `GET /.well-known/oauth-authorization-server` | Authorization server metadata ([RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414)) |
+    | `GET /mcp/oauth/authorize` | Authorization endpoint (redirects to the Kakiyo consent screen) |
+    | `POST /mcp/oauth/token` | Token endpoint (authorization_code + refresh_token grants) |
+
+    Kakiyo's OAuth implementation supports:
+
+    - OAuth 2.1 Authorization Code grant with **PKCE (S256)**
+    - **Client ID Metadata Documents** (CIMD) — no manual client registration required
+    - Resource Indicators ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707.html)) targeting `https://api.kakiyo.com/mcp`
+    - Refresh tokens with rotation
+    - Team-scoped access tokens (approval binds the connector to one Kakiyo team)
+  </Tab>
+  <Tab title="API key (Bearer header)">
+    Legacy and programmatic clients can authenticate with a 40-character team-scoped API key:
+
+    ```
+    Authorization: Bearer {your_40_char_api_key}
+    ```
+
+    API keys continue to work for Claude Code CLI, Claude Desktop config files, Cursor, OpenCode, and any other MCP client that allows custom HTTP headers.
+  </Tab>
+</Tabs>
 
 ### Transport
 
@@ -366,23 +431,35 @@ Tool errors are returned in MCP format:
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Connection refused or timeout">
+  <Accordion title="Claude says 'Couldn't reach the MCP server'">
+    - Confirm `https://api.kakiyo.com/mcp` is reachable and returns `401` with a `WWW-Authenticate` header
+    - Remove the existing custom connector in Claude and re-add it using the same URL
+    - Make sure you're not trying to paste a raw API key in the Claude custom connector dialog — use the OAuth flow for `claude.ai`/Claude Desktop
+  </Accordion>
+
+  <Accordion title="Claude OAuth flow opens but approval fails">
+    - Sign in to `app.kakiyo.com` first, then retry the Claude connector flow
+    - Make sure your user account has access to at least one Kakiyo team
+    - Approval binds the connector to the team selected on the consent screen; switching teams later requires reconnecting
+  </Accordion>
+
+  <Accordion title="Connection refused or timeout (non-Claude clients)">
     - Verify your API key is correct (40 characters)
     - Check that you're using `https://api.kakiyo.com/mcp`
     - Ensure your MCP client supports Streamable HTTP transport
   </Accordion>
-  
+
   <Accordion title="Authentication failed">
-    - API keys are team-specific - ensure you're using the right key
+    - API keys are team-specific — ensure you're using the right key
     - Keys must be prefixed with `Bearer ` in the Authorization header
     - Generate a new key from the dashboard if issues persist
   </Accordion>
-  
+
   <Accordion title="Tool not found">
-    - The MCP server has 42 tools - some operations (like agent creation) require the dashboard
+    - The MCP server has 42 tools — some operations (like agent creation) require the dashboard
     - Use `verify_api_key` to confirm your connection is working
   </Accordion>
-  
+
   <Accordion title="Agency tools not working">
     - Workspace tools require an Agency plan
     - Verify your team is on the correct plan in the dashboard
