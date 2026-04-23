@@ -86,15 +86,39 @@ All error responses include a JSON object with the following structure:
 
 ## Rate Limiting
 
-The API is rate limited to prevent abuse. Rate limits vary based on your subscription plan. If you exceed the rate limit, you'll receive a `429 Too Many Requests` response.
+The Kakiyo API implements tiered rate limiting to ensure fair usage and system stability. Rate limits are applied per team and vary by endpoint type.
 
-The response headers will include:
+### Rate Limit Tiers
 
-- `X-RateLimit-Limit`: The maximum number of requests allowed in a time window
-- `X-RateLimit-Remaining`: The number of requests remaining in the current time window
-- `X-RateLimit-Reset`: The time at which the current rate limit window resets (UTC epoch seconds)
+| Tier | Requests/Min | Endpoint Types | Examples |
+|------|-------------|----------------|----------|
+| **High** | 60 | Simple read operations | `GET /verify`, `GET /models`, `GET /webhooks/events` |
+| **Medium** | 30 | Standard read operations | `GET /campaigns`, `GET /agents`, `GET /analytics` |
+| **Low** | 15 | Write operations | All `POST`, `PUT`, `DELETE`, `GET /prospects/search` |
 
-When you exceed the rate limit, the response will include a `Retry-After` header indicating how many seconds to wait before retrying.
+### Rate Limit Response
+
+If you exceed the rate limit, you'll receive a `429 Too Many Requests` response:
+
+```json
+{
+  "error": "rate_limit_exceeded",
+  "message": "Too many requests. Please try again later.",
+  "retryAfter": 45
+}
+```
+
+**HTTP Status:** `429 Too Many Requests`
+
+**Headers:**
+- `Retry-After`: Seconds until the rate limit resets
+
+### Best Practices
+
+1. **Handle 429 errors**: Implement exponential backoff when receiving rate limit errors
+2. **Cache responses**: Cache high-tier endpoint responses (models, etc.) to reduce API calls
+3. **Batch operations**: Use batch endpoints when adding multiple prospects to minimize API calls
+4. **Respect Retry-After**: Wait the specified time before retrying requests
 
 ## Pagination
 

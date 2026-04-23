@@ -9,11 +9,16 @@ description: 'Developer guide: learn how to authenticate with the Kakiyo API usi
 
 ## Overview
 
-Kakiyo API uses API keys for authentication. All API requests must be authenticated using your API key in the Authorization header.
+Kakiyo supports two authentication mechanisms:
+
+1. **API keys (Bearer header)** — the default for the REST API (`/v1/*`) and for MCP clients that support custom HTTP headers (Claude Code, Cursor, OpenCode, Claude Desktop config file, etc.).
+2. **OAuth 2.1** — used only by Claude custom connectors on `claude.ai`/Claude Desktop when connecting Kakiyo's MCP server. See the [MCP Server guide](/mcp-server#authentication) for details on the OAuth flow.
+
+All REST API requests must be authenticated using an API key in the `Authorization` header.
 
 ## API Keys
 
-API keys are 40-character strings that should be copied from dashboard
+API keys are 40-character strings (20-character team ID + 20-character secret) generated from the Kakiyo dashboard.
 
 ## Obtaining an API Key
 
