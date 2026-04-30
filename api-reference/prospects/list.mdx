@@ -2,3 +2,91 @@
 title: 'List campaign prospects'
 openapi: 'GET /prospects/campaign/{campaignId}'
 ---
+
+## Overview
+
+List prospects for a specific campaign. The endpoint reads campaign conversation state from Appwrite and hydrates prospect profile details from PlanetScale.
+
+The response body remains a plain array for compatibility with existing integrations. Pagination metadata is returned in response headers.
+
+## Query Parameters
+
+<ParamField query="limit" type="number" default="25">
+  Maximum number of prospects to return. The maximum supported value is `100`.
+</ParamField>
+
+<ParamField query="offset" type="number" default="0">
+  Number of prospects to skip when using offset pagination. Ignored when `cursor` is provided.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Opaque cursor from the `X-Next-Cursor` response header. Use this for stable pagination through large campaigns.
+</ParamField>
+
+<ParamField query="status" type="number">
+  Filter by conversation status. Use `4` to retrieve prospects who replied.
+</ParamField>
+
+<ParamField query="isPaused" type="boolean">
+  Filter paused or active campaign conversations.
+</ParamField>
+
+<ParamField query="hasResponded" type="boolean">
+  Filter conversations with or without a recorded last message timestamp. Use `status=4` when you specifically need replied prospects.
+</ParamField>
+
+## Conversation Status Values
+
+| Status | Meaning |
+| --- | --- |
+| `0` | Not started |
+| `1` | Invitation sent |
+| `2` | Invitation accepted |
+| `3` | Contacted |
+| `4` | Replied |
+| `5` | Qualified |
+| `6` | Unqualified |
+| `7` | Skipped |
+| `502` | Invites disabled |
+| `503` | Unreachable |
+| `504` | No longer in network |
+| `505` | Invite cooldown |
+
+## Pagination Headers
+
+| Header | Description |
+| --- | --- |
+| `X-Limit` | Applied page size |
+| `X-Offset` | Applied offset when offset pagination is used |
+| `X-Has-More` | `true` when another page is available |
+| `X-Next-Cursor` | Opaque cursor to pass as `cursor` for the next page |
+
+## Examples
+
+### List campaign prospects
+
+```bash
+curl "https://api.kakiyo.com/v1/prospects/campaign/{campaignId}?limit=100" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### List replied prospects
+
+```bash
+curl "https://api.kakiyo.com/v1/prospects/campaign/{campaignId}?status=4&limit=100" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### List paused replied prospects
+
+```bash
+curl "https://api.kakiyo.com/v1/prospects/campaign/{campaignId}?status=4&isPaused=true&limit=100" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Continue with cursor pagination
+
+```bash
+curl "https://api.kakiyo.com/v1/prospects/campaign/{campaignId}?limit=100&cursor={nextCursor}" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
