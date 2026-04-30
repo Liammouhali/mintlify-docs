@@ -183,7 +183,7 @@ Manage leads and conversations.
 | `add_prospect` | Add a single LinkedIn profile to a campaign |
 | `add_prospects_batch` | Add multiple prospects at once |
 | `search_prospects` | Advanced search with status, date, and campaign filters |
-| `list_campaign_prospects` | List all prospects in a specific campaign |
+| `list_campaign_prospects` | List campaign prospects with pagination and filters like `status=4` for replies |
 | `pause_prospect` | Pause outreach to a specific person |
 | `resume_prospect` | Resume a paused conversation |
 | `qualify_prospect` | Mark a prospect as qualified |
@@ -307,6 +307,8 @@ Found 34 prospects who replied:
 
 Would you like me to qualify any of these?
 ```
+
+For campaign-specific replied prospects, use `list_campaign_prospects` with `status=4` and `limit=100`.
 
 ### Agency Workflow
 
