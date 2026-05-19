@@ -4074,6 +4074,22 @@
               "headline": {
                 "type": "string",
                 "example": "VP of Sales at Acme Inc"
+              },
+              "currentCompanyName": {
+                "type": ["string", "null"],
+                "example": "Acme Inc"
+              },
+              "currentJobTitle": {
+                "type": ["string", "null"],
+                "example": "VP of Sales"
+              },
+              "currentCompanyWebsite": {
+                "type": ["string", "null"],
+                "example": "https://www.acme.com"
+              },
+              "currentCompanyLinkedInUrl": {
+                "type": ["string", "null"],
+                "example": "https://www.linkedin.com/company/acme"
               }
             }
           }
@@ -4136,6 +4152,22 @@
               "headline": {
                 "type": "string",
                 "example": "VP of Sales at Acme Inc"
+              },
+              "currentCompanyName": {
+                "type": ["string", "null"],
+                "example": "Acme Inc"
+              },
+              "currentJobTitle": {
+                "type": ["string", "null"],
+                "example": "VP of Sales"
+              },
+              "currentCompanyWebsite": {
+                "type": ["string", "null"],
+                "example": "https://www.acme.com"
+              },
+              "currentCompanyLinkedInUrl": {
+                "type": ["string", "null"],
+                "example": "https://www.linkedin.com/company/acme"
               },
               "location": {
                 "type": "object",
