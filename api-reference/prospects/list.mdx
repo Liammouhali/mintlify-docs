@@ -9,6 +9,26 @@ List prospects for a specific campaign. The endpoint reads campaign conversation
 
 The response body remains a plain array for compatibility with existing integrations. Pagination metadata is returned in response headers.
 
+Each `prospect` object includes current company data when available: `currentCompanyName`, `currentJobTitle`, `currentCompanyWebsite`, and `currentCompanyLinkedInUrl`.
+
+## Response Fields
+
+<ResponseField name="prospect.currentCompanyName" type="string | null">
+  Current company name from prospect enrichment.
+</ResponseField>
+
+<ResponseField name="prospect.currentJobTitle" type="string | null">
+  Current job title from prospect enrichment.
+</ResponseField>
+
+<ResponseField name="prospect.currentCompanyWebsite" type="string | null">
+  Current company's website URL when available.
+</ResponseField>
+
+<ResponseField name="prospect.currentCompanyLinkedInUrl" type="string | null">
+  Current company's LinkedIn page URL when available.
+</ResponseField>
+
 ## Query Parameters
 
 <ParamField query="limit" type="number" default="25">

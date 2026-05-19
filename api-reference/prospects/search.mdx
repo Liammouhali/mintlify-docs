@@ -7,6 +7,8 @@ openapi: 'GET /prospects/search'
 
 Perform advanced search and filtering across all prospects in your team. This powerful endpoint allows you to find prospects based on multiple criteria including text search, campaign association, qualification status, location, and engagement metrics.
 
+Each result's `prospect` object includes current company data when available: `currentCompanyName`, `currentJobTitle`, `currentCompanyWebsite`, and `currentCompanyLinkedInUrl`.
+
 ## Query Parameters
 
 <ParamField query="query" type="string">
@@ -67,6 +69,10 @@ Perform advanced search and filtering across all prospects in your team. This po
       "name": "John Smith",
       "headline": "VP of Sales at TechCorp",
       "url": "https://linkedin.com/in/johnsmith",
+      "currentCompanyName": "TechCorp",
+      "currentJobTitle": "VP of Sales",
+      "currentCompanyWebsite": "https://www.techcorp.com",
+      "currentCompanyLinkedInUrl": "https://www.linkedin.com/company/techcorp",
       "location": {
         "city": "San Francisco",
         "country": "United States"
