@@ -4657,7 +4657,7 @@
               "days": {
                 "type": "string",
                 "pattern": "^[01]:[01]:[01]:[01]:[01]:[01]:[01]$",
-                "description": "Working days (Mon-Sun). Format: 7 values separated by colons, 1=working, 0=off",
+                "description": "Working days (Mon-Sun). Format: 7 values separated by colons, 1=working, 0=off. Must include at least one working day.",
                 "example": "1:1:1:1:1:0:0"
               },
               "start": {
