@@ -2,3 +2,39 @@
 title: 'Add prospects batch'
 openapi: 'POST /prospects/batch'
 ---
+
+Add multiple prospects to one campaign. Each prospect can include a `customData` string, max 3000 characters, that is saved on the created chat and available in prompts as `{{customData}}`.
+
+The import is asynchronous. The response includes a `listId`; use [Prospect Import Status](/api-reference/prospects/import-status) to confirm which rows created chats.
+
+## Example
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/prospects/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "campaignId": "campaign_12345abcde",
+    "prospects": [
+      {
+        "name": "John Smith",
+        "url": "https://linkedin.com/in/johnsmith",
+        "customData": "John commented on Liam's LinkedIn post about AI outbound."
+      },
+      {
+        "name": "Sarah Johnson",
+        "url": "https://linkedin.com/in/sarahjohnson",
+        "customData": "Sarah engaged with a Kakiyo post about sales automation."
+      }
+    ]
+  }'
+```
+
+## Prospect object
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | `string` | Yes | Prospect full name |
+| `url` | `string` | Yes | LinkedIn profile URL |
+| `ongoing` | `boolean` | No | Whether the conversation should start as ongoing. Defaults to `false` |
+| `customData` | `string` | No | Per-conversation prompt context, max 3000 characters |

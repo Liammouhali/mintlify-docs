@@ -592,6 +592,10 @@
                     "message": {
                       "type": "string",
                       "example": "3 prospects added successfully"
+                    },
+                    "listId": {
+                      "type": "string",
+                      "example": "import_list_id"
                     }
                   }
                 }
@@ -657,7 +661,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Round Robin distribution completed"
+                      "example": "Round Robin distribution processing started"
                     },
                     "totalProspects": {
                       "type": "integer",
@@ -679,6 +683,10 @@
                           "campaignName": {
                             "type": "string",
                             "example": "Q4 Enterprise Outreach"
+                          },
+                          "listId": {
+                            "type": "string",
+                            "example": "import_list_id"
                           },
                           "prospectsAssigned": {
                             "type": "integer",
@@ -802,6 +810,10 @@
                     "message": {
                       "type": "string",
                       "example": "Prospect added successfully"
+                    },
+                    "listId": {
+                      "type": "string",
+                      "example": "import_list_id"
                     }
                   }
                 }
@@ -916,6 +928,90 @@
           },
           "401": {
             "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prospects/imports/{listId}": {
+      "get": {
+        "summary": "Prospect Import Status",
+        "description": "Returns asynchronous prospect import status, counts, and completed report rows",
+        "operationId": "getProspectImportStatus",
+        "parameters": [
+          {
+            "name": "listId",
+            "in": "path",
+            "description": "Import list ID returned by the create endpoint",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Import status returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "listId": { "type": "string", "example": "import_list_id" },
+                    "campaignId": { "type": "string", "example": "campaign_12345abcde" },
+                    "status": { "type": "string", "example": "completed" },
+                    "total": { "type": "integer", "example": 1 },
+                    "processed": { "type": "integer", "example": 1 },
+                    "imported": { "type": "integer", "example": 1 },
+                    "existing": { "type": "integer", "example": 0 },
+                    "invalid": { "type": "integer", "example": 0 },
+                    "report": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": { "type": "integer", "example": 0 },
+                          "status": { "type": "string", "example": "imported" },
+                          "prospectId": { "type": "string", "example": "prospect_id" },
+                          "chatId": { "type": "string", "example": "chat_id" },
+                          "chatCreated": { "type": "boolean", "example": true },
+                          "customDataSaved": { "type": "boolean", "example": true }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You do not have access to this import",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Import not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -4229,22 +4325,10 @@
             "format": "uri",
             "example": "https://linkedin.com/in/johnsmith"
           },
-          "additionalFields": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["fieldName", "fieldValue"],
-              "properties": {
-                "fieldName": {
-                  "type": "string",
-                  "example": "company"
-                },
-                "fieldValue": {
-                  "type": "string",
-                  "example": "Acme Inc"
-                }
-              }
-            }
+          "customData": {
+            "type": "string",
+            "maxLength": 3000,
+            "example": "John commented on Liam's LinkedIn post about AI outbound."
           }
         }
       },
@@ -4271,22 +4355,10 @@
                   "format": "uri",
                   "example": "https://linkedin.com/in/johnsmith"
                 },
-                "additionalFields": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": ["fieldName", "fieldValue"],
-                    "properties": {
-                      "fieldName": {
-                        "type": "string",
-                        "example": "company"
-                      },
-                      "fieldValue": {
-                        "type": "string",
-                        "example": "Acme Inc"
-                      }
-                    }
-                  }
+                "customData": {
+                  "type": "string",
+                  "maxLength": 3000,
+                  "example": "John commented on Liam's LinkedIn post about AI outbound."
                 }
               }
             }
@@ -4326,22 +4398,10 @@
                   "default": false,
                   "example": false
                 },
-                "additionalFields": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": ["fieldName", "fieldValue"],
-                    "properties": {
-                      "fieldName": {
-                        "type": "string",
-                        "example": "company"
-                      },
-                      "fieldValue": {
-                        "type": "string",
-                        "example": "TechCorp Inc"
-                      }
-                    }
-                  }
+                "customData": {
+                  "type": "string",
+                  "maxLength": 3000,
+                  "example": "John commented on Liam's LinkedIn post about AI outbound."
                 }
               }
             }

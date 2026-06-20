@@ -184,6 +184,7 @@
               "api-reference/prospects/add-single",
               "api-reference/prospects/add-batch",
               "api-reference/prospects/add-batch-round-robin",
+              "api-reference/prospects/import-status",
               "api-reference/prospects/search",
               "api-reference/prospects/details",
               "api-reference/prospects/delete-single",
