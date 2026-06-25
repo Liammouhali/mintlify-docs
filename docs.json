@@ -191,7 +191,8 @@
               "api-reference/prospects/delete-bulk",
               "api-reference/prospects/pause",
               "api-reference/prospects/resume",
-              "api-reference/prospects/qualify"
+              "api-reference/prospects/qualify",
+              "api-reference/prospects/update-custom-data"
             ]
           },
           {

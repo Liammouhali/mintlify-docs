@@ -1350,6 +1350,113 @@
         }
       }
     },
+    "/prospects/{chatId}/custom-data": {
+      "patch": {
+        "summary": "Update Conversation customData",
+        "description": "Updates the per-conversation customData used in prompts as {{customData}}. Pass an empty string to clear it.",
+        "operationId": "updateConversationCustomData",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "description": "ID of the chat/conversation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customData"],
+                "properties": {
+                  "customData": {
+                    "type": "string",
+                    "maxLength": 3000,
+                    "description": "Per-conversation prompt context. Empty string clears it.",
+                    "example": "John replied positively to the AI outbound post; reference that follow-up."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Conversation customData updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Conversation customData updated successfully"
+                    },
+                    "chatId": {
+                      "type": "string",
+                      "example": "chat_12345abcde"
+                    },
+                    "customDataSaved": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "customDataLength": {
+                      "type": "integer",
+                      "example": 64
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conversation not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/prospects/{chatId}/pause": {
       "post": {
         "summary": "Pause Conversation",

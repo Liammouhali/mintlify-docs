@@ -1,0 +1,67 @@
+---
+title: 'Update Conversation customData'
+openapi: 'PATCH /prospects/{chatId}/custom-data'
+---
+
+## Overview
+
+Update the per-conversation `customData` for an existing chat. `customData` is the prompt context exposed as `{{customData}}`, set when the conversation is created via the prospect import endpoints.
+
+Use this when the context that personalizes a conversation changes after import (for example, the lead performed a new action), so the AI prompt always uses the latest context.
+
+## Path parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `chatId` | `string` | Yes | ID of the chat/conversation to update |
+
+## Request body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `customData` | `string` | Yes | New prompt context, max 3000 characters. Pass an empty string (`""`) to clear it |
+
+## Example
+
+```bash
+curl -X PATCH "https://api.kakiyo.com/v1/prospects/chat_12345abcde/custom-data" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customData": "John replied positively to the AI outbound post; reference that follow-up."
+  }'
+```
+
+```javascript
+const response = await fetch('https://api.kakiyo.com/v1/prospects/chat_12345abcde/custom-data', {
+  method: 'PATCH',
+  headers: {
+    Authorization: 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    customData: 'John replied positively to the AI outbound post; reference that follow-up.',
+  }),
+});
+
+const result = await response.json();
+console.log(result.customDataSaved, result.customDataLength);
+```
+
+## Response
+
+```json
+{
+  "message": "Conversation customData updated successfully",
+  "chatId": "chat_12345abcde",
+  "customDataSaved": true,
+  "customDataLength": 64
+}
+```
+
+## Notes
+
+- The chat must belong to a campaign owned by your team, otherwise the request returns `403`.
+- `customData` is truncated to 3000 characters.
+- An empty string clears the stored context (`customDataSaved` will be `false`).
+- The new value applies to subsequent AI message generations for the conversation.
