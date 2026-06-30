@@ -89,9 +89,10 @@ You need to add prospects to your campaign. There are two methods:
 1. Click the **Import CSV** button (or navigate to the campaign's prospect section after creation).
 2. Prepare a CSV file with a column containing LinkedIn profile URLs.
    - Accepted URL formats: `https://www.linkedin.com/in/john-doe` or just `linkedin.com/in/john-doe`
-   - Other columns (name, company, title) are optional but help with enrichment.
+   - Name columns are optional. To pass per-prospect prompt context, add a column such as `Custom Data`, `Custom Context`, or `Customer Score Data`.
 3. Upload the file by dragging it into the upload area or clicking to browse.
 4. Kakiyo automatically detects the LinkedIn URL column and parses the file.
+   - Detected custom data is saved on the conversation and can be used in prompts with `{{customData}}`.
 5. Review the import summary: prospects added, duplicates skipped, errors.
 
 <Note>

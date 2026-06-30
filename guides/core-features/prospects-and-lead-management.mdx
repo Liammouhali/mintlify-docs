@@ -9,30 +9,30 @@ description: "Import prospects via CSV or discover fresh leads with AI Lead Find
 
 ### Required Fields
 
-Every CSV must include these three fields:
+Every CSV must include a LinkedIn profile URL column. Name columns are optional but recommended:
 
 - **First Name**: Prospect's first name
 - **Last Name**: Prospect's last name
 - **LinkedIn URL**: Complete LinkedIn profile URL
 
-### Additional Data Fields
+### Custom Data
 
-Add any extra columns to enhance personalization:
+To pass per-prospect context into outreach prompts, add one column named **Custom Data** or a similar label such as **Custom Context** or **Customer Score Data**.
 
-**Buying Intent Signals:**
+Kakiyo saves that column on the prospect's conversation and exposes it in prompts as:
 
-- Hiring activity
-- Technology usage
-- Recent company changes
-- Behavioral indicators
+```text
+{{customData}}
+```
 
-**Custom Data:**
+Good custom data examples include:
 
-- Any relevant prospect information
+- Buying intent signals
+- Relevant prospect notes
 - Industry-specific data points
 - Company research findings
 
-> **Important**: Additional fields are provided to the AI as context for conversations, leading to significantly better personalization and higher response rates.
+> **Important**: Only the detected custom data column is saved as conversation context. Other CSV columns are not automatically passed into prompts unless they are imported as custom data.
 
 ---
 
