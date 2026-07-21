@@ -635,6 +635,106 @@
         }
       }
     },
+    "/prospects/sales-navigator": {
+      "post": {
+        "summary": "Import a Sales Navigator Search",
+        "description": "Queues a LinkedIn Sales Navigator people search for asynchronous import into a campaign. Matching profiles pass through Kakiyo's standard enrichment, duplicate, Do Not Contact, and campaign-capacity checks.",
+        "operationId": "importSalesNavigatorSearch",
+        "requestBody": {
+          "description": "The campaign, Sales Navigator people-search URL, and requested run size",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesNavigatorImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Sales Navigator import queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesNavigatorImportAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid URL, requested count, or campaign state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Campaign access denied or subscription unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Campaign already importing prospects or saved search already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded or the team already has three active public Sales Navigator imports",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/prospects/batch/round-robin": {
       "post": {
         "summary": "Add Prospects Batch (Round Robin)",
@@ -4469,6 +4569,70 @@
                 }
               }
             }
+          }
+        }
+      },
+      "SalesNavigatorImportRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["campaignId", "searchUrl"],
+        "properties": {
+          "campaignId": {
+            "type": "string",
+            "description": "Campaign that should receive eligible prospects",
+            "example": "campaign_12345abcde"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "default": "Sales Navigator import",
+            "description": "Name shown for the saved search in the dashboard",
+            "example": "US SaaS Sales Leaders"
+          },
+          "searchUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 20000,
+            "description": "Complete HTTPS LinkedIn Sales Navigator /sales/search/people URL containing a query parameter",
+            "example": "https://www.linkedin.com/sales/search/people?query=(keywords%3ASaaS)"
+          },
+          "requestedCount": {
+            "type": "integer",
+            "enum": [100, 250, 500],
+            "default": 250,
+            "description": "Maximum number of profiles requested for this run",
+            "example": 250
+          }
+        }
+      },
+      "SalesNavigatorImportAccepted": {
+        "type": "object",
+        "required": ["message", "sourceId", "runId", "status", "requestedCount"],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Sales Navigator import queued"
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "Saved-search correlation identifier",
+            "example": "source_12345abcde"
+          },
+          "runId": {
+            "type": ["string", "null"],
+            "description": "Current import-run correlation identifier",
+            "example": "run_12345abcde"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["queued"],
+            "example": "queued"
+          },
+          "requestedCount": {
+            "type": "integer",
+            "enum": [100, 250, 500],
+            "example": 250
           }
         }
       },

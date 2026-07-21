@@ -1,0 +1,96 @@
+---
+title: "Import Leads from Sales Navigator"
+description: "Save a LinkedIn Sales Navigator people search in Kakiyo and import 100, 250, or 500 matching profiles directly into a campaign."
+---
+
+Turn a focused LinkedIn Sales Navigator people search into campaign-ready leads without exporting a CSV. Kakiyo collects the matching profiles in the background, enriches them, removes duplicates, applies Do Not Contact rules, and adds eligible prospects to your campaign.
+
+<Info>
+  Sales Navigator is used to build the search. Kakiyo handles collection and campaign import after you paste the people-search URL.
+</Info>
+
+## Before You Start
+
+You need:
+
+- A LinkedIn Sales Navigator people search
+- A Kakiyo campaign with an assigned LinkedIn agent
+- A campaign that is not in Draft or Disabled state
+
+## Import a Search
+
+### 1. Build your people search
+
+Open LinkedIn Sales Navigator and apply the filters that define your target audience. Use a **people search**, not an account search, saved lead list, exported report, or profile URL.
+
+The browser URL must look like:
+
+```text
+https://www.linkedin.com/sales/search/people?query=...
+```
+
+### 2. Open the campaign importer
+
+In Kakiyo, open the target campaign, select **Add Prospects**, and choose **Sales Navigator**.
+
+### 3. Save and queue the search
+
+Enter a clear name, paste the complete browser URL, and choose how many profiles to request:
+
+| Run size | Best for |
+| ---: | --- |
+| `100` | Testing a search or importing a narrow segment |
+| `250` | A balanced campaign batch |
+| `500` | Larger searches and established targeting |
+
+Click the import action once. Kakiyo saves the search and queues the run.
+
+### 4. Let Kakiyo process it
+
+The import continues in the background. You can close the window and keep working. Kakiyo shows progress through Queued, Fetching, Waiting, Importing, and finalization stages, then emails the initiating dashboard user when the run is ready.
+
+If collection takes longer than usual, the source remains queued and Kakiyo continues automatically. You do not need to keep the dialog open.
+
+## What Kakiyo Does with Every Profile
+
+Each result passes through the standard prospect pipeline:
+
+1. Normalize the public LinkedIn profile URL.
+2. Deduplicate results within the run and against existing Kakiyo prospects.
+3. Enrich the person and company record.
+4. Apply person and company Do Not Contact rules.
+5. Check campaign ownership and available import capacity.
+6. Add eligible prospects through the canonical campaign integration flow.
+
+## Continue and Retry
+
+Kakiyo saves page checkpoints after every provider page.
+
+- **Continue** starts a new run from the next page of the same saved search.
+- **Retry** resumes a failed run from its durable checkpoint.
+- **Archive** removes the saved search from the active dashboard list after secure cleanup.
+
+Do not create a duplicate saved search when Retry is available.
+
+## Limits and Expectations
+
+- Each run requests `100`, `250`, or `500` profiles.
+- Sales Navigator returns pages of up to 25 profiles.
+- A saved search can continue through at most 100 pages, representing up to 2,500 accessible results.
+- Duplicate, invalid, Do Not Contact, and enrichment outcomes can make the number added lower than the number requested.
+- Only one active Sales Navigator run can use a campaign at a time.
+- Larger imports can take time because profile enrichment and campaign checks happen after collection.
+
+<Tip>
+  Start with 100 profiles when validating a new search. Continue from the next page once you are satisfied with lead quality.
+</Tip>
+
+## Use the Public API
+
+Developers can queue the same workflow with [`POST /v1/prospects/sales-navigator`](/api-reference/prospects/import-sales-navigator). API-key imports use the same safety and enrichment pipeline; dashboard controls remain the place to monitor, Continue, Retry, or archive the saved search.
+
+## Related Guides
+
+- [Prospects and Lead Management](/guides/core-features/prospects-and-lead-management)
+- [Getting Started with Lead Finder](/guides/lead-finder/getting-started-with-lead-finder)
+- [Understanding Campaigns](/guides/core-features/understanding-the-campaigns)

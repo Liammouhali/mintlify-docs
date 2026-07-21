@@ -1,0 +1,78 @@
+---
+title: 'Import a Sales Navigator Search'
+openapi: 'POST /prospects/sales-navigator'
+---
+
+Queue a LinkedIn Sales Navigator people search for asynchronous import into one Kakiyo campaign. Kakiyo collects matching profiles and routes them through its standard enrichment, duplicate, Do Not Contact, progress, and campaign-capacity pipeline.
+
+<Info>
+  A `202 Accepted` response means the import was queued. It does not mean that profiles have already been added.
+</Info>
+
+## Request Body
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `campaignId` | `string` | Yes | Campaign that should receive eligible prospects |
+| `searchUrl` | `string` | Yes | Complete HTTPS LinkedIn `/sales/search/people` URL containing a `query` parameter |
+| `requestedCount` | `integer` | No | `100`, `250`, or `500`; defaults to `250` |
+| `name` | `string` | No | Saved-search name; defaults to `Sales Navigator import` |
+
+## Example
+
+```bash
+curl -X POST "https://api.kakiyo.com/v1/prospects/sales-navigator" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "campaignId": "campaign_12345abcde",
+    "name": "US SaaS Sales Leaders",
+    "searchUrl": "https://www.linkedin.com/sales/search/people?query=(keywords%3ASaaS)",
+    "requestedCount": 250
+  }'
+```
+
+<Warning>
+  Paste the URL exactly as copied from the Sales Navigator browser address bar. Do not send an exported report URL, lead-list URL, or individual profile URL.
+</Warning>
+
+## Accepted Response
+
+```json
+{
+  "message": "Sales Navigator import queued",
+  "sourceId": "source_12345abcde",
+  "runId": "run_12345abcde",
+  "status": "queued",
+  "requestedCount": 250
+}
+```
+
+`sourceId` and `runId` are correlation identifiers. Progress, Continue, Retry, and archive controls are currently dashboard-only. API-key imports do not send a completion email because an API key is not a dashboard user.
+
+## Requirements and Limits
+
+- The campaign must belong to the authenticated API-key team.
+- The campaign must have an assigned LinkedIn agent and be ready for prospect imports.
+- The public API permits up to three active Sales Navigator imports per team.
+- Only one active Sales Navigator import can use a campaign at a time.
+- The endpoint uses the low write rate-limit tier.
+
+## Common Errors
+
+| Status | Error | Meaning |
+| ---: | --- | --- |
+| `400` | `campaign_missing_agent` | Assign an agent before importing prospects |
+| `400` | `campaign_not_ready` | The campaign is Draft or Disabled |
+| `401` | `invalid_api_key` | The API key is missing or invalid |
+| `403` | `forbidden` | The campaign does not belong to the API-key team |
+| `404` | `campaign_not_found` | The campaign does not exist |
+| `409` | `campaign_busy` | The campaign already has an active import |
+| `409` | `sales_navigator_source_exists` | This search is already saved for the campaign |
+| `429` | `sales_navigator_team_limit` | The team already has three active Sales Navigator imports |
+
+The team-cap response has no fixed retry time. Submit another import after one of the active imports finishes or is archived. Standard burst-rate `429` responses include a `Retry-After` header.
+
+## Dashboard Guide
+
+For the no-code workflow, Continue, Retry, and import status explanations, see [Import Leads from Sales Navigator](/guides/lead-finder/sales-navigator-imports).

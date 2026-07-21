@@ -104,7 +104,8 @@
             "group": "Lead Finder",
             "pages": [
               "guides/lead-finder/overview",
-              "guides/lead-finder/getting-started-with-lead-finder"
+              "guides/lead-finder/getting-started-with-lead-finder",
+              "guides/lead-finder/sales-navigator-imports"
             ]
           },
           {
@@ -183,6 +184,7 @@
               "api-reference/prospects/list",
               "api-reference/prospects/add-single",
               "api-reference/prospects/add-batch",
+              "api-reference/prospects/import-sales-navigator",
               "api-reference/prospects/add-batch-round-robin",
               "api-reference/prospects/import-status",
               "api-reference/prospects/search",

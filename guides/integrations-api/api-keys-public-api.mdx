@@ -56,7 +56,9 @@ Base URL: `https://api.kakiyo.com/v1`
 
 - `POST /prospects` - Add a single prospect
 - `POST /prospects/batch` - Batch add prospects
+- `POST /prospects/sales-navigator` - Queue a Sales Navigator people search import
 - `POST /prospects/batch/round-robin` - Distribute across campaigns
+- `GET /prospects/imports/:listId` - Check a direct prospect import
 - `GET /prospects/search` - Advanced search with filters
 - `GET /prospects/:chatId` - Get prospect details and messages
 - `POST /prospects/:chatId/qualify` - Mark as qualified
@@ -81,14 +83,20 @@ Base URL: `https://api.kakiyo.com/v1`
 
 ---
 
-## Rate Limits & Credits
+## Rate Limits and Usage
 
-- **Rate limit**: 60 requests per minute per endpoint.
-- **Credit cost**: Every API call consumes **1 credit**, regardless of endpoint.
-- **Pagination**: Search results are capped at 100 per page. Use `limit` and `offset` parameters.
-- **Bulk operations**: Max 100 prospects per batch request.
+Kakiyo uses team-scoped rate-limit tiers rather than one universal limit:
 
-When credits reach zero, API calls return HTTP 402 and agents are automatically paused.
+| Tier | Requests per minute | Typical operations |
+| --- | ---: | --- |
+| High | 60 | Simple reads such as API-key verification |
+| Medium | 30 | Standard list and analytics reads |
+| Low | 15 | Writes and provider-backed operations |
+
+Public API calls do not consume legacy usage credits. Lead Finder credits apply only to Lead Finder operations. Sales Navigator imports use the low write tier and allow at most three active imports per team through the public API.
+
+- **Pagination**: Search results are capped at 100 per page. Use `limit` and `offset` parameters where supported.
+- **Bulk operations**: Max 100 prospects per direct batch request.
 
 ---
 
