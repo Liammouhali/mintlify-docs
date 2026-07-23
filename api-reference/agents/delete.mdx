@@ -9,13 +9,14 @@ openapi: 'DELETE /agents/{id}'
 
 ## Overview
 
-Permanently delete an agent and all its associated data. This endpoint can only be used when the agent status is `ended`. The operation removes the agent from your account, cleans up external resources (GoLogin profiles), and deletes all usage statistics.
+Permanently delete an agent and all its associated data. Kakiyo-managed agents must have status `ended`; externally provisioned profiles can be removed when their source lifecycle requires cleanup. The operation removes the agent, its campaigns, and its usage statistics from your account. Kakiyo-managed agents also have their provider resources cleaned up, while externally provisioned profiles keep their externally owned provider resources untouched.
 
 ## Prerequisites
 
-- Agent must have status `ended`
 - You must have access to the agent (same team)
 - Agent must exist in your account
+- Kakiyo-managed agents must have status `ended`
+- No campaign import can be active for the agent
 
 ## Use Cases
 
@@ -55,7 +56,13 @@ Permanently delete an agent and all its associated data. This endpoint can only 
   "message": "You do not have access to this agent"
 }
 
-// Invalid agent status
+// Campaign import in progress
+{
+  "error": "campaign_busy",
+  "message": "Wait for active prospect imports to finish before deleting this profile"
+}
+
+// Kakiyo-managed agent is not ended
 {
   "error": "invalid_status",
   "message": "Agent can only be deleted when status is ended",
@@ -72,7 +79,7 @@ Permanently delete an agent and all its associated data. This endpoint can only 
 ## Testing Examples
 
 ```bash
-# Delete an ended agent
+# Delete an agent
 curl -X DELETE "https://api.kakiyo.com/v1/agents/agent_123" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json"
@@ -141,9 +148,11 @@ except Exception as e:
 | Status Code | Error Code | Description | Action |
 | ----------- | ---------- | ----------- | ------ |
 | 200 | - | Success | Agent deleted successfully |
-| 400 | `invalid_status` | Agent status is not 'ended' | Wait for agent to end or manually end it |
+| 400 | `invalid_status` | Kakiyo-managed agent is not `ended` | End the agent, then retry |
 | 403 | `forbidden` | No access to agent | Verify agent belongs to your team |
 | 404 | `not_found` | Agent doesn't exist | Check agent ID is correct |
+| 409 | `campaign_busy` | A campaign import is active | Wait for the import to finish, then retry |
+| 429 | `rate_limit_exceeded` | Too many requests | Retry after the indicated delay |
 | 500 | `internal_error` | Server error | Retry request or contact support |
 
 ### Comprehensive Error Handling
@@ -167,8 +176,10 @@ const safeDeleteAgent = async (agentId) => {
           throw new Error('Agent not found. Please check the agent ID.');
         case 'forbidden':
           throw new Error('You do not have permission to delete this agent.');
+        case 'campaign_busy':
+          throw new Error('Agent cannot be deleted while a campaign import is active. Retry shortly.');
         case 'invalid_status':
-          throw new Error(`Agent cannot be deleted. Current status: ${data.currentStatus}. Agent must be ended first.`);
+          throw new Error(`Agent cannot be deleted. Current status: ${data.currentStatus}.`);
         case 'internal_error':
           throw new Error('Server error occurred. Please try again later.');
         default:
@@ -191,16 +202,6 @@ const safeDeleteAgent = async (agentId) => {
 ```javascript
 const safeAgentDeletion = async (agentId) => {
   try {
-    // First, check agent status
-    const agent = await fetch(`https://api.kakiyo.com/v1/agents/${agentId}`, {
-      headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
-    }).then(r => r.json());
-
-    if (agent.status !== 'ended') {
-      console.log(`Agent status is ${agent.status}. Cannot delete until ended.`);
-      return { success: false, reason: 'Agent not ended' };
-    }
-
     // Confirm deletion (in a real app, this would be user confirmation)
     const confirmed = true; // Replace with actual confirmation logic
 
@@ -228,27 +229,17 @@ const safeAgentDeletion = async (agentId) => {
 ### Bulk Agent Cleanup
 
 ```javascript
-const cleanupEndedAgents = async () => {
+const cleanupAgents = async (agentIds) => {
   try {
-    // Get all agents
-    const agents = await fetch('https://api.kakiyo.com/v1/agents', {
-      headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
-    }).then(r => r.json());
-
-    // Filter ended agents
-    const endedAgents = agents.filter(agent => agent.status === 'ended');
-    
-    console.log(`Found ${endedAgents.length} ended agents to clean up`);
-
     const results = [];
-    for (const agent of endedAgents) {
+    for (const agentId of agentIds) {
       try {
-        await deleteAgent(agent.id);
-        results.push({ id: agent.id, success: true });
-        console.log(`✓ Deleted agent ${agent.id}`);
+        await deleteAgent(agentId);
+        results.push({ id: agentId, success: true });
+        console.log(`✓ Deleted agent ${agentId}`);
       } catch (error) {
-        results.push({ id: agent.id, success: false, error: error.message });
-        console.log(`✗ Failed to delete agent ${agent.id}: ${error.message}`);
+        results.push({ id: agentId, success: false, error: error.message });
+        console.log(`✗ Failed to delete agent ${agentId}: ${error.message}`);
       }
     }
 
@@ -262,7 +253,7 @@ const cleanupEndedAgents = async () => {
 
 ## Best Practices
 
-1. **Status Verification**: Always verify agent status is 'ended' before attempting deletion
+1. **Status Verification**: Ensure Kakiyo-managed agents are ended and campaign imports have completed before attempting deletion
 2. **User Confirmation**: Implement confirmation dialogs for destructive operations
 3. **Error Handling**: Handle all possible error scenarios gracefully
 4. **Logging**: Log deletion operations for audit trails
