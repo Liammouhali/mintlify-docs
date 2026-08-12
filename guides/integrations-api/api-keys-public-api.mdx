@@ -93,7 +93,7 @@ Kakiyo uses team-scoped rate-limit tiers rather than one universal limit:
 | Medium | 30 | Standard list and analytics reads |
 | Low | 15 | Writes and provider-backed operations |
 
-Public API calls do not consume legacy usage credits. Lead Finder credits apply only to Lead Finder operations. Sales Navigator imports use the low write tier and allow at most three active imports per team through the public API.
+Sales Navigator imports use the low write tier and allow at most three active imports per team through the public API.
 
 - **Pagination**: Search results are capped at 100 per page. Use `limit` and `offset` parameters where supported.
 - **Bulk operations**: Max 100 prospects per direct batch request.
