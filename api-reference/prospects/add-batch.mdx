@@ -34,7 +34,7 @@ curl -X POST "https://api.kakiyo.com/v1/prospects/batch" \
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `name` | `string` | Yes | Prospect full name |
+| `name` | `string` | No | Prospect full name. Optional; Kakiyo enriches it from the LinkedIn profile when omitted |
 | `url` | `string` | Yes | LinkedIn profile URL |
 | `ongoing` | `boolean` | No | Whether the conversation should start as ongoing. Defaults to `false` |
 | `customData` | `string` | No | Per-conversation prompt context, max 3000 characters |

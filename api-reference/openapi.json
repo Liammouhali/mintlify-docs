@@ -4517,7 +4517,7 @@
       },
       "AddProspectRequest": {
         "type": "object",
-        "required": ["campaignId", "name", "url"],
+        "required": ["campaignId", "url"],
         "properties": {
           "campaignId": {
             "type": "string",
@@ -4551,7 +4551,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["name", "url"],
+              "required": ["url"],
               "properties": {
                 "name": {
                   "type": "string",
@@ -4653,7 +4653,7 @@
             "minItems": 1,
             "items": {
               "type": "object",
-              "required": ["name", "url"],
+              "required": ["url"],
               "properties": {
                 "name": {
                   "type": "string",

@@ -12,7 +12,7 @@ Add an individual prospect to a campaign. Prospect imports are processed asynchr
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `campaignId` | `string` | Yes | Campaign ID that should receive the prospect |
-| `name` | `string` | Yes | Prospect full name |
+| `name` | `string` | No | Prospect full name. Optional; Kakiyo enriches it from the LinkedIn profile when omitted |
 | `url` | `string` | Yes | LinkedIn profile URL |
 | `ongoing` | `boolean` | No | Whether the conversation should start as ongoing. Defaults to `false` |
 | `customData` | `string` | No | Per-conversation context, max 3000 characters. Saved on the created chat and available in prompts as `{{customData}}` |
