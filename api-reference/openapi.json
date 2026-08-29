@@ -509,7 +509,13 @@
                       "properties": {
                         "prospects": {
                           "type": "integer",
+                          "description": "Total prospects in the campaign",
                           "example": 150
+                        },
+                        "pendingInvitations": {
+                          "type": "integer",
+                          "description": "Prospects left to invite (chats with no invitation sent yet, including invite cooldown)",
+                          "example": 87
                         },
                         "prospectsAnswers": {
                           "type": "integer",
@@ -4228,7 +4234,13 @@
             "properties": {
               "prospects": {
                 "type": "integer",
+                "description": "Total prospects in the campaign",
                 "example": 150
+              },
+              "pendingInvitations": {
+                "type": "integer",
+                "description": "Prospects left to invite (chats with no invitation sent yet, including invite cooldown)",
+                "example": 87
               },
               "prospectsAnswers": {
                 "type": "integer",
