@@ -76,3 +76,11 @@ Use [Prospect Import Status](/api-reference/prospects/import-status) to confirm 
 - Keep `customData` concise and directly useful for the AI prompt.
 - Do not include secrets or sensitive private data.
 - Confirm import completion with the import status endpoint; creation is asynchronous.
+
+## Common Errors
+
+| Status | Error | Meaning |
+| ---: | --- | --- |
+| `400` | `campaign_missing_agent` | Assign an agent before importing prospects |
+| `409` | `campaign_busy` | The campaign already has an active import |
+| `409` | `agent_restricted` | The campaign uses a restricted LinkedIn profile |

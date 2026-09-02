@@ -139,9 +139,9 @@ Once connected, you can control Kakiyo using natural language:
 
 ---
 
-## Available Tools (42)
+## Available Tools (43)
 
-The MCP server provides 42 tools organized by category:
+The MCP server provides 43 tools organized by category:
 
 ### Agents (5 tools)
 
@@ -172,7 +172,7 @@ Create and manage outreach campaigns.
 | `pause_campaign` | Stop a campaign from sending messages |
 | `resume_campaign` | Restart a paused campaign |
 
-### Prospects (9 tools)
+### Prospects (10 tools)
 
 Manage leads and conversations.
 
@@ -180,13 +180,18 @@ Manage leads and conversations.
 |------|-------------|
 | `list_prospects` | List prospects with basic filtering |
 | `get_prospect` | Get full prospect details and conversation history |
-| `add_prospect` | Add a single LinkedIn profile to a campaign |
-| `add_prospects_batch` | Add multiple prospects at once |
+| `add_prospect` | Add a single LinkedIn profile to a campaign. Optional `customData` (max 3000 chars) is saved on the conversation and available in prompts as `{{customData}}` |
+| `add_prospects_batch` | Add multiple prospects at once. Each prospect may include `customData` (max 3000 chars) for per-conversation prompt context |
 | `search_prospects` | Advanced search with status, date, and campaign filters |
 | `list_campaign_prospects` | List campaign prospects with pagination and filters like `status=4` for replies |
 | `pause_prospect` | Pause outreach to a specific person |
 | `resume_prospect` | Resume a paused conversation |
 | `qualify_prospect` | Mark a prospect as qualified |
+| `update_prospect_custom_data` | Update or clear `customData` on an existing conversation (`{{customData}}` in prompts; max 3000 chars; empty string clears) |
+
+<Note>
+  Use `customData` for freeform outreach context unique to that lead — for example the intent signal, post they engaged with, or research note that explains why you are contacting them now. The agent injects it into openers, replies, and follow-ups whenever the prompt includes `{{customData}}`.
+</Note>
 
 ### Products (1 tool)
 
@@ -310,6 +315,16 @@ Would you like me to qualify any of these?
 
 For campaign-specific replied prospects, use `list_campaign_prospects` with `status=4` and `limit=100`.
 
+```
+You: Add https://linkedin.com/in/sarahchen to campaign camp_123 with context that she commented on our AI outbound post yesterday
+
+Claude: I'll add Sarah with that customData so the agent can reference it in outreach.
+
+[Calls add_prospect with campaignId, linkedinUrl, and customData]
+
+Done. customData is saved on the conversation and available in prompts as {{customData}} (max 3000 characters).
+```
+
 ### Agency Workflow
 
 ```
@@ -432,7 +447,7 @@ Tool errors are returned in MCP format:
   </Accordion>
 
   <Accordion title="Tool not found">
-    - The MCP server has 42 tools — some operations (like agent creation) require the dashboard
+    - The MCP server has 43 tools — some operations (like agent creation) require the dashboard
     - Use `verify_api_key` to confirm your connection is working
   </Accordion>
 

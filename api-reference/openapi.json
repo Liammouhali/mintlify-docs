@@ -4547,6 +4547,7 @@
           "customData": {
             "type": "string",
             "maxLength": 3000,
+            "description": "Per-conversation AI context saved on the created chat and available in prompts as {{customData}}. Max 3000 characters. Use for why this specific lead is being contacted now.",
             "example": "John commented on Liam's LinkedIn post about AI outbound."
           }
         }
@@ -4577,6 +4578,7 @@
                 "customData": {
                   "type": "string",
                   "maxLength": 3000,
+                  "description": "Per-conversation AI context saved on the created chat and available in prompts as {{customData}}. Max 3000 characters.",
                   "example": "John commented on Liam's LinkedIn post about AI outbound."
                 }
               }
@@ -4684,6 +4686,7 @@
                 "customData": {
                   "type": "string",
                   "maxLength": 3000,
+                  "description": "Per-conversation AI context saved on the created chat and available in prompts as {{customData}}. Max 3000 characters.",
                   "example": "John commented on Liam's LinkedIn post about AI outbound."
                 }
               }

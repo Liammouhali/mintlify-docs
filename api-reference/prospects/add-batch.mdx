@@ -38,3 +38,11 @@ curl -X POST "https://api.kakiyo.com/v1/prospects/batch" \
 | `url` | `string` | Yes | LinkedIn profile URL |
 | `ongoing` | `boolean` | No | Whether the conversation should start as ongoing. Defaults to `false` |
 | `customData` | `string` | No | Per-conversation prompt context, max 3000 characters |
+
+## Common Errors
+
+| Status | Error | Meaning |
+| ---: | --- | --- |
+| `400` | `campaign_missing_agent` | Assign an agent before importing prospects |
+| `409` | `campaign_busy` | The campaign already has an active import |
+| `409` | `agent_restricted` | The campaign uses a restricted LinkedIn profile |
