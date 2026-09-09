@@ -1,0 +1,14 @@
+---
+title: 'Get prompt'
+openapi: 'GET /prompts/{id}'
+---
+
+Returns one team-owned prompt as separate sections, not a raw JSON blob.
+
+For Messages prompts: `context`, `firstMessage`, and `followUps` (`[{ prompt, delay }]`). `delay` is days after the previous message (1-30). Max 3 follow-ups.
+
+For Comment prompts: `comment`.
+
+Also returns `guidelines` with the schema, mandatory `{{variables}}`, and missing coverage.
+
+`GET /prompts` lists ids only. Call this endpoint before updating a prompt.

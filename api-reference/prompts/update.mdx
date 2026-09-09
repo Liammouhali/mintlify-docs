@@ -1,0 +1,41 @@
+---
+title: 'Update prompt'
+openapi: 'PUT /prompts/{id}'
+---
+
+Patch one or more sections. Omitted fields stay stored. The server merges, validates, then writes canonical JSON.
+
+Do not send a `content` blob. Unknown keys are `validation_error`.
+
+## Messages fields
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `context` | string | Role and mission. Counts toward mandatory `{{variables}}`. Omit to keep stored. |
+| `firstMessage` | string | First LinkedIn DM instructions. Counts toward mandatory `{{variables}}`. Omit to keep stored. |
+| `followUps` | array | Replaces the whole list. Max 3 items of `{ prompt, delay }`. `delay` is 1-30 days after the previous message. Omit to keep current follow-ups; send `[]` to clear. |
+| `followUpEnabled` | boolean | Turns follow-up sending on or off without deleting `followUps`. |
+
+To change one delay, copy every follow-up from `GET /prompts/:id` and send the full array.
+
+A 4th follow-up, a delay outside 1-30, or dropped mandatory variables is rejected and nothing is saved.
+
+## Comment fields
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `comment` | string | Replaces the comment instructions. Invalid on Messages prompts. |
+
+## Example: change follow-up delays
+
+```bash
+curl -X PUT "https://api.kakiyo.com/v1/prompts/PROMPT_ID" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "followUps": [
+      { "prompt": "If they didn'\''t reply, send a short bump.", "delay": 7 },
+      { "prompt": "Second bump, mention a relevant post.", "delay": 5 }
+    ]
+  }'
+```
