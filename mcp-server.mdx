@@ -139,9 +139,9 @@ Once connected, you can control Kakiyo using natural language:
 
 ---
 
-## Available Tools (43)
+## Available Tools (45)
 
-The MCP server provides 43 tools organized by category:
+The MCP server provides 45 tools organized by category:
 
 ### Agents (5 tools)
 
@@ -201,13 +201,19 @@ View products/services for campaigns.
 |------|-------------|
 | `list_products` | List all products available for outreach |
 
-### Prompts (1 tool)
+### Prompts (3 tools)
 
-View AI message templates.
+Read and patch AI message templates.
 
 | Tool | Description |
 |------|-------------|
-| `list_prompts` | List all prompt templates |
+| `list_prompts` | List prompt templates (id, name, type, model only — no section text) |
+| `get_prompt` | Get one prompt as sections (`context`, `firstMessage`, `followUps` or `comment`) plus update guidelines. Call this before `update_prompt` |
+| `update_prompt` | Patch those sections. Omitted fields stay stored. `followUps` replaces the whole array (max 3; `delay` is 1-30 days after the previous message). A 4th follow-up is rejected |
+
+<Note>
+  MCP agents should not send a raw prompt JSON blob. Patch `context`, `firstMessage`, or `followUps` separately. The API assembles and validates the stored JSON. To change one follow-up delay, copy the full `followUps` array from `get_prompt` first.
+</Note>
 
 ### Analytics (2 tools)
 

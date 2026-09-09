@@ -2386,6 +2386,125 @@
         }
       }
     },
+    "/prompts/{id}": {
+      "get": {
+        "summary": "Get Prompt",
+        "description": "Returns one team-owned prompt as separate sections (`context`, `firstMessage`, `followUps` for Messages, or `comment` for Comment), plus update guidelines. Does not return a raw content blob. `list_prompts` returns ids only.",
+        "operationId": "getPrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the prompt",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prompt sections and guidelines",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Prompt not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Prompt",
+        "description": "Patch prompt sections. Omitted fields stay stored. The server merges, validates, and writes canonical JSON. Do not send a raw `content` blob. `followUps` replaces the whole array (max 3). `delay` is days after the previous message (1-30).",
+        "operationId": "updatePrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the prompt",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to patch. At least one field is required.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated prompt sections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request, too many follow-ups, invalid delay, or missing mandatory variables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Prompt or model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/agents": {
       "get": {
         "summary": "List Agents",
@@ -4760,6 +4879,91 @@
           }
         }
       },
+      "PromptFollowUp": {
+        "type": "object",
+        "required": ["prompt", "delay"],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Follow-up instruction text",
+            "example": "If they didn't reply, send a short bump."
+          },
+          "delay": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30,
+            "description": "Days after the previous message",
+            "example": 3
+          }
+        }
+      },
+      "PromptDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "prompt_987654321"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sales Outreach Sequence"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Messages", "Comment"],
+            "example": "Messages"
+          },
+          "model": {
+            "type": "string",
+            "example": "model_claude3"
+          },
+          "followUpEnabled": {
+            "type": "boolean",
+            "description": "Whether follow-ups are sent. Does not delete stored followUps.",
+            "example": true
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Custom variable names used in this prompt"
+          },
+          "context": {
+            "type": "string",
+            "description": "Messages only. Role and mission. Counts toward mandatory variables."
+          },
+          "firstMessage": {
+            "type": "string",
+            "description": "Messages only. First LinkedIn DM instructions. Counts toward mandatory variables."
+          },
+          "followUps": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "$ref": "#/components/schemas/PromptFollowUp"
+            },
+            "description": "Messages only. Max 3 items."
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment prompts only."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "guidelines": {
+            "type": "object",
+            "description": "Schema, mandatory variables, and update rules for this prompt",
+            "additionalProperties": true
+          }
+        }
+      },
       "CreatePromptRequest": {
         "type": "object",
         "required": ["name", "model", "type"],
@@ -4779,6 +4983,47 @@
             "enum": ["Messages", "Comment"],
             "description": "The prompt type. `Messages` is used for direct LinkedIn message outreach. `Comment` is reserved for an upcoming feature that will enable AI-powered engagement on prospects' LinkedIn posts.",
             "example": "Messages"
+          }
+        }
+      },
+      "UpdatePromptRequest": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "model": {
+            "type": "string",
+            "description": "Model ID from GET /models"
+          },
+          "followUpEnabled": {
+            "type": "boolean",
+            "description": "Messages only. Turns follow-up sending on or off without deleting followUps."
+          },
+          "context": {
+            "type": "string",
+            "description": "Messages only. Omit to keep the stored context."
+          },
+          "firstMessage": {
+            "type": "string",
+            "description": "Messages only. Omit to keep the stored first message."
+          },
+          "followUps": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "$ref": "#/components/schemas/PromptFollowUp"
+            },
+            "description": "Messages only. Replaces the whole array. Omit to keep current follow-ups; send [] to clear. To change one delay, resend every item."
+          },
+          "comment": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Comment prompts only."
           }
         }
       },

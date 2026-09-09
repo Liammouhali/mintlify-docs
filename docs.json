@@ -218,7 +218,9 @@
             "group": "Prompts",
             "pages": [
               "api-reference/prompts/list",
-              "api-reference/prompts/create"
+              "api-reference/prompts/create",
+              "api-reference/prompts/get",
+              "api-reference/prompts/update"
             ]
           },
           {
