@@ -11,8 +11,8 @@ description: 'Developer guide: learn how to authenticate with the Kakiyo API usi
 
 Kakiyo supports two authentication mechanisms:
 
-1. **API keys (Bearer header)** — the default for the REST API (`/v1/*`) and for MCP clients that support custom HTTP headers (Claude Code, Cursor, OpenCode, Claude Desktop config file, etc.).
-2. **OAuth 2.1** — used only by Claude custom connectors on `claude.ai`/Claude Desktop when connecting Kakiyo's MCP server. See the [MCP Server guide](/mcp-server#authentication) for details on the OAuth flow.
+1. **API keys (Bearer header)** — the default for the REST API (`/v1/*`). Optional for MCP clients that cannot run OAuth.
+2. **OAuth 2.1** — the default for MCP clients (Claude, ChatGPT, Grok, Cursor, Claude Code, and any other OAuth MCP client). See the [MCP Server guide](/mcp-server#authentication) for the OAuth flow. Manage connected clients from **Developer → MCP**.
 
 All REST API requests must be authenticated using an API key in the `Authorization` header.
 
@@ -25,7 +25,7 @@ API keys are 40-character strings (20-character team ID + 20-character secret) g
 You can generate API keys from your Kakiyo dashboard:
 
 1. Log in to your [Kakiyo dashboard](https://app.kakiyo.com)
-2. Navigate to **Team > API Keys**
+2. Navigate to **Developer > API Keys**
 3. Click **Create New API Key**
 4. Give your key a descriptive name (e.g., "Production", "Development", "Testing")
 5. Copy your newly generated API key immediately, as you won't be able to see it again
