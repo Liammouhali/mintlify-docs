@@ -5030,6 +5030,11 @@
       "Agent": {
         "type": "object",
         "properties": {
+          "linkedinUrl": {
+            "type": ["string", "null"],
+            "description": "Stored LinkedIn profile URL, or null when unavailable. May omit the https:// scheme.",
+            "example": "linkedin.com/in/john-doe"
+          },
           "id": {
             "type": "string",
             "example": "agent_abcdef123456"
@@ -5090,6 +5095,11 @@
       "AgentDetails": {
         "type": "object",
         "properties": {
+          "linkedinUrl": {
+            "type": ["string", "null"],
+            "description": "Stored LinkedIn profile URL, or null when unavailable. May omit the https:// scheme.",
+            "example": "linkedin.com/in/john-doe"
+          },
           "id": {
             "type": "string",
             "example": "agent_abcdef123456"
