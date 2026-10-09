@@ -1,6 +1,6 @@
 ---
 title: MCP Server
-description: 'Use Kakiyo with Claude, ChatGPT, Grok, Cursor, and other MCP-compatible AI agents. Covers OAuth custom connectors, API-key setups, and available MCP tools.'
+description: 'Use Kakiyo with Claude, ChatGPT, Grok, Cursor, and other MCP-compatible AI agents. Covers OAuth custom connectors, API-key setups, finding leads from chat, and available MCP tools.'
 ---
 
 <Warning>
@@ -159,6 +159,7 @@ Choose your MCP client and add the configuration:
 
 Once connected, you can control Kakiyo using natural language:
 
+- *"Find me 20 heads of growth at B2B SaaS companies in Germany and add the best ones to my DACH campaign"*
 - *"Show me all my running agents"*
 - *"How many AI credits do we have left?"*
 - *"How is my Tech Founders campaign performing?"*
@@ -168,9 +169,74 @@ Once connected, you can control Kakiyo using natural language:
 
 ---
 
-## Available Tools (49)
+## Find leads from your AI assistant
 
-The MCP server provides 49 tools organized by category:
+Your AI assistant can search for new people to contact, show you who matches, and send the people you pick straight into a campaign, all from the chat. It uses the same Lead Finder as the dashboard, so every search started from your assistant also appears under **Searches** in Kakiyo.
+
+<Info>
+  Finding leads over MCP is available to workspaces on an **active trial or paid plan**. Other workspaces get a message with a link to Billing.
+</Info>
+
+### How it works
+
+<Steps>
+  <Step title="Describe who you want">
+    Ask in plain language, for example *"Find CTOs at fintech startups in London with 20 to 200 employees"*. Your assistant turns this into one precise search and saves it in Kakiyo.
+  </Step>
+  <Step title="Get matches from Kakiyo's database">
+    Within a few seconds you see a ranked list: name, title, company, location, a match strength (**strong** or **possible**) and a short reason why each person fits. Contact details such as email or phone are never shown here.
+  </Step>
+  <Step title="More results from LinkedIn and the web (automatic)">
+    If the database has fewer than 10 strong matches, Kakiyo also searches LinkedIn and the web in the background. This usually takes one to two minutes, and your assistant brings the extra people in as they are verified.
+  </Step>
+  <Step title="Pick and send">
+    Tell your assistant who to keep, or say *"add the top 30"*, and which campaign to use. The assistant confirms with you first, because the campaign's LinkedIn profile will start contacting these people.
+  </Step>
+  <Step title="Follow the import">
+    Your assistant reports how many people were added and how many were skipped, for example people the campaign already contacts or people on your Do Not Contact list.
+  </Step>
+</Steps>
+
+### Tips for better results
+
+- **Be specific.** Name the role, seniority, industry, location and company size or stage. *"VPs of Sales at B2B SaaS companies in the Nordics with 50 to 500 employees"* works far better than *"sales SaaS Nordics"*.
+- **Mention your campaign.** People that campaign's LinkedIn profile is already talking to are left out automatically.
+- **Refine instead of starting over.** *"Only companies above 100 people"* updates the same search and doesn't use up a new one.
+- **Ask for more.** *"Show me the next ones"* pages through the same search for free.
+- **Continue in the dashboard.** Every search started in chat is under **Searches** in Kakiyo, where you can review it or send more people later.
+
+### Daily limits
+
+To keep searching fast and fair for everyone, lead searches over MCP have daily limits per workspace. The limits use a **rolling 24-hour window**: each search frees up again exactly 24 hours after you made it.
+
+| What | Limit per 24 hours |
+|------|--------------------|
+| New searches | 20 |
+| Refining an existing search (changing its description) | 20 |
+| Searches that also look on LinkedIn and the web | 10 |
+
+These never count toward a limit:
+
+- Asking for the same search again, or for the next page of results
+- Checking on a search's progress
+- Adding people to a campaign
+- Searches you run in the Kakiyo dashboard
+
+When a limit is reached, your assistant tells you when the next search frees up. If the LinkedIn and web limit is reached, you still get the matches from Kakiyo's database. You can keep working in the dashboard at any time.
+
+### Lead Finder tools (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `find_leads` | Search for people from a plain-language description, refine a search, or get the next page. Returns ranked matches, starts the LinkedIn and web search when needed, and shows how many searches you have left today |
+| `get_lead_search` | Read-only. Collects the extra LinkedIn and web results as they arrive, and follows the import after you send people to a campaign. Waits on the server for up to 25 seconds per call |
+| `add_leads_to_campaign` | Sends the people you picked (or the top N matches) from a search into a campaign. People already contacted by that campaign and people on your Do Not Contact list are skipped. A search can be sent once; start a new search for different people |
+
+---
+
+## Available Tools (52)
+
+The MCP server provides 52 tools organized by category. The three Lead Finder tools are described above.
 
 ### Agents (5 tools)
 
@@ -203,7 +269,7 @@ Create and manage outreach campaigns.
 
 ### Prospects (10 tools)
 
-Manage leads and conversations.
+Manage leads and conversations. To find new people to contact, use the [Lead Finder tools](#find-leads-from-your-ai-assistant).
 
 | Tool | Description |
 |------|-------------|
@@ -328,6 +394,35 @@ Verify your connection.
 ---
 
 ## Example Conversations
+
+### Finding and Adding Leads
+
+```
+You: Find heads of growth at Series A B2B SaaS companies in Germany
+     for my DACH Growth campaign
+
+Claude: [Calls list_campaigns, then find_leads with the campaign]
+
+I found 25 strong and possible matches in Kakiyo's database. Here are the top ones:
+
+| Name          | Title          | Company   | Location | Why they match                  |
+|---------------|----------------|-----------|----------|---------------------------------|
+| Lena Hoffmann | Head of Growth | Finlytics | Berlin   | Leads growth at a Series A SaaS |
+| ...           |                |           |          |                                 |
+
+I'm also searching LinkedIn and the web for more.
+
+[Calls get_lead_search]
+
+7 more people found. Which ones should I add to DACH Growth?
+
+You: Add all the strong ones.
+
+Claude: [Calls add_leads_to_campaign, then get_lead_search]
+
+Done: 14 people added to DACH Growth, 2 skipped because the campaign
+already contacts them. You can also see this search under Searches in Kakiyo.
+```
 
 ### Monitoring Performance
 
@@ -462,6 +557,7 @@ The MCP server uses **Streamable HTTP** transport, which is stateless and compat
 
 MCP requests follow the same rate limits as the REST API:
 - Rate limits are per-team, not per-key
+- Lead Finder tools also have [daily limits](#daily-limits) per workspace (rolling 24 hours)
 
 ### Error Handling
 
@@ -509,8 +605,23 @@ Tool errors are returned in MCP format:
     - Generate a new key from the dashboard if you are on the header path and issues persist
   </Accordion>
 
+  <Accordion title="Lead search says subscription required">
+    - Finding leads over MCP needs an active trial or paid plan. Start a trial or reactivate your subscription from **Billing** in the dashboard, then ask again.
+  </Accordion>
+
+  <Accordion title="Lead search says the daily limit was reached">
+    - Your workspace used its MCP searches for the last 24 hours. The message says when the next one frees up.
+    - You can still refine or page through searches you already made, follow imports, and use the Lead Finder in the dashboard without limits.
+  </Accordion>
+
+  <Accordion title="My assistant can't add leads to a campaign">
+    - Make sure the campaign has a LinkedIn profile assigned and that the profile isn't restricted.
+    - A search can be sent to a campaign once. Ask your assistant to start a new search for different people.
+    - If you changed the search after seeing the results, ask your assistant to show the results again and pick from the new list.
+  </Accordion>
+
   <Accordion title="Tool not found">
-    - The MCP server has 49 tools — some operations (like agent creation) require the dashboard
+    - The MCP server has 52 tools — some operations (like agent creation) require the dashboard
     - Use `verify_api_key` to confirm your connection is working
   </Accordion>
 
