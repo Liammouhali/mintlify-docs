@@ -189,6 +189,9 @@ Your AI assistant can search for new people to contact, show you who matches, an
   <Step title="More results from LinkedIn and the web (automatic)">
     If the database has fewer than 10 strong matches, Kakiyo also searches LinkedIn and the web in the background. This usually takes one to two minutes, and your assistant brings the extra people in as they are verified.
   </Step>
+  <Step title="Find more (optional)">
+    When that search is done and more people may exist, say *"find more"*. Your assistant runs another round with the same criteria, just like the **Find more leads** button in the dashboard, and shows you only the new people.
+  </Step>
   <Step title="Pick and send">
     Tell your assistant who to keep, or say *"add the top 30"*, and which campaign to use. The assistant confirms with you first, because the campaign's LinkedIn profile will start contacting these people.
   </Step>
@@ -203,6 +206,7 @@ Your AI assistant can search for new people to contact, show you who matches, an
 - **Mention your campaign.** People that campaign's LinkedIn profile is already talking to are left out automatically.
 - **Refine instead of starting over.** *"Only companies above 100 people"* updates the same search and doesn't use up a new one.
 - **Ask for more.** *"Show me the next ones"* pages through the same search for free.
+- **Find more people.** *"Find more"* keeps searching LinkedIn and the web with the same criteria. Each extra round counts as one LinkedIn and web search, and a search can run up to 5 extra rounds. Your assistant stops earlier when nothing more exists or the last round found very few new people. To look for different people, change the description instead.
 - **Continue in the dashboard.** Every search started in chat is under **Searches** in Kakiyo, where you can review it or send more people later.
 
 ### Daily limits
@@ -213,30 +217,32 @@ To keep searching fast and fair for everyone, lead searches over MCP have daily 
 |------|--------------------|
 | New searches | 20 |
 | Refining an existing search (changing its description) | 20 |
-| Searches that also look on LinkedIn and the web | 10 |
+| Searches that also look on LinkedIn and the web (including each "find more" round) | 10 |
 
 These never count toward a limit:
 
 - Asking for the same search again, or for the next page of results
+- A "find more" that doesn't run (nothing more to find, a round already running, or a limit reached)
 - Checking on a search's progress
 - Adding people to a campaign
 - Searches you run in the Kakiyo dashboard
 
 When a limit is reached, your assistant tells you when the next search frees up. If the LinkedIn and web limit is reached, you still get the matches from Kakiyo's database. You can keep working in the dashboard at any time.
 
-### Lead Finder tools (3 tools)
+### Lead Finder tools (4 tools)
 
 | Tool | Description |
 |------|-------------|
 | `find_leads` | Search for people from a plain-language description, refine a search, or get the next page. Returns ranked matches, starts the LinkedIn and web search when needed, and shows how many searches you have left today |
 | `get_lead_search` | Read-only. Collects the extra LinkedIn and web results as they arrive, and follows the import after you send people to a campaign. Waits on the server for up to 25 seconds per call |
+| `find_more_leads` | The dashboard's **Find more leads** for an existing search: runs one more LinkedIn and web round with the same criteria once the previous one is done. Returns the people already found, so `get_lead_search` then shows only the new ones. Uses one LinkedIn and web search only when a round actually runs; up to 5 extra rounds per search |
 | `add_leads_to_campaign` | Sends the people you picked (or the top N matches) from a search into a campaign. People already contacted by that campaign and people on your Do Not Contact list are skipped. A search can be sent once; start a new search for different people |
 
 ---
 
-## Available Tools (52)
+## Available Tools (53)
 
-The MCP server provides 52 tools organized by category. The three Lead Finder tools are described above.
+The MCP server provides 53 tools organized by category. The four Lead Finder tools are described above.
 
 ### Agents (5 tools)
 
@@ -415,6 +421,13 @@ I'm also searching LinkedIn and the web for more.
 [Calls get_lead_search]
 
 7 more people found. Which ones should I add to DACH Growth?
+
+You: Find more.
+
+Claude: [Calls find_more_leads, then get_lead_search]
+
+Searching again with the same criteria... 9 new people found (none of
+the ones you already saw).
 
 You: Add all the strong ones.
 
@@ -614,6 +627,11 @@ Tool errors are returned in MCP format:
     - You can still refine or page through searches you already made, follow imports, and use the Lead Finder in the dashboard without limits.
   </Accordion>
 
+  <Accordion title="&quot;Find more&quot; says there is nothing more to find">
+    - The search has found everything it can for this description, the last round found very few new people, or the search already ran its 5 extra rounds.
+    - Nothing was counted toward your limits. To find different people, ask your assistant to change or widen the description, or start a new search.
+  </Accordion>
+
   <Accordion title="My assistant can't add leads to a campaign">
     - Make sure the campaign has a LinkedIn profile assigned and that the profile isn't restricted.
     - A search can be sent to a campaign once. Ask your assistant to start a new search for different people.
@@ -621,7 +639,7 @@ Tool errors are returned in MCP format:
   </Accordion>
 
   <Accordion title="Tool not found">
-    - The MCP server has 52 tools — some operations (like agent creation) require the dashboard
+    - The MCP server has 53 tools — some operations (like agent creation) require the dashboard
     - Use `verify_api_key` to confirm your connection is working
   </Accordion>
 
