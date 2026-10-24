@@ -15,24 +15,54 @@ Every CSV must include a LinkedIn profile URL column. Name columns are optional 
 - **Last Name**: Prospect's last name
 - **LinkedIn URL**: Complete LinkedIn profile URL
 
-### Custom Data
+### Custom Context Column
 
-To pass per-prospect context into outreach prompts, add one column named **Custom Data** or a similar label such as **Custom Context** or **Customer Score Data**.
+Any column of your CSV can carry per-prospect context into your outreach prompts. After you choose the file, pick it in **Custom context column**:
 
-Kakiyo saves that column on the prospect's conversation and exposes it in prompts as:
+1. Upload your CSV as usual.
+2. Open **Custom context column** below the file and choose the column to use, or **None**.
+3. Check the preview: how many rows have a value, a sample value, and a warning if some values are too long.
+4. Click **Upload Prospects** (or **Preview Distribution** when you split one CSV across several campaigns: the same column is used for every campaign).
+
+If a column is named **Custom Data**, or something close such as **Custom Context** or **Customer Score Data**, Kakiyo preselects it and marks it **Suggested**. You can still choose another column or **None**.
+
+Kakiyo saves each row's value on that prospect's conversation and exposes it in prompts as:
 
 ```text
 {{customData}}
 ```
 
-Good custom data examples include:
+This is the same variable the [API](/api-reference/prospects/add-batch) and the [MCP server](/mcp-server) fill with `customData`, so a prompt written for one works for all three. You can also view or edit the value later from the prospect's details.
+
+Good custom context examples include:
 
 - Buying intent signals
 - Relevant prospect notes
 - Industry-specific data points
 - Company research findings
 
-> **Important**: Only the detected custom data column is saved as conversation context. Other CSV columns are not automatically passed into prompts unless they are imported as custom data.
+<Note>
+  - Each value is limited to 3,000 characters. Longer values are shortened, and the import screen tells you how many before you upload.
+  - Empty cells save nothing for that prospect.
+  - Only the chosen column is saved as conversation context. Other columns are not passed into prompts.
+  - Importing the same people again with a new value updates their custom context.
+</Note>
+
+---
+
+## Deleting Prospects
+
+On the **Prospects** page, select the rows you want to remove, then click **Delete** in the selection bar. You can delete any number of selected prospects in one action: there is no 100-prospect limit.
+
+1. Select the prospects (use the header checkbox to select every loaded row; scroll to load more).
+2. Click **Delete**, then confirm by ticking **I understand and confirm**.
+3. Large selections are deleted in batches and the button shows the progress (for example *Deleting 500 of 1,200…*). Keep the page open until it finishes.
+
+Deleting a prospect removes its conversation and pending actions **from that campaign only**. Other campaigns that contain the same person are not affected, and the person can be imported again later.
+
+<Warning>
+  Deletion cannot be undone. If something goes wrong partway through, Kakiyo tells you how many prospects were deleted and how many were not processed, so you can select the rest and try again.
+</Warning>
 
 ---
 

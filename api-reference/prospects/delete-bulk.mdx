@@ -7,6 +7,10 @@ openapi: 'DELETE /prospects'
 
 Delete multiple prospects in a single operation. This endpoint efficiently processes bulk deletions with detailed results for each prospect. Maximum 100 prospects per request. **This action cannot be undone.**
 
+<Note>
+  The 100-per-request limit applies to the API. In the Kakiyo dashboard you can delete any number of selected prospects in one action; see [Deleting Prospects](/guides/core-features/prospects-and-lead-management#deleting-prospects). To delete more than 100 through the API, send several requests.
+</Note>
+
 ## Request Body
 
 <ParamField body="prospectIds" type="array" required>
