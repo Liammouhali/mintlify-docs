@@ -92,6 +92,12 @@
             ]
           },
           {
+            "group": "Email (Beta)",
+            "pages": [
+              "guides/email/email-channel"
+            ]
+          },
+          {
             "group": "Optimize Your Results",
             "pages": [
               "guides/optimize-your-results/overview",
