@@ -1,0 +1,124 @@
+---
+title: "Email Channel (Beta)"
+description: "Connect Gmail so Kakiyo can follow up by email when LinkedIn goes quiet. What Kakiyo can see, how review and Autopilot work, the daily limit, and how to disconnect."
+---
+
+When a prospect doesn't accept your LinkedIn invitation, or stops replying, Kakiyo can follow up by email from your own Gmail address. LinkedIn stays the main channel. Email starts only when LinkedIn goes quiet, and a reply on either channel pauses the other one.
+
+<Info>
+  The email channel is in beta and is switched on per workspace. If you don't see **Mailboxes** in the sidebar, contact support@kakiyo.com.
+</Info>
+
+## Before You Start
+
+You need:
+
+- A Gmail or Google Workspace mailbox that you own or are allowed to use
+- A campaign with an offering and a LinkedIn profile
+
+## Connect Gmail
+
+<Steps>
+  <Step title="Open Mailboxes">
+    Click **Mailboxes** in the sidebar, then **Connect Gmail**.
+  </Step>
+  <Step title="Read what Kakiyo will do">
+    Kakiyo first shows exactly what it will do with your mailbox. Click **Continue to Google**.
+  </Step>
+  <Step title="Allow access in Google">
+    Choose your Google account and allow access. Google lists the permission Kakiyo asks for: to read, compose and send emails, and to manage labels.
+  </Step>
+  <Step title="Back in Kakiyo">
+    Your mailbox now appears under **Connected mailboxes**, ready to be chosen in a campaign.
+  </Step>
+</Steps>
+
+## What Kakiyo Can and Can't See
+
+| Kakiyo does | Kakiyo never does |
+| --- | --- |
+| Sends the emails you approve (or, on Autopilot, the emails it writes) | Reads, stores or changes any other email |
+| Reads replies, only in email threads Kakiyo started | Touches your spam folder |
+| Reads your Gmail signature, to sign emails like you do | Permanently deletes any email |
+| Copies your Kakiyo actions to those threads in Gmail: labels, archive, trash and read | Uses your emails to train AI models |
+
+The text of these email conversations is sent to Kakiyo's AI providers only to write your emails and replies and to sort replies, never to train AI. Read the [Privacy Policy](https://kakiyo.com/privacy-policy#google-user-data) for the full details.
+
+## Turn On Email for a Campaign
+
+1. Open the campaign and go to **Settings**.
+2. In the **Email** section, choose a mailbox under **Send from**.
+3. Choose how emails are approved:
+   - **Review each email** (default): every email, including follow-ups and replies, waits for your approval.
+   - **Autopilot**: Kakiyo sends every email without asking you first. You confirm this in a separate dialog.
+4. Optional: add **Email instructions**, for example "Mention our free audit. Keep emails under 80 words."
+5. Click **Save email settings**.
+
+Prospects already in the campaign are included.
+
+## When Kakiyo Sends an Email
+
+- **First email**: when the LinkedIn invitation is not accepted after 7 days, or 3 days after the last LinkedIn follow-up without a reply.
+- **Follow-ups**: up to 2, in the same email thread (+3 and +5 days).
+- **Replies**: when the prospect answers, the follow-ups stop and Kakiyo writes an answer in the same thread.
+- **LinkedIn reply**: if the prospect answers on LinkedIn, email pauses. If the conversation then goes quiet for 7 days, Kakiyo may send one short nudge by email.
+
+Kakiyo looks up the prospect's work email only when it is needed, and uses only verified addresses. Every address found uses 1 of your workspace's monthly email credits.
+
+Kakiyo can also decide that an email would not help and not send it.
+
+## Review and Send
+
+Drafts show up in two places:
+
+- **Mailboxes** > **Waiting for review**, with **Approve all** to send every draft at once
+- The **Email** tab of the conversation in your **Inbox**
+
+Open a draft to read it, change anything you like, then **Approve** it, or **Skip** it.
+
+## Replies, Labels, Archive and Trash
+
+Kakiyo checks your mailbox for replies every 10 minutes. Replies appear in the conversation's **Email** tab, sorted as interested, question, not interested, unsubscribe or out of office.
+
+In the **Email** tab you can:
+
+- add a label: **Interested**, **Meeting** or **Not interested** (shown in Gmail as `Kakiyo/Interested`, `Kakiyo/Meeting` and `Kakiyo/Not interested`)
+- **Archive** the conversation
+- move it to **Trash**, and restore it
+
+Each action is copied to the same thread in Gmail. Opening a conversation with a new reply marks it as read in Gmail too.
+
+Moving a conversation to **Trash** also stops Kakiyo from sending anything more in it. You can restore it in Kakiyo, but sending does not start again. Gmail deletes messages in Trash for good after 30 days.
+
+## Daily Limit and Sending Hours
+
+- A new mailbox sends **2 emails on its first day**, then 2 more each day, up to **30 a day**.
+- The limit is shared by every campaign using that mailbox.
+- Emails go out only during the working hours of the campaign's LinkedIn profile, 4 to 10 minutes apart.
+
+## Unsubscribes and Bounces
+
+Every email is plain and simple, ends with your Gmail signature, and has an **Unsubscribe** link. Prospects who click it, or reply with something like "please remove me", are never emailed again. Addresses that bounce are also blocked. Your do-not-contact list applies to email too.
+
+## Disconnect and Delete Your Data
+
+1. Go to **Mailboxes**.
+2. Open the mailbox's menu and choose **Disconnect**.
+
+Kakiyo stops all email on that mailbox, removes its access at Google, and deletes the stored token, your signature and the content (subject and body) of the stored emails. A minimal record of each conversation without content, and the list of unsubscribes, is kept so opt-outs keep being respected.
+
+You can also remove Kakiyo's access from your Google Account at [myaccount.google.com/permissions](https://myaccount.google.com/permissions). Kakiyo then stops using the mailbox. To delete the stored data too, disconnect it in Kakiyo.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The mailbox says it needs reconnecting">
+    Google stopped Kakiyo's access, for example after a password change or because access was removed. Click **Reconnect** on the banner or in **Mailboxes**. Your daily limit and history are kept.
+  </Accordion>
+  <Accordion title="No email was sent to a prospect">
+    Kakiyo only emails verified addresses. The prospect may have no verified work email, may be on your do-not-contact list, may have unsubscribed, or may have answered on LinkedIn. The **Email** tab shows the reason.
+  </Accordion>
+  <Accordion title="An email shows as Unconfirmed">
+    Kakiyo could not confirm the email went out. Check your Gmail **Sent** folder, then choose **Resend** or **Dismiss**. Kakiyo never resends it on its own.
+  </Accordion>
+</AccordionGroup>
