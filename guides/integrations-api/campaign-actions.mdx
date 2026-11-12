@@ -1,0 +1,107 @@
+---
+title: "Campaign Actions"
+description: "Tell Kakiyo's AI what a prospect did outside LinkedIn (booked a call, viewed your lead list, visited pricing). Your systems send a signed webhook, and the next message takes it into account."
+---
+
+<Info>
+  **This guide is for dashboard users.** It explains how to create actions and hand the setup to your developer or AI assistant. For the request format, signing and code samples, see [Campaign Actions (Developer Guide)](/developers/campaign-actions).
+</Info>
+
+> A campaign action is something a prospect can do outside LinkedIn: book a call, open the lead list you sent, visit your pricing page. Your own systems tell Kakiyo when it happens, and Kakiyo's AI sees it the next time it writes to that prospect.
+
+Kakiyo does not track anything itself. Your website, booking tool or backend already knows when a prospect does something, and it reports it to Kakiyo with one signed HTTP request.
+
+## How it works
+
+<Steps>
+  <Step title="Create an action">
+    In a campaign, open the **Actions** tab and click **New action**. Give it a name and write what it means for the AI.
+  </Step>
+  <Step title="Connect your system">
+    Each action has its own **webhook URL** and **signing secret**. Your server sends a signed `POST` to that URL with the prospect's LinkedIn URL (or Kakiyo chat id) whenever the action happens.
+  </Step>
+  <Step title="The AI uses it">
+    On the next first message, reply or follow-up for that prospect, the AI sees the completed action in the prospect's custom context, for example: *"Booked a call: done on 2026-11-12. Meaning: Don't pitch again; confirm the time."*
+  </Step>
+</Steps>
+
+## Example uses
+
+| Action | Sent by | What the AI does with it |
+| --- | --- | --- |
+| Booked a call | Cal.com / Calendly handler | Stops pitching, confirms the meeting |
+| Viewed lead list | Your lead-magnet page | Asks which leads looked most useful |
+| Visited pricing page | Your website backend | Treats it as a buying signal |
+| Started a trial | Your product | Offers help with onboarding |
+
+---
+
+## Creating an action
+
+1. Open **Campaigns**, click a campaign, and choose the **Actions** tab.
+2. Click **New action**.
+3. Fill in:
+   - **Name**: short and clear, e.g. "Booked a call" (max 60 characters).
+   - **What it means for the AI**: one or two sentences telling the AI how to react, e.g. "The prospect booked a discovery call. Do not pitch again; confirm the time." (max 500 characters).
+   - **Signing secret**: let Kakiyo **generate a secure secret** (recommended), or **use your own secret** (24 to 128 characters, no spaces).
+4. Click **Create action**. The full secret is shown right away. Copy it and give it to whoever sets up the integration. They should store it on their server as `KAKIYO_ACTION_SECRET`.
+
+A campaign can have up to 10 actions by default.
+
+<Warning>
+  The AI sees completed actions through the `{{customData}}` variable. If your campaign's prompt does not use `{{customData}}`, the Actions tab shows a warning: add the variable to your prompt so the AI can see them.
+</Warning>
+
+---
+
+## Setting it up without writing code yourself
+
+Every action has a **Setup guide** button. It opens a panel with:
+
+- the webhook URL and how to sign the request;
+- the exact request body and every possible response;
+- ready-to-use **cURL**, **Node.js** and **Python** examples;
+- a **Copy AI setup prompt** button. Paste the prompt into ChatGPT, Claude or Cursor and it writes the integration for your stack. The prompt never contains your secret: the code reads it from `KAKIYO_ACTION_SECRET`.
+
+---
+
+## Seeing completed actions
+
+Open a conversation in the **Inbox** and click the prospect's name, or open a prospect from **Prospects**. Under **Custom Data**, **Completed actions** lists every action the prospect completed, how many times, when, and the details your system sent.
+
+You can remove a completed action that was sent by mistake with the **×** next to it. The AI stops seeing it right away.
+
+---
+
+## Managing actions
+
+On each action card you can:
+
+- **Copy the webhook URL**.
+- **Reveal or copy the signing secret**.
+- **Rotate the secret**: generate a new one or set your own. The old secret stops working immediately, so update your server right after.
+- **Edit** the name and meaning.
+- **Delete** the action. Its URL stops working and it is removed from every prospect in the campaign.
+
+<Note>
+  Any team member can create actions and edit their name and meaning. Revealing, rotating or deleting a secret is limited to team owners and admins, and to the person who created the action.
+</Note>
+
+---
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="Does Kakiyo track website visits or bookings itself?">
+    No. Your systems decide when an action happened and send it to Kakiyo. Kakiyo only receives it and passes it to the AI.
+  </Accordion>
+  <Accordion title="Does it overwrite the custom data I wrote for a prospect?">
+    No. Completed actions are added after your custom data when the AI writes, and your custom data is never changed.
+  </Accordion>
+  <Accordion title="What happens if the same event is sent twice?">
+    If your system sends an `eventId`, retries of the same event are not counted twice. Without it, every request counts as a new completion and increases the count.
+  </Accordion>
+  <Accordion title="Can I call the URL from a web page in the browser?">
+    No. The request must be signed with your secret, and a secret in a web page is public. Always send it from your server, a serverless function or an automation tool's code step.
+  </Accordion>
+</AccordionGroup>
