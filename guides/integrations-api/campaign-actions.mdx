@@ -99,7 +99,7 @@ On each action card you can:
     No. Completed actions are added after your custom data when the AI writes, and your custom data is never changed.
   </Accordion>
   <Accordion title="What happens if the same event is sent twice?">
-    If your system sends an `eventId`, retries of the same event are not counted twice. Without it, every request counts as a new completion and increases the count.
+    If your system sends an `eventId`, a retry of one of the prospect's last 20 events for that action is not counted twice (an older id counts again). Without an `eventId`, every request counts as a new completion and increases the count.
   </Accordion>
   <Accordion title="Can I call the URL from a web page in the browser?">
     No. The request must be signed with your secret, and a secret in a web page is public. Always send it from your server, a serverless function or an automation tool's code step.
