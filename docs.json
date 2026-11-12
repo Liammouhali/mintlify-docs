@@ -120,7 +120,8 @@
               "guides/integrations-api/overview",
               "guides/integrations-api/hubspot-integration",
               "guides/integrations-api/do-not-contact-dnc-lists",
-              "guides/integrations-api/webhooks"
+              "guides/integrations-api/webhooks",
+              "guides/integrations-api/campaign-actions"
             ]
           }
         ]
@@ -148,6 +149,7 @@
               "quickstart",
               "authentication",
               "webhooks",
+              "developers/campaign-actions",
               "mcp-server",
               "guides/integrations-api/api-keys-public-api"
             ]
