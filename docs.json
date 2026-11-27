@@ -98,6 +98,12 @@
             ]
           },
           {
+            "group": "Campaign Groups (Beta)",
+            "pages": [
+              "guides/campaign-groups/campaign-groups"
+            ]
+          },
+          {
             "group": "Optimize Your Results",
             "pages": [
               "guides/optimize-your-results/overview",
@@ -184,6 +190,12 @@
               "api-reference/campaigns/pause",
               "api-reference/campaigns/resume",
               "api-reference/campaigns/stats"
+            ]
+          },
+          {
+            "group": "Campaign Groups",
+            "pages": [
+              "api-reference/campaign-groups/list"
             ]
           },
           {

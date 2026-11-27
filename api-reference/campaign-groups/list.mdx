@@ -1,0 +1,40 @@
+---
+title: 'List campaign groups'
+openapi: 'GET /campaign-groups'
+---
+
+## Overview
+
+List the workspace's [campaign groups](/guides/campaign-groups/campaign-groups): campaigns, usually on different LinkedIn profiles, that share one pool of people. Each group returns its campaigns with their weight (share of new prospects) and the group's results.
+
+Use a group's `id` as `groupId` in [Add Single Prospect](/api-reference/prospects/add-single) or [Add Prospects Batch](/api-reference/prospects/add-batch) to split prospects across the group.
+
+<Note>
+  Campaign groups are in beta and switched on per workspace. Workspaces without them get `403 feature_unavailable`. Groups are created and edited in the dashboard.
+</Note>
+
+## Example
+
+```bash
+curl "https://api.kakiyo.com/v1/campaign-groups" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```json
+{
+  "groups": [
+    {
+      "id": "group_12345abcde",
+      "name": "Series A founders",
+      "paused": false,
+      "members": [
+        { "campaignId": "campaign_aaa", "name": "Series A founders · Ayush", "weight": 80, "agentId": "agent_aaa", "status": "active" },
+        { "campaignId": "campaign_bbb", "name": "Series A founders · Liam", "weight": 20, "agentId": "agent_bbb", "status": "active" }
+      ],
+      "stats": { "people": 120, "contacted": 96, "connected": 41, "replied": 12, "qualified": 4, "retargeted": 9, "rescued": 2 }
+    }
+  ]
+}
+```
+
+`weight` is relative: 80 and 20 mean 80% and 20% of new prospects. `retargeted` counts people tried by more than one campaign, and `rescued` the people who answered after a second try.

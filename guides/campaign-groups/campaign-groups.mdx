@@ -1,0 +1,79 @@
+---
+title: "Campaign Groups (Beta)"
+description: "Let several campaigns share one pool of people: split new leads by percentage, keep one conversation per person, and give people who don't answer a second try from another profile or offer."
+---
+
+A campaign group joins campaigns that go after the same people. Each campaign keeps its own LinkedIn profile, prompt and offer. The group shares new leads between them by percentage, makes sure each person only ever has **one conversation going**, and can give someone a **second try** when they don't answer.
+
+<Info>
+  Campaign groups are in beta and are switched on per workspace. If you don't see **Groups** on the Campaigns page, contact support@kakiyo.com.
+</Info>
+
+## When to use a group
+
+- **Several LinkedIn profiles, one audience.** Ayush, Liam and Ilan all reach Series A founders. The group splits new founders 80 / 10 / 10 and never lets two of them message the same person.
+- **One profile, two offers.** Ayush runs two campaigns with different offers. If someone goes quiet on the first offer, the same conversation continues with the second one.
+
+## Create a group
+
+<Steps>
+  <Step title="Open Groups">
+    Go to **Campaigns**, switch to **Groups**, and click **New group**.
+  </Step>
+  <Step title="Add campaigns and set the split">
+    Name the group, add your campaigns and move the sliders. The split always adds up to 100%. Each campaign shows its LinkedIn profile.
+  </Step>
+  <Step title="Choose second tries">
+    Pick one of the ready-made options (see below). **Customize each rule** lets you change any rule or wait time.
+  </Step>
+  <Step title="Save">
+    If your campaigns already have conversations, Kakiyo shows what will happen before you save: how many people join, who was in more than one campaign, and who keeps talking to them.
+  </Step>
+</Steps>
+
+You can also add a campaign to a group from its **Settings** tab, under **Campaign group**, and set its share there.
+
+## Second tries
+
+The options depend on how many LinkedIn profiles the group has.
+
+**Several profiles**
+
+| Option | What happens |
+| --- | --- |
+| Just split leads | New people are shared out. Nothing is retried. |
+| Split + try another profile (recommended) | If an invite isn't accepted (14 days by default) or can't be sent, another profile sends its own invite. |
+| Full retargeting | Also: no reply after the follow-ups, replied then went quiet, or said no (much later). Another profile or offer tries once. |
+
+**One profile**
+
+| Option | What happens |
+| --- | --- |
+| Just split leads | New people are shared between the profile's campaigns. Nothing is retried. |
+| Split + switch offer (recommended) | If someone doesn't reply after the follow-ups, or replied and then went quiet, the same LinkedIn conversation continues with another campaign's offer and follow-ups. |
+
+The campaign that takes over needs follow-ups turned on. When another profile takes over, its AI knows what was said before.
+
+## One conversation per person
+
+- A person sent to the group again, from any source, is skipped as **already linked**.
+- **The first one wins.** Whichever profile gets the invite accepted, or the reply, first keeps the person. If someone replies to two of your profiles, the first reply keeps the conversation and the other one goes **on hold**.
+- A conversation on hold shows a short note in the **Inbox** explaining why, with **Make this one active** if you want to switch. **Stop contacting this person** stops them in every campaign of the group.
+
+## Sending people to a group
+
+- **CSV:** in a campaign, **Add prospects** → **Send to a campaign group**.
+- **Lead Finder:** pick the group in the campaign picker, then send.
+- **Pipedrive:** choose the group as the import target.
+- **API and MCP:** use `groupId` instead of `campaignId`. See [List Campaign Groups](/api-reference/campaign-groups/list).
+
+## Safety
+
+- Do-not-contact lists are checked before any second try. A person who unsubscribes or is on your do-not-contact list is stopped in the whole group, for good.
+- **Profiles that can try the same person** (2 by default) limits how many of your profiles can reach one person.
+- **Pause colleagues after a reply** stops new outreach to a company once someone there replies.
+- Pausing a group stops second tries. New people are still split.
+
+## Leaving a group
+
+Removing a campaign from a group, deleting the group or deleting a member campaign never wakes anything up: conversations that were on hold become ordinary paused conversations that you can resume yourself.
