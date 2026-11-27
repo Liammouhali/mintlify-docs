@@ -240,9 +240,9 @@ When a limit is reached, your assistant tells you when the next search frees up.
 
 ---
 
-## Available Tools (53)
+## Available Tools (54)
 
-The MCP server provides 53 tools organized by category. The four Lead Finder tools are described above.
+The MCP server provides 54 tools organized by category. The four Lead Finder tools are described above.
 
 ### Agents (5 tools)
 
@@ -260,13 +260,14 @@ Manage your LinkedIn automation agents.
   Agent creation and setup require the dashboard for security (credentials handling).
 </Note>
 
-### Campaigns (6 tools)
+### Campaigns (7 tools)
 
 Create and manage outreach campaigns.
 
 | Tool | Description |
 |------|-------------|
 | `list_campaigns` | List all campaigns with status and prospect counts |
+| `list_campaign_groups` | List [campaign groups](/guides/campaign-groups/campaign-groups) (beta) with each campaign's weight and group results. Pass a group's id as `groupId` to `add_prospect` or `add_prospects_batch` |
 | `get_campaign_stats` | Get performance metrics (total prospects, left to invite, responses, qualified leads, etc.) |
 | `create_campaign` | Create a new campaign with product, prompt, and agent |
 | `update_campaign` | Modify campaign name or variables |
@@ -281,8 +282,8 @@ Manage leads and conversations. To find new people to contact, use the [Lead Fin
 |------|-------------|
 | `list_prospects` | List prospects with basic filtering |
 | `get_prospect` | Get full prospect details and conversation history |
-| `add_prospect` | Add a single LinkedIn profile to a campaign. Optional `customData` (max 3000 chars) is saved on the conversation and available in prompts as `{{customData}}` |
-| `add_prospects_batch` | Add multiple prospects at once. Each prospect may include `customData` (max 3000 chars) for per-conversation prompt context |
+| `add_prospect` | Add a single LinkedIn profile to a campaign, or to a campaign group with `groupId` (beta). Optional `customData` (max 3000 chars) is saved on the conversation and available in prompts as `{{customData}}` |
+| `add_prospects_batch` | Add multiple prospects at once, to a campaign or split across a campaign group with `groupId` (beta). Each prospect may include `customData` (max 3000 chars) for per-conversation prompt context |
 | `search_prospects` | Advanced search with status, date, and campaign filters |
 | `list_campaign_prospects` | List campaign prospects with pagination and filters like `status=4` for replies |
 | `pause_prospect` | Pause outreach to a specific person |
@@ -639,7 +640,7 @@ Tool errors are returned in MCP format:
   </Accordion>
 
   <Accordion title="Tool not found">
-    - The MCP server has 53 tools — some operations (like agent creation) require the dashboard
+    - The MCP server has 54 tools — some operations (like agent creation) require the dashboard
     - Use `verify_api_key` to confirm your connection is working
   </Accordion>
 

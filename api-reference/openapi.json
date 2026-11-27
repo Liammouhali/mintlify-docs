@@ -571,10 +571,34 @@
         }
       }
     },
+    "/campaign-groups": {
+      "get": {
+        "summary": "List Campaign Groups",
+        "description": "Returns the workspace's campaign groups with their campaigns, weights and stats. Beta: answers 403 feature_unavailable when campaign groups are not switched on for the workspace.",
+        "operationId": "listCampaignGroups",
+        "responses": {
+          "200": {
+            "description": "Campaign groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "groups": { "type": "array", "items": { "$ref": "#/components/schemas/CampaignGroup" } }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Authentication failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "403": { "description": "Campaign groups are not enabled for this workspace", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    },
     "/prospects/batch": {
       "post": {
         "summary": "Add Prospects Batch",
-        "description": "Adds multiple prospects to a campaign",
+        "description": "Adds multiple prospects to a campaign, or to a campaign group with groupId (beta).",
         "operationId": "addProspectsBatch",
         "requestBody": {
           "description": "Batch of prospects to add",
@@ -602,6 +626,35 @@
                     "listId": {
                       "type": "string",
                       "example": "import_list_id"
+                    },
+                    "groupId": {
+                      "type": "string",
+                      "description": "Group imports only",
+                      "example": "group_12345abcde"
+                    },
+                    "distribution": {
+                      "type": "array",
+                      "description": "Group imports only: how the prospects were split",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "campaignId": { "type": "string" },
+                          "listId": { "type": "string" },
+                          "prospects": { "type": "integer" }
+                        }
+                      }
+                    },
+                    "failures": {
+                      "type": "array",
+                      "description": "Group imports only: campaigns that could not take their part right now. Retry those prospects later.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "campaignId": { "type": "string" },
+                          "prospects": { "type": "integer" },
+                          "error": { "type": "string", "enum": ["campaign_busy", "enqueue_failed"] }
+                        }
+                      }
                     }
                   }
                 }
@@ -892,7 +945,7 @@
     "/prospects": {
       "post": {
         "summary": "Add Single Prospect",
-        "description": "Adds a single prospect to a campaign",
+        "description": "Adds a single prospect to a campaign, or to a campaign group with groupId (beta).",
         "operationId": "addProspect",
         "requestBody": {
           "description": "Prospect to add",
@@ -920,6 +973,35 @@
                     "listId": {
                       "type": "string",
                       "example": "import_list_id"
+                    },
+                    "groupId": {
+                      "type": "string",
+                      "description": "Group imports only",
+                      "example": "group_12345abcde"
+                    },
+                    "distribution": {
+                      "type": "array",
+                      "description": "Group imports only: how the prospects were split",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "campaignId": { "type": "string" },
+                          "listId": { "type": "string" },
+                          "prospects": { "type": "integer" }
+                        }
+                      }
+                    },
+                    "failures": {
+                      "type": "array",
+                      "description": "Group imports only: campaigns that could not take their part right now. Retry those prospects later.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "campaignId": { "type": "string" },
+                          "prospects": { "type": "integer" },
+                          "error": { "type": "string", "enum": ["campaign_busy", "enqueue_failed"] }
+                        }
+                      }
                     }
                   }
                 }
@@ -4646,13 +4728,52 @@
           }
         }
       },
+      "CampaignGroup": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "group_12345abcde" },
+          "name": { "type": "string", "example": "Series A founders" },
+          "paused": { "type": "boolean", "description": "Paused groups stop second tries; new prospects are still split.", "example": false },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "campaignId": { "type": "string", "example": "campaign_12345abcde" },
+                "name": { "type": "string", "example": "Series A founders · Ayush" },
+                "weight": { "type": "integer", "minimum": 0, "maximum": 100, "description": "Relative share of new prospects", "example": 80 },
+                "agentId": { "type": "string", "description": "LinkedIn profile running the campaign", "example": "agent_12345abcde" },
+                "status": { "type": "string", "example": "active" }
+              }
+            }
+          },
+          "stats": {
+            "type": "object",
+            "properties": {
+              "people": { "type": "integer", "example": 120 },
+              "contacted": { "type": "integer", "example": 96 },
+              "connected": { "type": "integer", "example": 41 },
+              "replied": { "type": "integer", "example": 12 },
+              "qualified": { "type": "integer", "example": 4 },
+              "retargeted": { "type": "integer", "description": "People tried by more than one campaign", "example": 9 },
+              "rescued": { "type": "integer", "description": "People who answered after a second try", "example": 2 }
+            }
+          }
+        }
+      },
       "AddProspectRequest": {
         "type": "object",
-        "required": ["campaignId", "url"],
+        "required": ["url"],
         "properties": {
           "campaignId": {
             "type": "string",
+            "description": "Campaign that receives the prospect(s). Exactly one of campaignId or groupId.",
             "example": "campaign_12345abcde"
+          },
+          "groupId": {
+            "type": "string",
+            "description": "Campaign group ID (from GET /campaign-groups). Send it instead of campaignId: the group splits prospects across its campaigns by weight and keeps one conversation per person. Exactly one of campaignId or groupId. Beta: only for workspaces with campaign groups switched on.",
+            "example": "group_12345abcde"
           },
           "name": {
             "type": "string",
@@ -4673,11 +4794,17 @@
       },
       "AddProspectsBatchRequest": {
         "type": "object",
-        "required": ["campaignId", "prospects"],
+        "required": ["prospects"],
         "properties": {
           "campaignId": {
             "type": "string",
+            "description": "Campaign that receives the prospect(s). Exactly one of campaignId or groupId.",
             "example": "campaign_12345abcde"
+          },
+          "groupId": {
+            "type": "string",
+            "description": "Campaign group ID (from GET /campaign-groups). Send it instead of campaignId: the group splits prospects across its campaigns by weight and keeps one conversation per person. Exactly one of campaignId or groupId. Beta: only for workspaces with campaign groups switched on.",
+            "example": "group_12345abcde"
           },
           "prospects": {
             "type": "array",

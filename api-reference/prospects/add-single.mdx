@@ -11,11 +11,22 @@ Add an individual prospect to a campaign. Prospect imports are processed asynchr
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `campaignId` | `string` | Yes | Campaign ID that should receive the prospect |
+| `campaignId` | `string` | Yes, or `groupId` | Campaign ID that should receive the prospect |
+| `groupId` | `string` | Yes, or `campaignId` | Campaign group ID (beta). The group picks the campaign. See below |
 | `name` | `string` | No | Prospect full name. Optional; Kakiyo enriches it from the LinkedIn profile when omitted |
 | `url` | `string` | Yes | LinkedIn profile URL |
 | `ongoing` | `boolean` | No | Whether the conversation should start as ongoing. Defaults to `false` |
 | `customData` | `string` | No | Per-conversation context, max 3000 characters. Saved on the created chat and available in prompts as `{{customData}}` |
+
+## Send to a campaign group (beta)
+
+Send `groupId` instead of `campaignId` to add prospects to a [campaign group](/guides/campaign-groups/campaign-groups). The group splits them across its campaigns by weight and keeps one conversation per person: anyone already in the group is skipped as already linked. Get group IDs from [List Campaign Groups](/api-reference/campaign-groups/list).
+
+The response adds `groupId`, `distribution` (one entry per campaign that received prospects, each with its own `listId`) and, if a campaign could not take its part right now, `failures`. Retry those prospects later.
+
+<Note>
+  Campaign groups are in beta. Workspaces without them get `403 feature_unavailable`. Sending both `campaignId` and `groupId`, or neither, is a `400`.
+</Note>
 
 ## Prompt personalization
 
